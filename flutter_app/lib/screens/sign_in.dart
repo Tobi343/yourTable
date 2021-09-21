@@ -1,3 +1,4 @@
+import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/register.dart';
@@ -51,7 +52,7 @@ class _SignInState extends State<SignIn> {
                           SizedBox(height: 50,),
                           Text("YourTable",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
                           SizedBox(height: 20,),
-                          Image.asset("lib/assets/app_icon.png",width: 200,height: 200,),
+                          Image.asset("lib/assets/orange_logo.png",width: 200,height: 200,),
                           SizedBox(height: 20,),
                           TextFormField(
                             style: TextStyle(color: mainColor),
@@ -115,8 +116,7 @@ class _SignInState extends State<SignIn> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                                 onPressed: (){
-                                  Navigator.pushReplacement(
-                                    context, MaterialPageRoute(builder: (context) => Register()),);
+                                  Navigator.push(context, ConcentricPageRoute(builder: (ctx) => Register()));
                                 },
                                 child: RichText(text: TextSpan(
                                   style: TextStyle(
@@ -125,7 +125,7 @@ class _SignInState extends State<SignIn> {
                                   ),
                                   children: [
                                     TextSpan(text: "No Account? "),
-                                    TextSpan(text: "Register",style: TextStyle(color: mainColor))
+                                    TextSpan(text: "Register",style: TextStyle(color: mainColor,decoration: TextDecoration.underline))
                                   ],
                                 ),
                                 )

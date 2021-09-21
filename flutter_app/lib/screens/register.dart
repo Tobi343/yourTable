@@ -1,3 +1,4 @@
+import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/sign_in.dart';
@@ -12,7 +13,7 @@ class _RegisterState extends State<Register> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Color mainColor = Color(0xffF7761E);
+  Color mainColor = Colors.white;
 
   String email ='';
   String password ='';
@@ -33,7 +34,7 @@ class _RegisterState extends State<Register> {
       ),
     ) : Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffF7761E),
       body: GestureDetector(
         onTap: (){
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -53,7 +54,7 @@ class _RegisterState extends State<Register> {
                           SizedBox(height: 50,),
                           Text("YourTable",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
                           SizedBox(height: 20,),
-                          Image.asset("lib/assets/app_icon.png",width: 200,height: 200,),
+                          Image.asset("lib/assets/white_logo.png",width: 200,height: 200,),
                           SizedBox(height: 20,),
                           TextFormField(
                             style: TextStyle(color: mainColor),
@@ -103,7 +104,7 @@ class _RegisterState extends State<Register> {
                                     obscure = !obscure;
                                   });
                                 },
-                                icon: !obscure ? Icon(Icons.visibility_sharp,color: mainColor,) : Icon(Icons.visibility_off_sharp,color: Colors.grey),
+                                icon: !obscure ? Icon(Icons.visibility_sharp,color: mainColor,) : Icon(Icons.visibility_off_sharp,color: Colors.grey[600]),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -117,17 +118,16 @@ class _RegisterState extends State<Register> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                                 onPressed: (){
-                                  Navigator.pushReplacement(
-                                    context, MaterialPageRoute(builder: (context) => SignIn()),);
-                                },
+                                  Navigator.pop(context);
+                                  },
                                 child: RichText(text: TextSpan(
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    color: Colors.grey,
+                                    color: Colors.grey[600],
                                   ),
                                   children: [
                                     TextSpan(text: "Already have an Account? "),
-                                    TextSpan(text: "Sign in",style: TextStyle(color: mainColor))
+                                    TextSpan(text: "Sign in",style: TextStyle(color: mainColor,decoration: TextDecoration.underline,))
                                   ],
                                 ),
                                 )
@@ -139,9 +139,11 @@ class _RegisterState extends State<Register> {
                               ),
                               child: Text(
                                 'Register',
-                                style:TextStyle(color: Colors.white,fontSize: 16),
+                                style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                               ),
-                              onPressed: () {}
+                              onPressed: () {
+
+                              }
                           ),
                           SizedBox(height: 12,),
                           Text(error,
