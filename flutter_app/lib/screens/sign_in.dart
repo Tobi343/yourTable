@@ -26,9 +26,12 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return loading ?  Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+    return loading ?  WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+      ),
     ) :  Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,

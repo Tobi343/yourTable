@@ -26,9 +26,12 @@ class _RegisterState extends State<Register> {
   
   @override
   Widget build(BuildContext context) {
-    return loading ? Scaffold(
-      backgroundColor: Color(0xffF7761E),
-      body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+    return loading ? WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Color(0xffF7761E),
+        body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+      ),
     ) : Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xffF7761E),
