@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
     return loading ? Container(
       color: Colors.white,
       child: SpinKitFadingCircle(
-        color: Colors.blue,
+        color: mainColor,
         size: 50.0,
       ),
     ) : Scaffold(
@@ -51,9 +51,9 @@ class _RegisterState extends State<Register> {
                       child:Column(
                         children: [
                           SizedBox(height: 50,),
-                          Text("YourTable",style: TextStyle(fontSize: 50,color: mainColor,fontFamily: "PatrickHand"),),
+                          Text("YourTable",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
                           SizedBox(height: 20,),
-                          //Image.asset("lib/assets/app_icon.png",width: 200,height: 200,),
+                          Image.asset("lib/assets/app_icon.png",width: 200,height: 200,),
                           SizedBox(height: 20,),
                           TextFormField(
                             style: TextStyle(color: mainColor),
