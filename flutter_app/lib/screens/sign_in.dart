@@ -1,15 +1,17 @@
 import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_app/screens/register.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
 
   final _formKey = GlobalKey<FormState>();
 
@@ -24,12 +26,9 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return loading ?  Container(
-      color: Colors.white,
-      child: SpinKitFadingCircle(
-        color: mainColor,
-        size: 50.0,
-      ),
+    return loading ?  Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
     ) :  Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -142,12 +141,24 @@ class _SignInState extends State<SignIn> {
                                 'Sign in',
                                 style:TextStyle(color: Colors.white,fontSize: 16),
                               ),
-                              onPressed: () {}
+                              onPressed: () {
+                                setState(() {
+                                  loading = true;
+                                });
+                                Future.delayed(const Duration(milliseconds: 8000), () {
+
+
+                                  setState(() {
+                                    loading = false;
+                                  });
+
+                                });
+                              }
                           ),
                           SizedBox(height: 12,),
                           Text(error,
                             style: TextStyle(color: Colors.red, fontSize: 16),
-                          )
+                          ),
                         ],
                       )
                   )

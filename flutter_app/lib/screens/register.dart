@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -25,12 +26,9 @@ class _RegisterState extends State<Register> {
   
   @override
   Widget build(BuildContext context) {
-    return loading ? Container(
-      color: Color(0xffF7761E),
-      child: SpinKitFadingCircle(
-        color: mainColor,
-        size: 50.0,
-      ),
+    return loading ? Scaffold(
+      backgroundColor: Color(0xffF7761E),
+      body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
     ) : Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xffF7761E),
@@ -144,7 +142,18 @@ class _RegisterState extends State<Register> {
                                 style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                               ),
                               onPressed: () {
+                                setState(() {
+                                  loading = true;
+                                });
+                                Future.delayed(const Duration(milliseconds: 8000), () {
 
+
+                                  setState(() {
+                                    loading = false;
+                                    Navigator.pushReplacement(context, ConcentricPageRoute(builder: (ctx) => SignIn()));
+                                  });
+
+                                });
                               }
                           ),
                           SizedBox(height: 12,),
