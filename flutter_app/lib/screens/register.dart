@@ -22,12 +22,11 @@ class _RegisterState extends State<Register> {
   bool loading = false;
   bool obscure = true;
 
-
-
+  
   @override
   Widget build(BuildContext context) {
     return loading ? Container(
-      color: Colors.white,
+      color: Color(0xffF7761E),
       child: SpinKitFadingCircle(
         color: mainColor,
         size: 50.0,
