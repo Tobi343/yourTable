@@ -115,6 +115,9 @@ class _SignInState extends State<SignIn> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
+                                style: ButtonStyle(
+                                  overlayColor: MaterialStateColor.resolveWith((states) => Colors.red.withOpacity(0)),
+                                ),
                                 onPressed: (){
                                   Navigator.push(context, ConcentricPageRoute(builder: (ctx) => Register()));
                                 },

@@ -119,6 +119,9 @@ class _RegisterState extends State<Register> {
                                 onPressed: (){
                                   Navigator.pop(context);
                                   },
+                                style: ButtonStyle(
+                                  overlayColor: MaterialStateColor.resolveWith((states) => Colors.red.withOpacity(0)),
+                                ),
                                 child: RichText(text: TextSpan(
                                   style: TextStyle(
                                     fontSize: 14.0,
