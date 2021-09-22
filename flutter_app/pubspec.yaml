@@ -30,9 +30,25 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_spinkit: ^5.0.0
   concentric_transition: ^1.0.1+1
+  lottie: ^1.2.0
+  flutter_native_splash: ^1.2.3
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: lib/assets/orange_logo.png
+  fullscreen: true
+  android: true
+  ios: true
 
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.9.2"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/orange_logo.png"
+
   flutter_test:
     sdk: flutter
 
@@ -49,9 +65,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/app_icon.png
-    - lib/assets/orange_logo.png
-    - lib/assets/white_logo.png
+    - lib/assets/
+    - lib/assets/closed_tag.json
+    - lib/assets/rocket.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
