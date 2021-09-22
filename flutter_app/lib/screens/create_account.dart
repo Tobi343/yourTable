@@ -49,7 +49,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           key: _formKey,
                           child:Column(
                               children: [
-                                Text("Your Table",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
+                                //Text("Your Table",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
                                 Lottie.asset('lib/assets/astronaut.json'),
                                 TextFormField(
                                   style: TextStyle(color: mainColor),
