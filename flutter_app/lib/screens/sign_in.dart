@@ -59,7 +59,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             SizedBox(height: 20,),
                             TextFormField(
                               style: TextStyle(color: mainColor),
-                              validator: (val) => val!.isEmpty ? 'Enter an Email' : null,
+                              validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
                                 setState(() => email = val);
                               },
@@ -85,11 +85,11 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             TextFormField(
                               style: TextStyle(color: mainColor),
                               obscureText: obscure,
-                              validator: (val) => val!.length < 6 ? 'Enter a Password 6+ characters long' : null,
+                              validator: (val) => val!.length < 6 ? 'Passwort welches mindestens 6 Zeichen lang ist' : null,
                               onChanged: (val) {
                                 setState(() => password = val);
                               },
-                              decoration: InputDecoration(labelText: 'Password', labelStyle: TextStyle(color: mainColor),
+                              decoration: InputDecoration(labelText: 'Passwort', labelStyle: TextStyle(color: mainColor),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide: BorderSide(color: Colors.red,width: 2),
@@ -130,8 +130,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                       color: Colors.grey,
                                     ),
                                     children: [
-                                      TextSpan(text: "No Account? "),
-                                      TextSpan(text: "Register",style: TextStyle(color: mainColor,decoration: TextDecoration.underline))
+                                      TextSpan(text: "Keinen Account? "),
+                                      TextSpan(text: "Jetzt registrieren",style: TextStyle(color: mainColor,decoration: TextDecoration.underline))
                                     ],
                                   ),
                                   )
@@ -142,7 +142,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   primary: mainColor,
                                 ),
                                 child: Text(
-                                  'Sign in',
+                                  'Einloggen',
                                   style:TextStyle(color: Colors.white,fontSize: 16),
                                 ),
                                 onPressed: () {

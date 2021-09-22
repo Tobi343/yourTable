@@ -61,7 +61,7 @@ class _RegisterState extends State<Register> {
                             SizedBox(height: 20,),
                             TextFormField(
                               style: TextStyle(color: mainColor),
-                              validator: (val) => val!.isEmpty ? 'Enter an Email' : null,
+                              validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
                                 setState(() => email = val);
                               },
@@ -86,12 +86,12 @@ class _RegisterState extends State<Register> {
                             SizedBox(height: 20,),
                             TextFormField(
                               style: TextStyle(color: mainColor),
-                              validator: (val) => val!.length < 6 ? 'Enter a Password 6+ characters long' : null,
+                              validator: (val) => val!.length < 6 ? 'Passwort welches mindestens 6 Zeichen lang ist' : null,
                               obscureText: obscure,
                               onChanged: (val) {
                                 setState(() => password = val);
                               },
-                              decoration: InputDecoration(labelText: 'Password', labelStyle: TextStyle(color: mainColor),
+                              decoration: InputDecoration(labelText: 'Passwort', labelStyle: TextStyle(color: mainColor),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide: BorderSide(color: Colors.red,width: 2),
@@ -132,8 +132,8 @@ class _RegisterState extends State<Register> {
                                       color: Colors.grey[600],
                                     ),
                                     children: [
-                                      TextSpan(text: "Already have an Account? "),
-                                      TextSpan(text: "Sign in",style: TextStyle(color: mainColor,decoration: TextDecoration.underline,))
+                                      TextSpan(text: "Schon einen Account? "),
+                                      TextSpan(text: "Einloggen",style: TextStyle(color: mainColor,decoration: TextDecoration.underline,))
                                     ],
                                   ),
                                   )
@@ -144,7 +144,7 @@ class _RegisterState extends State<Register> {
                                   primary: mainColor,
                                 ),
                                 child: Text(
-                                  'Register',
+                                  'Registrieren',
                                   style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                                 ),
                                 onPressed: () {

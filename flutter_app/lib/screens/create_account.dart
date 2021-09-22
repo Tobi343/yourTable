@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -17,9 +18,17 @@ class _CreateAccountState extends State<CreateAccount> {
   String lastName = '';
   String number = '';
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return loading ? WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Color(0xffF7761E),
+        body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+      ),
+    ) : WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: Color(0xffF7761E),
@@ -132,7 +141,19 @@ class _CreateAccountState extends State<CreateAccount> {
                                     ),
                                     onPressed: () {
                                       if(_formKey.currentState!.validate()){
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        Future.delayed(const Duration(milliseconds: 8000), () {
 
+
+                                          setState(() {
+                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+                                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
+                                            //loading = false;
+                                          });
+
+                                        });
                                       }
                                       else{}
                                     }
