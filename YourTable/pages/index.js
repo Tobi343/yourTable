@@ -14,7 +14,7 @@ export default function Home() {
       <div class="relative min-h-screen md:flex">
         <MobileSideBar/>
         <Sidebar/>
-        <div className="flex-1 p-10 text-2xl font-bold">
+        <div className="flex-1 p-10 text-2xl  min-h-screen font-bold">
           <CardContainer/>
         </div>
       </div>
