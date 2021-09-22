@@ -31,9 +31,24 @@ dependencies:
   flutter_spinkit: ^5.0.0
   concentric_transition: ^1.0.1+1
   lottie: ^1.2.0
+  flutter_native_splash: ^1.2.3
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: lib/assets/orange_logo.png
+  fullscreen: true
+  android: true
+  ios: true
 
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.9.2"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/orange_logo.png"
+
   flutter_test:
     sdk: flutter
 
