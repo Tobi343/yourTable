@@ -148,18 +148,24 @@ class _RegisterState extends State<Register> {
                                   style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                                 ),
                                 onPressed: () {
-                                  setState(() {
-                                    loading = true;
-                                  });
-                                  Future.delayed(const Duration(milliseconds: 8000), () {
-
-
+                                  if(_formKey.currentState!.validate()){
                                     setState(() {
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
-                                      //loading = false;
+                                      loading = true;
                                     });
+                                    Future.delayed(const Duration(milliseconds: 8000), () {
 
-                                  });
+
+                                      setState(() {
+                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                            CreateAccount()), (Route<dynamic> route) => false);
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
+                                        //loading = false;
+                                      });
+
+                                    });
+                                  }
+                                  else{}
+
                                 }
                             ),
                             SizedBox(height: 12,),

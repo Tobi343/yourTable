@@ -146,17 +146,21 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   style:TextStyle(color: Colors.white,fontSize: 16),
                                 ),
                                 onPressed: () {
-                                  setState(() {
-                                    loading = true;
-                                  });
-                                  Future.delayed(const Duration(milliseconds: 8000), () {
-
-
+                                  if(_formKey.currentState!.validate()){
                                     setState(() {
-                                      loading = false;
+                                      loading = true;
                                     });
+                                    Future.delayed(const Duration(milliseconds: 8000), () {
 
-                                  });
+
+                                      setState(() {
+                                        loading = false;
+                                      });
+
+                                    });
+                                  }
+                                  else{}
+
                                 }
                             ),
                             SizedBox(height: 12,),
