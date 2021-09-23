@@ -16,10 +16,10 @@ function Sidebar() {
                 </a>
                 <nav className="">
                     <SideBarCard Name="Dashboard" Icon={<DashboardIcon/>}/>
-                    <SideBarCard Name="Reservations" Icon={<DateRangeIcon/>}/>
-                    <SideBarCard Name="MyProfile" Icon={<RestaurantIcon/>}/>
-                    <SideBarCard Name="Settings" Icon={<SettingsIcon/>}/>
-                    <SideBarCard Name="LogOut" Icon={<LogoutIcon/>}/>
+                    <SideBarCard Name="Reservierungen" Icon={<DateRangeIcon/>}/>
+                    <SideBarCard Name="Mein Profil" Icon={<RestaurantIcon/>}/>
+                    <SideBarCard Name="Einstellungen" Icon={<SettingsIcon/>}/>
+                    <SideBarCard Name="Ausloggen"  Icon={<LogoutIcon/>}/>
                 </nav>   
             </div>
     )

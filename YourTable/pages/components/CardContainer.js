@@ -5,10 +5,10 @@ function CardContainer() {
     return (
        <div className="">
             <div className="flex flex-wrap justify-evenly">
-                <InfoCard title="Reservations"/> 
-                <InfoCard title="Customers"/>
-                <InfoCard title="Free Tables"/>
-                <InfoCard title="Views"/>
+                <InfoCard title="Reservierungen"/> 
+                <InfoCard title="Kunden"/>
+                <InfoCard title="Freie Tische"/>
+                <InfoCard title="Ansichten"/>
             </div>
        </div>
     )
