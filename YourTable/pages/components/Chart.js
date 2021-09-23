@@ -2,14 +2,14 @@ import React from 'react'
 import {Line} from 'react-chartjs-2';
 
 const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
     datasets: [
       {
-        label: 'My First dataset',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
+        label: 'Reservations',
+        fill: true,
+        lineTension: 0.4,
+        backgroundColor: 'rgba(245, 158, 11,0.4)',
+        borderColor: 'rgba(245, 158, 11,1)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -23,7 +23,7 @@ const data = {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40]
+        data: [65, 59, 80, 81, 56, 55, 0]
       }
     ]
   };
@@ -31,12 +31,11 @@ const data = {
 
 function Chart() {
     return (
+      <div className=" bg-white min-w-screen shadow-sm border rounded-xl lg:m-20 border-gray-100">
         <div>
-            <h2>Line Example</h2>
-            <Line className="w-full m-4 h-96 "
-                data={data}
-            />
+          <Line data={data} />
         </div>
+  </div>
     )
 }
 
