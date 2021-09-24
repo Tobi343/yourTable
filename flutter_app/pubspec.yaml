@@ -32,6 +32,7 @@ dependencies:
   concentric_transition: ^1.0.1+1
   lottie: ^1.2.0
   flutter_native_splash: ^1.2.3
+  animated_search_bar: ^2.0.0
 
 flutter_native_splash:
   color: "#ffffff"

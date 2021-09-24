@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:lottie/lottie.dart';
+
+import 'home_screen.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -52,6 +55,9 @@ class _CreateAccountState extends State<CreateAccount> {
                                 //Text("Your Table",style: TextStyle(fontSize: 60,color: mainColor,fontFamily: "PatrickHand"),),
                                 Lottie.asset('lib/assets/astronaut.json'),
                                 TextFormField(
+                                  inputFormatters: [
+                                    new LengthLimitingTextInputFormatter(30),
+                                  ],
                                   style: TextStyle(color: mainColor),
                                   validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
                                   onChanged: (val) {
@@ -77,6 +83,9 @@ class _CreateAccountState extends State<CreateAccount> {
                                 ),
                                 SizedBox(height: 20,),
                                 TextFormField(
+                                  inputFormatters: [
+                                    new LengthLimitingTextInputFormatter(30),
+                                  ],
                                   style: TextStyle(color: mainColor),
                                   validator: (val) => val!.isEmpty ? 'Nachname eingeben' : null,
                                   onChanged: (val) {
@@ -102,6 +111,9 @@ class _CreateAccountState extends State<CreateAccount> {
                                 ),
                                 SizedBox(height: 20),
                                 TextFormField(
+                                  inputFormatters: [
+                                    new LengthLimitingTextInputFormatter(30),
+                                  ],
                                   style: TextStyle(color: mainColor),
                                   validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
                                   onChanged: (val) {
@@ -129,16 +141,17 @@ class _CreateAccountState extends State<CreateAccount> {
                                 TextButton(
                                     style: ButtonStyle(
                                       overlayColor: MaterialStateColor.resolveWith((states) => Colors.white.withOpacity(0)),
+                                      backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
                                     ),
-                                    /*child: Text(
-                                      'Create',
+                                    child: Text(
+                                      'Starten!',
                                       style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
-                                    ),*/
-                                    child: Lottie.asset(
+                                    ),
+                                    /*child: Lottie.asset(
                                         'lib/assets/rocket.json',
                                       height: 100,
                                       width: 100
-                                    ),
+                                    ),*/
                                     onPressed: () {
                                       if(_formKey.currentState!.validate()){
                                         setState(() {
@@ -148,7 +161,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
 
                                           setState(() {
-                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
                                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
                                             //loading = false;
                                           });
