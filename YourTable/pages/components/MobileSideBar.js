@@ -9,7 +9,7 @@ function MobileSideBar() {
     
 
     return (
-        <div class="bg-gray-800 text-gray-100 flex justify-between md:hidden">
+        <div class="bg-gray-800 text-gray-100 flex justify-between md:hidden w-screen">
           <a href="#" class="block p-4 text-white font-bold">YourTable</a>
 
           <button onClick={handleClick} class="mobile-menu-button p-4 focus:outline-none focus:bg-gray-700">

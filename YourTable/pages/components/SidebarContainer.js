@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 
 function SidebarContainer() {
     return (
-        <div className="min-h-screen">
+        <div className="">
               <MobileSideBar />
               <Sidebar />
         </div>
