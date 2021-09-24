@@ -129,16 +129,17 @@ class _CreateAccountState extends State<CreateAccount> {
                                 TextButton(
                                     style: ButtonStyle(
                                       overlayColor: MaterialStateColor.resolveWith((states) => Colors.white.withOpacity(0)),
+                                      backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
                                     ),
-                                    /*child: Text(
-                                      'Create',
+                                    child: Text(
+                                      'Starten!',
                                       style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
-                                    ),*/
-                                    child: Lottie.asset(
+                                    ),
+                                    /*child: Lottie.asset(
                                         'lib/assets/rocket.json',
                                       height: 100,
                                       width: 100
-                                    ),
+                                    ),*/
                                     onPressed: () {
                                       if(_formKey.currentState!.validate()){
                                         setState(() {
