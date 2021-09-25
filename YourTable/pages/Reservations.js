@@ -1,15 +1,23 @@
 import React from "react";
-import SidebarContainer from "./components/SidebarContainer";
+import MobileSideBar from "./components/Sidebars/MobileSideBar";
+import Sidebar from "./components/Sidebars/Sidebar";
+import CardContainer from "./components/Cards/CardContainer";
+import Navbar from "./components/Sidebars/Navbar";
+
 import Table from "./components/table";
 function Reservations() {
   return (
-    <div class="relative min-h-screen md:flex w-full">
-      <SidebarContainer />
-      <div className="w-full">
-          <Table/>
+    <div>
+    <Navbar />
+    <main className="flex bg-gray-100">
+      <Sidebar />
 
+      <div className="w-full flex flex-col h-screen overflow-y-hidden">
+        <MobileSideBar />
+        <Table />
       </div>
-    </div>
+    </main>
+  </div>
   );
 }
 

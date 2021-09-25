@@ -1,25 +1,32 @@
 import Head from "next/head";
-import Sidebar from "./components/Sidebar";
-import MobileSideBar from "./components/MobileSideBar";
-import CardContainer from "./components/CardContainer";
-import Chart from "./components/Chart";
-import { Helmet } from "react-helmet";
-import { useEffect } from "react";
+import React from "react";
+import { useState } from "react";
+import CardContainer from "./components/Cards/CardContainer";
+import Sidebar from "./components/Sidebars/Sidebar";
+import MobileSideBar from "./components/Sidebars/MobileSideBar";
+import Navbar from "./components/Sidebars/Navbar";
 
 export default function Home() {
+
+  const [NavColor,setNavColor] = useState("bg-blue-500");
+
+
   return (
     <div>
       <Head>
         <title>YourTableAdminPanel</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <div class="relative min-h-screen md:flex w-full">
-        <MobileSideBar />
-        <Sidebar />
-        <div className="flex-1 p-10 text-2xl font-bold">
-          <CardContainer />
-        </div>
+      <div>
+        <Navbar setNavColorField={setNavColor}/>
+        <main className="flex bg-gray-100">
+          <Sidebar NavColorField={NavColor}/>
+          <p> {NavColor}</p>
+          <div className="w-full flex flex-col h-screen overflow-y-hidden">
+            <MobileSideBar />
+            <CardContainer />
+          </div>
+        </main>
       </div>
     </div>
   );
