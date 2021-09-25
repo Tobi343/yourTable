@@ -1,18 +1,20 @@
-import React from 'react'
+import React from "react";
 
 function InfoCard(props) {
-    return (
-        <div className="bg-gray-100 flex flex-col shadow-md h-40" >
-            <div  className={`${props.color} h-14 text-white flex flex-wrap content-center items-center justify-center`}>
-                <h2 class="text-center ">{props.title}</h2>
-            </div>
-            <div className="flex flex-col m-5">
-                <span className="text-4xl text-gray-700">{props.count}</span>
-                <span className=" text-gray-500 opacity-70 text-base">{props.info}</span>
-            </div>
-
+  return (
+    <div class="w-full px-6 sm:w-1/2 xl:w-1/3">
+      <div class="flex items-center px-5 py-6 my-6 shadow-sm rounded-md bg-gray-100">
+        <div class="p-3 rounded-full bg-indigo-600 bg-opacity-75 text-white">
+            {props.icon}
         </div>
-    )
+
+        <div class="mx-5">
+          <h4 class="text-2xl font-semibold text-gray-700">{props.count}</h4>
+          <div class="text-gray-500">{props.title}</div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default InfoCard
+export default InfoCard;

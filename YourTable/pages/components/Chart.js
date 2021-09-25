@@ -31,7 +31,7 @@ const data = {
 
 function Chart() {
     return (
-      <div className=" bg-white min-w-screen shadow-sm border rounded-xl lg:m-20 border-gray-100">
+      <div className=" bg-white min-w-screen shadow-sm border h-10 rounded-xl lg:m-20 border-gray-100">
         <div>
           <Line data={data} />
         </div>

@@ -19,7 +19,6 @@ export default function Home() {
         <Sidebar />
         <div className="flex-1 p-10 text-2xl font-bold">
           <CardContainer />
-          <Chart />
         </div>
       </div>
     </div>
