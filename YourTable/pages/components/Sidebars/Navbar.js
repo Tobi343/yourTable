@@ -5,28 +5,35 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 
-function Navbar(setNavColorField) {
-
+function Navbar(props) {
   //localStorage.setItem('color', "bg-blue-500");
 
   const setColor = (parameter) => (e) => {
     e.preventDefault();
-    v_SideBar.classList.remove( localStorage.getItem('color'));
+    v_SideBar.classList.remove(localStorage.getItem("color"));
     v_SideBar.classList.add(parameter);
     //setNavColor(parameter);
-   }
-   
-   
-      function showColors(e) {
-        e.preventDefault();
+  };
 
-        colorsDiv.classList.remove("invisible");
-      }
-    
-      function hideColors(e) {
-        e.preventDefault();
-        colorsDiv.classList.add("invisible");
-      }
+  function showColors(e) {
+    e.preventDefault();
+
+    colorsDiv.classList.remove("invisible");
+  }
+
+  function hideColors(e) {
+    e.preventDefault();
+    colorsDiv.classList.add("invisible");
+  }
+
+  function triggerNavBar(e){
+    e.preventDefault();
+    MobileBar.classList.toggle("hidden");
+    v_SideBar.classList.toggle("-translate-x-full");
+  }
+
+  
+
   return (
     <nav className="bg-white">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -34,9 +41,11 @@ function Navbar(setNavColorField) {
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <button
               id="sidebarBtn"
+              onClick={triggerNavBar}
               className="px-4 py-2 text-gray-700 text-2xl rounded-lg hover:bg-gray-200"
             >
               <MenuIcon />
+              
             </button>
             <form method="GET" className="w-full invisible sm:visible">
               <div className="relative text-gray-500 ml-6 px-3 pt-1">
@@ -90,8 +99,9 @@ function Navbar(setNavColorField) {
                 </button>
               </div>
 
-              <div                id="colorsDiv"
-                className="  hover:visible origin-top-right absolute right-0 w-28
+              <div
+                id="colorsDiv"
+                className="invisible  hover:visible origin-top-right absolute right-0 w-28
               rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5
               focus:outline-none z-10"
               >
@@ -99,23 +109,23 @@ function Navbar(setNavColorField) {
                 <div className="py-2">
                   <button
                     className="bg-blue-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-blue-600"
-                    onclick={()=>setNavColorField("bg-blue-500")}
+                    onClick={() => props.setNavColorField("bg-blue-500")}
                   ></button>
                   <button
                     className="bg-indigo-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-indigo-600"
-                    onclick={()=>setNavColorField("bg-indigo-500")}
+                    onClick={() => props.setNavColorField("bg-indigo-500")}
                   ></button>
                   <button
                     className="bg-green-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-green-600"
-                    onclick={()=>setNavColorField("bg-green-500")}
+                    onClick={() => props.setNavColorField("bg-green-500")}
                   ></button>
                   <button
                     className="bg-red-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-red-600"
-                    onClick={()=>setNavColorField("bg-red-800")}
+                    onClick={() => props.setNavColorField("bg-red-500")}
                   ></button>
                   <button
-                    className="bg-gray-800 w-24 h-8 rounded block mx-auto my-1 hover:bg-gray-900" 
-                    onClick={()=>setNavColorField("bg-gray-800")}
+                    className="bg-gray-800 w-24 h-8 rounded block mx-auto my-1 hover:bg-gray-900"
+                    onClick={() => props.setNavColorField("bg-gray-800")}
                   ></button>
                 </div>
               </div>

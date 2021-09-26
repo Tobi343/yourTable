@@ -1,12 +1,12 @@
 import React from "react";
 import TableItem from "./TableItem";
 
-function table() {
+function table(props) {
   return (
     <div class="container mx-auto px-4 sm:px-8">
       <div class="py-8">
         <div>
-          <h2 class="text-2xl font-semibold leading-tight">Reservations</h2>
+          <h2 class="text-2xl font-semibold leading-tight">Reservierungen</h2>
         </div>
         <div class="my-2 flex sm:flex-row flex-col">
           <div class="flex flex-row mb-1 sm:mb-0">
@@ -29,8 +29,8 @@ function table() {
             <div class="relative">
               <select class="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500">
                 <option>All</option>
-                <option>Active</option>
-                <option>Inactive</option>
+                <option>Today</option>
+                <option>Upcoming</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
@@ -78,10 +78,13 @@ function table() {
                 </tr>
               </thead>
               <tbody>
-                <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:10" Tischnummer="A34"/>
-                <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:10" Tischnummer="A34"/>
-                <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:10" Tischnummer="A34"/>
-                <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:10" Tischnummer="A34"/>
+                {props.reservations.map(e=>{
+                  {console.log(e)}
+                  <TableItem Name={e.Name} Anzahl={e.Anzahl} Uhrzeit={e.Uhrzeit} Tischnummer={e.Tischnummer}/>
+                })}
+                                  <TableItem Name={e.Name} Anzahl={e.Anzahl} Uhrzeit={e.Uhrzeit} Tischnummer={e.Tischnummer}/>
+
+                
               </tbody>
             </table>
             <div class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">

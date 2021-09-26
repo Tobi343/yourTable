@@ -3,21 +3,45 @@ import MobileSideBar from "./components/Sidebars/MobileSideBar";
 import Sidebar from "./components/Sidebars/Sidebar";
 import CardContainer from "./components/Cards/CardContainer";
 import Navbar from "./components/Sidebars/Navbar";
+import { useState } from "react";
 
 import Table from "./components/table";
 function Reservations() {
+  const [NavColor, setNavColor] = useState("bg-blue-500");
+
+  const arr = [
+    {
+      Name: "Meris Bihorac",
+      Anzahl: "3",
+      Uhrzeit: "22:10",
+      Tischnummer: "A20",
+    },
+    {
+      Name: "Meris Bihorac",
+      Anzahl: "3",
+      Uhrzeit: "22:10",
+      Tischnummer: "A20",
+    },
+    {
+      Name: "Meris Bihorac",
+      Anzahl: "3",
+      Uhrzeit: "22:10",
+      Tischnummer: "A20",
+    }
+  ];
+
   return (
     <div>
-    <Navbar />
-    <main className="flex bg-gray-100">
-      <Sidebar />
+      <Navbar setNavColorField={setNavColor} />
+      <main className="flex bg-gray-100">
+        <Sidebar NavColorField={NavColor} />
 
-      <div className="w-full flex flex-col h-screen overflow-y-hidden">
-        <MobileSideBar />
-        <Table />
-      </div>
-    </main>
-  </div>
+        <div className="w-full flex flex-col h-screen overflow-y-hidden">
+          <MobileSideBar />
+          <Table reservations={arr} />
+        </div>
+      </main>
+    </div>
   );
 }
 
