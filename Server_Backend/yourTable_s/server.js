@@ -13,7 +13,7 @@ const Pool = require('pg').Pool
 const app = express()
 const bodyparser = require('body-parser')
 const jwt = require('jsonwebtoken');
-
+const serverPort = process.env.serverPort || 8000;
 const port = 5432; //db port
 
 const pool = new Pool({
@@ -28,7 +28,7 @@ app.use(bodyparser())
 app.use(bodyparser.urlencoded({extended: true}))
 
 app.get('',(req,res)=>{
-    res.send("LOL");
+    res.send("Welcome to the API of YourTable!");
 })
 
 app.get('/users', (req, res) => {
@@ -111,8 +111,8 @@ const verify = (req) => {
 }
 
 
-app.listen(3000, () =>{
-    console.log("Server successfully running on port 3000");
+app.listen(serverPort, () =>{
+    console.log("Server successfully running on port "+serverPort);
 })
 
 
