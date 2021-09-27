@@ -2,9 +2,12 @@ import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/register.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
+
+import 'home_screen.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
 
   final _formKey = GlobalKey<FormState>();
+  AuthService auth = new AuthService();
 
   Color mainColor = Color(0xffF7761E);
 
@@ -145,21 +149,38 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                   'Einloggen',
                                   style:TextStyle(color: Colors.white,fontSize: 16),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
+
                                   if(_formKey.currentState!.validate()){
                                     setState(() {
-                                      loading = true;
+                                      email = email.trim();
+                                      loading=true;
                                     });
-                                    Future.delayed(const Duration(milliseconds: 8000), () {
-
-
-                                      setState(() {
-                                        loading = false;
-                                      });
-
+                                    var jwt = await auth.attemptLogIn(email, password);
+                                    print(jwt);
+                                    setState(() {
+                                      if(jwt == null || jwt == "null") {
+                                        setState(() {
+                                          error = "Einloggen fehlgeschlagen!";
+                                          loading = false;
+                                        });
+                                      }
+                                      else {
+                                        error = "";
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeScreen()), (
+                                            Route<dynamic> route) => false);
+                                      }
                                     });
                                   }
-                                  else{}
+                                  else{
+
+                                  }
+
+
 
                                 }
                             ),
