@@ -33,6 +33,8 @@ dependencies:
   lottie: ^1.2.0
   flutter_native_splash: ^1.2.3
   animated_search_bar: ^2.0.0
+  flutter_secure_storage: ^4.2.1
+  http: ^0.13.3
 
 flutter_native_splash:
   color: "#ffffff"

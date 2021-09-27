@@ -1,6 +1,7 @@
 import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
@@ -15,6 +16,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
 
   final _formKey = GlobalKey<FormState>();
+  AuthService auth = new AuthService();
+
 
   Color mainColor = Colors.white;
 
@@ -147,7 +150,8 @@ class _RegisterState extends State<Register> {
                                   'Registrieren',
                                   style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
+                                  /*
                                   if(_formKey.currentState!.validate()){
                                     setState(() {
                                       loading = true;
@@ -165,6 +169,36 @@ class _RegisterState extends State<Register> {
                                     });
                                   }
                                   else{}
+
+                                   */
+
+                                  if(_formKey.currentState!.validate()){
+                                    setState(() {
+                                      email = email.trim();
+                                      loading=true;
+                                    });
+                                    var jwt = await auth.attemptSignUp(email, password);
+                                    print(jwt);
+                                    setState(() {
+                                      if(jwt != 201) {
+                                        setState(() {
+                                          error = "Registrieren fehlgeschlagen!";
+                                          loading = false;
+                                        });
+                                      }
+                                      else {
+                                        error = "";
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateAccount()), (
+                                            Route<dynamic> route) => false);
+                                      }
+
+                                    });
+                                  }
+
 
                                 }
                             ),
