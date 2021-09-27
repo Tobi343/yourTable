@@ -10,7 +10,7 @@ function Sidebar(props) {
   return (
     <aside
       id="v_SideBar"
-      className={`${props.NavColorField} relative h-screen w-72 hidden sm:block shadow-xl transition duration-200 ease-in-out`}
+      className={`bg-blue-500 relative h-screen w-72 hidden sm:block shadow-xl transition duration-200 ease-in-out`}
     >     
       <div className="p-6">
         <a
