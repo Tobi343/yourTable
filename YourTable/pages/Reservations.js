@@ -14,20 +14,26 @@ function Reservations() {
       Name: "Meris Bihorac",
       Anzahl: "3",
       Uhrzeit: "22:10",
-      Tischnummer: "A20",
+      Tischnummer: "A3454",
     },
     {
       Name: "Meris Bihorac",
       Anzahl: "3",
       Uhrzeit: "22:10",
-      Tischnummer: "A20",
+      Tischnummer: "A3454",
     },
     {
       Name: "Meris Bihorac",
       Anzahl: "3",
       Uhrzeit: "22:10",
-      Tischnummer: "A20",
-    }
+      Tischnummer: "A3454",
+    },
+    {
+      Name: "Meris Bihorac",
+      Anzahl: "3",
+      Uhrzeit: "22:10",
+      Tischnummer: "A3454",
+    },
   ];
 
   return (
@@ -38,7 +44,7 @@ function Reservations() {
 
         <div className="w-full flex flex-col h-screen overflow-y-hidden">
           <MobileSideBar />
-          <Table reservations={arr} />
+          <Table Reservations={arr} />
         </div>
       </main>
     </div>

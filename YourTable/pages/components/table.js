@@ -1,24 +1,24 @@
 import React from "react";
 import TableItem from "./TableItem";
 
-function table(props) {
+function Table(props) {
   return (
-    <div class="container mx-auto px-4 sm:px-8">
-      <div class="py-8">
+    <div className="container mx-auto px-4 sm:px-8">
+      <div className="py-8">
         <div>
-          <h2 class="text-2xl font-semibold leading-tight">Reservierungen</h2>
+          <h2 className="text-2xl font-semibold leading-tight">Reservierungen</h2>
         </div>
-        <div class="my-2 flex sm:flex-row flex-col">
-          <div class="flex flex-row mb-1 sm:mb-0">
-            <div class="relative">
-              <select class="appearance-none h-full rounded-l border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+        <div className="my-2 flex sm:flex-row flex-col">
+          <div className="flex flex-row mb-1 sm:mb-0">
+            <div className="relative">
+              <select className="appearance-none h-full rounded-l border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <option>5</option>
                 <option>10</option>
                 <option>20</option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
-                  class="fill-current h-4 w-4"
+                  className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
@@ -26,15 +26,15 @@ function table(props) {
                 </svg>
               </div>
             </div>
-            <div class="relative">
-              <select class="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500">
+            <div className="relative">
+              <select className="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500">
                 <option>All</option>
                 <option>Today</option>
                 <option>Upcoming</option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
-                  class="fill-current h-4 w-4"
+                  className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
@@ -43,59 +43,57 @@ function table(props) {
               </div>
             </div>
           </div>
-          <div class="block relative">
-            <span class="h-full absolute inset-y-0 left-0 flex items-center pl-2">
+          <div className="block relative">
+            <span className="h-full absolute inset-y-0 left-0 flex items-center pl-2">
               <svg
                 viewBox="0 0 24 24"
-                class="h-4 w-4 fill-current text-gray-500"
+                className="h-4 w-4 fill-current text-gray-500"
               >
                 <path d="M10 4a6 6 0 100 12 6 6 0 000-12zm-8 6a8 8 0 1114.32 4.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 012 10z"></path>
               </svg>
             </span>
             <input
               placeholder="Search"
-              class="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+              className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
             />
           </div>
         </div>
-        <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-          <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-            <table class="min-w-full leading-normal">
+        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+          <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+            <table className="min-w-full leading-normal">
               <thead>
                 <tr>
-                  <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Name
                   </th>
-                  <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Anzahl der Gäste
                   </th>
-                  <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Uhrzeit
                   </th>
-                  <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Tischnummer
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {props.reservations.map(e=>{
-                  {console.log(e)}
-                  <TableItem Name={e.Name} Anzahl={e.Anzahl} Uhrzeit={e.Uhrzeit} Tischnummer={e.Tischnummer}/>
-                })}
-                                  <TableItem Name={e.Name} Anzahl={e.Anzahl} Uhrzeit={e.Uhrzeit} Tischnummer={e.Tischnummer}/>
+               {props.Reservations.map((reservation)=>(
+                <TableItem Name={reservation.Name} Anzahl={reservation.Anzahl} Uhrzeit={reservation.Uhrzeit} Tischnummer={reservation.Tischnummer}/>
+               ))}
 
                 
               </tbody>
             </table>
-            <div class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
-              <span class="text-xs xs:text-sm text-gray-900">
+            <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
+              <span className="text-xs xs:text-sm text-gray-900">
                 4 von 50
               </span>
-              <div class="inline-flex mt-2 xs:mt-0">
-                <button class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
+              <div className="inline-flex mt-2 xs:mt-0">
+                <button className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
                   Weniger
                 </button>
-                <button class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
+                <button className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
                   Mehr
                 </button>
               </div>
@@ -107,4 +105,4 @@ function table(props) {
   );
 }
 
-export default table;
+export default Table;
