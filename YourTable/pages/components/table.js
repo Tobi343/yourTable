@@ -78,11 +78,9 @@ function Table(props) {
                 </tr>
               </thead>
               <tbody>
-              <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:30" Tischnummer="A30"/>
-              <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:30" Tischnummer="A30"/>
-               {props.Reservations.map(reservation=>{
-                <TableItem Name="Meris Bihorac" Anzahl="5" Uhrzeit="22:30" Tischnummer="A35"/>
-               })};
+               {props.Reservations.map((reservation)=>(
+                <TableItem Name={reservation.Name} Anzahl={reservation.Anzahl} Uhrzeit={reservation.Uhrzeit} Tischnummer={reservation.Tischnummer}/>
+               ))}
 
                 
               </tbody>
