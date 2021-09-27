@@ -19,20 +19,22 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       backgroundColor: mainColor,
       appBar: AppBar(
-        toolbarHeight: 75,
+        toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(restaurant),
           onPressed: () => _scaffoldKey.currentState!.openDrawer(),
         ),
         backgroundColor: secondColor,
         title: Container(
-          height: 55,
+          height: 52,
           child: TextFormField(
+            maxLines: 1,
             textInputAction: TextInputAction.search,
             style: TextStyle(color: mainColor),
             textCapitalization: TextCapitalization.sentences,
             cursorColor: mainColor,
             decoration: InputDecoration(
+              isDense: true,
               suffixIcon: Icon(Icons.search_sharp, color: mainColor,),
               hintStyle: TextStyle(color: mainColor.withOpacity(0.7)),
               hintText: "Restaurant",labelText: 'Restaurant finden', labelStyle: TextStyle(color: mainColor),
