@@ -10,7 +10,7 @@ function Sidebar(props) {
   return (
     <aside
       id="v_SideBar"
-      className={`bg-blue-500 relative h-screen w-72 hidden sm:block shadow-xl transition duration-200 ease-in-out`}
+      className={`bg-blue-500 relative h-screen w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
     >     
       <div className="p-6">
         <a
@@ -21,11 +21,11 @@ function Sidebar(props) {
         </a>
       </div>
       <nav className="text-white text-base font-semibold pt-3">
-        <SideBarCard Text="Dashboard" Icon={<DashboardIcon/>} Link="/"/>
-        <SideBarCard Text="Reservierungen" Icon={<DateRangeIcon/>} Link="/Reservations"/>
-        <SideBarCard Text="Mein Profil" Icon={<RestaurantIcon/>} Link="#"/>
-        <SideBarCard Text="Einstellungen" Icon={<SettingsIcon/>} Link="#"/>
-        <SideBarCard Text="Ausloggen" Icon={<LogoutIcon/>} Link="#"/>
+        <SideBarCard Text="Dashboard" Icon={<DashboardIcon className="mr-3"/>} Link="/"/>
+        <SideBarCard Text="Reservierungen" Icon={<DateRangeIcon className="mr-3"/>} Link="/Reservations"/>
+        <SideBarCard Text="Mein Profil" Icon={<RestaurantIcon className="mr-3"/>} Link="/myProfile"/>
+        <SideBarCard Text="Einstellungen" Icon={<SettingsIcon className="mr-3"/>} Link="#"/>
+        <SideBarCard Text="Ausloggen" Icon={<LogoutIcon className="mr-3"/>} Link="#"/>
 
       </nav>
     </aside>

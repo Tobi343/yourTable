@@ -28,23 +28,23 @@ function Navbar(props) {
 
   function triggerNavBar(e){
     e.preventDefault();
-    MobileBar.classList.toggle("hidden");
-    v_SideBar.classList.toggle("-translate-x-full");
+      MobileBar.classList.toggle("hidden");
+      v_SideBar.classList.toggle("-translate-x-full");
   }
 
   
 
   return (
     <nav className="bg-white">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
-          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+          <div className="flex-1 flex items-center justify-center md:items-stretch md:justify-start">
             <button
               id="sidebarBtn"
               onClick={triggerNavBar}
-              className="px-4 py-2 text-gray-700 text-2xl rounded-lg hover:bg-gray-200"
+              className="px-4 text-gray-700 text-2xl rounded-lg hover:bg-gray-200"
             >
-              <MenuIcon />
+            <MenuIcon/>
               
             </button>
             <form method="GET" className="w-full invisible sm:visible">
