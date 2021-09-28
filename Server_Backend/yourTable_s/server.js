@@ -59,19 +59,19 @@ app.get("/bcrypt", async (req, res) => {
 });
 
 app.post("/users/register", express.urlencoded(), async function (req, res) {
-  const salt = Math.random() * 20 + 10;
-  const hashedPW = await bcrypt.hash(req.body.password, 10);
-
+  const salt = Math.trunc(Math.random() * 20 + 10);
+  const hashedPW = await bcrypt.hash(req.body.password, salt);
+  console.log("register");
   pool.query(
     "SELECT FROM CUSTOMER WHERE CUSTOMER_EMAIL = $1",
     [req.body.email],
     function (err, row) {
-        if(err){
-            console.log(err);
-            res.status(401);
-            res.send(err);
-            return;
-        }
+      if (err) {
+        console.log(err);
+        res.status(401);
+        res.send(err);
+        return;
+      }
       if (row.rowCount > 0) {
         console.error("can't create user " + req.body.email);
         res.status(409);
@@ -79,9 +79,16 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
       } else {
         console.log("Can create user " + req.body.email);
         pool.query(
-          "INSERT INTO CUSTOMER VALUES ($1, $2, $3, $4, $5, $6)",
-
-          [9,'Sample Name', req.body.email,req.body.email.split('@')[0], hashedPW, '+435632422'],
+          "INSERT INTO CUSTOMER(CUSTOMER_FIRSTNAME,CUSTOMER_SECONDNAME,CUSTOMER_EMAIL,CUSTOMER_USERNAME,CUSTOMER_PASSWORD,CUSTOMER_PHONE,CUSTOMER_SALT) VALUES  ($1, $2, $3, $4, $5, $6,$7)",
+          [
+            "Sample",
+            "Name",
+            req.body.email,
+            req.body.email.split("@")[0],
+            hashedPW,
+            "+435633432422",
+            salt,
+          ],
           (error, results) => {
             if (error) {
               console.log(error);
@@ -89,6 +96,7 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
             } else {
               res.status(201);
               res.send("Success");
+              console.log("User created!!");
             }
           }
         );
@@ -97,50 +105,57 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
   );
 });
 
+const login = (username, password) => {};
+
 app.post("/users/login", express.urlencoded(), async function (req, res) {
-  //pool.query('Select salt from users where username = $1',[req.body.username], async (error, results) => {
-  //if(error){
-  //    console.log(error)
-  //}
-  //console.log(results.rows[0].salt);
-
-  const hashedPW = await bcrypt.hash(req.body.password, 5);
-  console.log("Login: ");
-  console.log(hashedPW);
   pool.query(
-    "SELECT * FROM CUSTOMER WHERE (CUSTOMER_EMAIL) = ($1)",
-    [req.body.email],
-    (error, results) => {
-      if (results.rowCount > 0) {
-        bcrypt.compare(req.body.password, results.rows[0].customer_password, function (err, result) {
-          if (result) {
-            console.log(result);
-            var payload = {
-              username: req.body.email,
-            };
-            var token = jwt.sign(payload, "abc", {
-              algorithm: "HS256",
-              expiresIn: "15d",
-            });
-            console.log("Success");
-            console.log(token);
-
-            res.send(token);
-          }
-          else{
-              console.log(result)
-              console.log(err)
-              res.status(403).send(null)
-          }
-        });
-      } else {
-        console.error("Failure: " + error);
-        res.status(401);
-        res.send("Wrong Userdata");
+    "Select salt from users where username = $1",
+    [req.body.username],
+    async (error, results) => {
+      if (error) {
+        console.log(error);
       }
+      const hashedPW = await bcrypt.hash(req.body.password, 5);
+      console.log("Login: ");
+      console.log(hashedPW);
+      pool.query(
+        "SELECT * FROM CUSTOMER WHERE (CUSTOMER_EMAIL) = ($1)",
+        [req.body.email],
+        (error, results) => {
+          if (results.rowCount > 0) {
+            bcrypt.compare(
+              req.body.password,
+              results.rows[0].customer_password,
+              function (err, result) {
+                if (result) {
+                  console.log(result);
+                  var payload = {
+                    username: req.body.email,
+                  };
+                  var token = jwt.sign(payload, process.env.TOKEN_SECRET, {
+                    algorithm: "HS256",
+                    expiresIn: "15d",
+                  });
+                  console.log("Success");
+                  console.log(token);
+
+                  res.send(token);
+                } else {
+                  console.log(result);
+                  console.log(err);
+                  res.status(403).send(null);
+                }
+              }
+            );
+          } else {
+            console.error("Failure: " + error);
+            res.status(401);
+            res.send("Wrong Userdata");
+          }
+        }
+      );
     }
   );
-  // })
 });
 
 const verify = (req) => {
@@ -149,7 +164,7 @@ const verify = (req) => {
   console.log(token);
 
   try {
-    jwt.verify(token, "abc", { algorithm: "HS256" });
+    jwt.verify(token, process.env.TOKEN_SECRET, { algorithm: "HS256" });
     return true;
   } catch {
     return false;
