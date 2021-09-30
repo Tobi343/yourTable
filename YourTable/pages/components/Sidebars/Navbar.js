@@ -26,13 +26,12 @@ function Navbar(props) {
     colorsDiv.classList.add("invisible");
   }
 
-  function triggerNavBar(e){
+  function triggerNavBar(e) {
     e.preventDefault();
-      MobileBar.classList.toggle("hidden");
-      v_SideBar.classList.toggle("-translate-x-full");
+    MobileBar.classList.toggle("hidden");
+    v_SideBar.classList.toggle("md:block");
+    v_SideBar.classList.toggle("-translate-x-full");
   }
-
-  
 
   return (
     <nav className="bg-white">
@@ -44,8 +43,7 @@ function Navbar(props) {
               onClick={triggerNavBar}
               className="px-4 text-gray-700 text-2xl rounded-lg hover:bg-gray-200"
             >
-            <MenuIcon/>
-              
+              <MenuIcon />
             </button>
             <form method="GET" className="w-full invisible sm:visible">
               <div className="relative text-gray-500 ml-6 px-3 pt-1">

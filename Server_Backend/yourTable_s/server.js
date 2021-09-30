@@ -94,6 +94,7 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
               console.log(error);
               res.status(403);
             } else {
+              login(req.body.username,req.body.password,res);
               res.status(201);
               res.send("Success");
               console.log("User created!!");
@@ -105,57 +106,54 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
   );
 });
 
-const login = (username, password) => {};
-
-app.post("/users/login", express.urlencoded(), async function (req, res) {
+const login = (username, password,res) => {
+  //Get Salt Value to compare hashed pw
   pool.query(
-    "Select salt from users where username = $1",
-    [req.body.username],
+    `Select * from customer where ${
+      username.split("@").length > 0 ? "customer_email" : "customer_username"
+    } = $1`,
+    [username],
     async (error, results) => {
       if (error) {
         console.log(error);
+        return;
       }
-      const hashedPW = await bcrypt.hash(req.body.password, 5);
-      console.log("Login: ");
-      console.log(hashedPW);
-      pool.query(
-        "SELECT * FROM CUSTOMER WHERE (CUSTOMER_EMAIL) = ($1)",
-        [req.body.email],
-        (error, results) => {
-          if (results.rowCount > 0) {
-            bcrypt.compare(
-              req.body.password,
-              results.rows[0].customer_password,
-              function (err, result) {
-                if (result) {
-                  console.log(result);
-                  var payload = {
-                    username: req.body.email,
-                  };
-                  var token = jwt.sign(payload, process.env.TOKEN_SECRET, {
-                    algorithm: "HS256",
-                    expiresIn: "15d",
-                  });
-                  console.log("Success");
-                  console.log(token);
+      const hashedPW = await bcrypt.hash(
+        password,
+        results.rows[0].customer_salt
+      );
+      console.log("Login with: " + hashedPW);
 
-                  res.send(token);
-                } else {
-                  console.log(result);
-                  console.log(err);
-                  res.status(403).send(null);
-                }
-              }
-            );
+      bcrypt.compare(
+        hashedPW,
+        results.rows[0].customer_password,
+        function (err, result) {
+          if (result) {
+            console.log(result);
+            var payload = {
+              username: username,
+            };
+            var token = jwt.sign(payload, process.env.TOKEN_SECRET, {
+              algorithm: "HS256",
+              expiresIn: "1d",
+            });
+            console.log("Success");
+            console.log(token);
+            res.send(token);
           } else {
-            console.error("Failure: " + error);
-            res.status(401);
-            res.send("Wrong Userdata");
+            console.log(err);
+            res.status(403).send(null);
           }
         }
       );
     }
   );
+};
+
+app.post("/users/login", express.urlencoded(), async function (req, res) {
+
+  login(req.body.username,req.body.password,res);
+
 });
 
 const verify = (req) => {

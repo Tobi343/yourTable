@@ -5,6 +5,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import ForumIcon from '@mui/icons-material/Forum';
 
 function Sidebar(props) {
   return (
@@ -23,6 +24,7 @@ function Sidebar(props) {
       <nav className="text-white text-base font-semibold pt-3">
         <SideBarCard Text="Dashboard" Icon={<DashboardIcon className="mr-3"/>} Link="/"/>
         <SideBarCard Text="Reservierungen" Icon={<DateRangeIcon className="mr-3"/>} Link="/Reservations"/>
+        <SideBarCard Text="Chats" Icon={<ForumIcon className="mr-3"/>} Link="#"/>
         <SideBarCard Text="Mein Profil" Icon={<RestaurantIcon className="mr-3"/>} Link="/myProfile"/>
         <SideBarCard Text="Einstellungen" Icon={<SettingsIcon className="mr-3"/>} Link="#"/>
         <SideBarCard Text="Ausloggen" Icon={<LogoutIcon className="mr-3"/>} Link="#"/>

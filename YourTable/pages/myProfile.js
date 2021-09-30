@@ -11,6 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AppsIcon from "@mui/icons-material/Apps";
 import SecurityIcon from "@mui/icons-material/Security";
+import Image from "../public/orange_logo.png"
 
 function myProfile() {
   const [NavColor, setNavColor] = useState("bg-blue-500");
@@ -87,6 +88,9 @@ function myProfile() {
               <div>
                 <div className="font-bold text-gray-700 p-4 pl-6 text-xl mt-4 mb-5">
                   Meine Profildaten
+                </div>
+                <div className=" rounded-full">
+                  <img src="/samplePerson.jpg" className="rounded-full h-20 ml-6 mb-3"/>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   <div className="flex flex-col mx-6 my-3">
