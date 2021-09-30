@@ -45,13 +45,12 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/users/login
+POST http://localhost:3000/users/register
 Content-Type: application/json
 
 {
-  "username": "vw",
   "password": "Passw0rd",
-  "email": ""
+  "email": "tobi.bressler@gmail.com"
 }
 
 
