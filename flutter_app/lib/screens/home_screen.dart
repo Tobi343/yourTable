@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/edit_userData.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:animated_search_bar/animated_search_bar.dart';
+import 'package:circular_clip_route/circular_clip_route.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,6 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Color secondColor = Color(0xffF7761E);
   Color mainColor = Colors.white;
+
+  final _avatarKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +80,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           alignment: Alignment.topRight,
                           child: FittedBox(
                               fit: BoxFit.fitHeight,
-                              child: IconButton( icon: Icon(Icons.edit_sharp),
-                                  color: mainColor,
-                                onPressed: (){},
+                              child: IconButton(
+                                key: _avatarKey,
+                                icon: Icon(Icons.edit_sharp),
+                                color: mainColor,
+                                onPressed: (){
+                                  Navigator.push(context, CircularClipRoute<void>(
+                                    builder: (_) => EditUserData(),
+
+                                    // This context will be used to determine the location and size of
+                                    // the expanding clip. Here this will resolve to the `IconButton`.
+                                    expandFrom: _avatarKey.currentContext!,
+                                    curve: Curves.fastOutSlowIn,
+                                    reverseCurve: Curves.fastOutSlowIn.flipped,
+                                    opacity: ConstantTween(1),
+                                    transitionDuration: const Duration(seconds: 1),
+                                  ));
+                                },
                               ))),
                     ],
                   ),
