@@ -57,189 +57,199 @@ class _EditUserDataState extends State<EditUserData> {
         title: FittedBox(fit: BoxFit.fitWidth, child: Text("Tobias Breffler")),
         backgroundColor: secondColor,
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40, bottom: 5),
-                child: //Lottie.asset('lib/assets/avatar_load.json',reverse: true,repeat: true, fit: BoxFit.scaleDown),
-                Icon(Icons.account_circle_sharp,color: secondColor,size: 100,),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
-                child: TextFormField(
-                  controller: _firstnameController,
-                  inputFormatters: [
-                    new LengthLimitingTextInputFormatter(30),
-                  ],
-                  style: TextStyle(color: secondColor),
-                  validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
-                  onChanged: (val) {
-                    setState(() => _firstnameController.text = val);
-                  },
-                  decoration: InputDecoration(labelText: 'Vorname', labelStyle: TextStyle(color: secondColor),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.account_box_sharp,color: secondColor,),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: secondColor,width: 2),
-                    ),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+      body: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 0),
+                    child: Lottie.asset('lib/assets/dancing_burger.json',height: 200,),
+                    //Icon(Icons.account_circle_sharp,color: secondColor,size: 100,),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30,left: 40,right: 40),
+                    child: TextFormField(
+                      controller: _firstnameController,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(30),
+                      ],
+                      style: TextStyle(color: secondColor),
+                      validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
+                      onChanged: (val) {
+                        setState(() => _firstnameController.text = val);
+                      },
+                      decoration: InputDecoration(labelText: 'Vorname', labelStyle: TextStyle(color: secondColor),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        prefixIcon: Icon(Icons.account_box_sharp,color: secondColor,),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: secondColor,width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
-                child: TextFormField(
-                  controller: _lastnameController,
-                  inputFormatters: [
-                    new LengthLimitingTextInputFormatter(30),
-                  ],
-                  style: TextStyle(color: secondColor),
-                  validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
-                  onChanged: (val) {
-                    setState(() => _lastnameController.text = val);
-                  },
-                  decoration: InputDecoration(labelText: 'Nachname', labelStyle: TextStyle(color: secondColor),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.person,color: secondColor,),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: secondColor,width: 2),
-                    ),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
-                child: TextFormField(
-                  controller: _emailController,
-                  inputFormatters: [
-                    new LengthLimitingTextInputFormatter(30),
-                  ],
-                  style: TextStyle(color: secondColor),
-                  validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
-                  onChanged: (val) {
-                    setState(() => _emailController.text = val);
-                  },
-                  decoration: InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: secondColor),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.email_sharp,color: secondColor,),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: secondColor,width: 2),
-                    ),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30,left: 40,right: 40),
+                    child: TextFormField(
+                      controller: _lastnameController,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(30),
+                      ],
+                      style: TextStyle(color: secondColor),
+                      validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
+                      onChanged: (val) {
+                        setState(() => _lastnameController.text = val);
+                      },
+                      decoration: InputDecoration(labelText: 'Nachname', labelStyle: TextStyle(color: secondColor),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        prefixIcon: Icon(Icons.person,color: secondColor,),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: secondColor,width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 10),
-                child: TextFormField(
-                  controller: _numberController,
-                  inputFormatters: [
-                    new LengthLimitingTextInputFormatter(30),
-                  ],
-                  style: TextStyle(color: secondColor),
-                  validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
-                  onChanged: (val) {
-                    setState(() => _numberController.text = val);
-                  },
-                  decoration: InputDecoration(labelText: 'Handynummer', labelStyle: TextStyle(color: secondColor),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: Colors.red,width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.phone_android_sharp,color: secondColor,),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(color: secondColor,width: 2),
-                    ),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30,left: 40,right: 40),
+                    child: TextFormField(
+                      controller: _emailController,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(30),
+                      ],
+                      style: TextStyle(color: secondColor),
+                      validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
+                      onChanged: (val) {
+                        setState(() => _emailController.text = val);
+                      },
+                      decoration: InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: secondColor),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        prefixIcon: Icon(Icons.email_sharp,color: secondColor,),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: secondColor,width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15,top: 10),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: secondColor,
+                  Padding(
+                    padding: EdgeInsets.only(top: 30,left: 40,right: 40,bottom: 40),
+                    child: TextFormField(
+                      controller: _numberController,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(30),
+                      ],
+                      style: TextStyle(color: secondColor),
+                      validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
+                      onChanged: (val) {
+                        setState(() => _numberController.text = val);
+                      },
+                      decoration: InputDecoration(labelText: 'Handynummer', labelStyle: TextStyle(color: secondColor),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.red,width: 2),
+                        ),
+                        prefixIcon: Icon(Icons.phone_android_sharp,color: secondColor,),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: secondColor,width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      'Speichern',
-                      style:TextStyle(color: mainColor,fontSize: 16),
-                    ),
-                    onPressed: () async {/*
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15,top: 0),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: secondColor,
+                        ),
+                        child: Text(
+                          'Speichern',
+                          style:TextStyle(color: mainColor,fontSize: 16),
+                        ),
+                        onPressed: () async {/*
 
-                      if(_formKey.currentState!.validate()){
-                        setState(() {
-                          email = email.trim();
-                          loading=true;
-                        });
-                        var jwt = await auth.attemptLogIn(email, password);
-                        print(jwt);
-                        setState(() {
-                          if(jwt == null || jwt == "null") {
+                          if(_formKey.currentState!.validate()){
                             setState(() {
-                              error = "Einloggen fehlgeschlagen!";
-                              loading = false;
+                              email = email.trim();
+                              loading=true;
+                            });
+                            var jwt = await auth.attemptLogIn(email, password);
+                            print(jwt);
+                            setState(() {
+                              if(jwt == null || jwt == "null") {
+                                setState(() {
+                                  error = "Einloggen fehlgeschlagen!";
+                                  loading = false;
+                                });
+                              }
+                              else {
+                                error = "";
+                                Navigator.of(context)
+                                    .pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HomeScreen()), (
+                                    Route<dynamic> route) => false);
+                              }
                             });
                           }
-                          else {
-                            error = "";
-                            Navigator.of(context)
-                                .pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen()), (
-                                Route<dynamic> route) => false);
+                          else{
+
                           }
-                        });
-                      }
-                      else{
-
-                      }
-                      */
+                          */
 
 
-                    }
-                ),
+                        }
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

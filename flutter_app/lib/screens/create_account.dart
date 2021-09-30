@@ -47,7 +47,7 @@ class _CreateAccountState extends State<CreateAccount> {
               child: Stack(
                 children: <Widget>[
                   Container(
-                      padding: EdgeInsets.symmetric(vertical: 20,horizontal: 50),
+                      padding: EdgeInsets.symmetric(vertical: 20,horizontal: 40),
                       child: Form(
                           key: _formKey,
                           child:Column(
