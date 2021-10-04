@@ -13,14 +13,14 @@ const Pool = require("pg").Pool;
 const app = express();
 const bodyparser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const serverPort = process.env.serverPort || 8000;
+const serverPort = process.env.PORT || 8000;
 const port = 5432; //db port
 
 const pool = new Pool({
-  user: "postgres",
-  host: "193.170.109.2",
-  database: "postgres",
-  password: "vKK7SyQLcJ6cI0p3h0iG",
+  user: "yfnktala",
+  host: "tai.db.elephantsql.com",
+  database: "yfnktala",
+  password: "M81ZjaAvNDzWhIcTaxjfO2l__1ZJosAX",
   port: port,
 });
 
