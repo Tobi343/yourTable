@@ -16,7 +16,7 @@ export default function Home() {
     <div>
       <Head>
         <title>YourTableAdminPanel</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/orange_logo.png" />
       </Head>
       <div>
         <Navbar setNavColorField={setNavColor}/>
