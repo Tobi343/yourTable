@@ -1,0 +1,62 @@
+###
+
+GET https://localhost:4999/listUsers
+
+###
+
+
+POST http://localhost:4999/users
+Content-Type: application/json
+
+{
+"name": "Sebastian", "password": "Stecher"
+}
+
+###
+
+
+POST http://10.15.55.136:8000/users/register
+Content-Type: application/json
+
+{
+"email": "Tobias.bgz@gmail.com", "password": "Bressler"
+}
+
+###
+
+POST http://localhost:4999/users
+Content-Type: application/json
+
+{"name": "Vincenz", "password": "Wimmer"}
+
+###
+
+POST http://localhost:4999/users/login
+Content-Type: application/json
+
+{"name":  "Vincenz", "password":  "12314"}
+
+###
+
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{"username":  "vw", "password":  "Passw0rd"}
+
+###
+
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+  "password": "Passw0rd",
+  "email": "tobi.bressler@gmail.com"
+}
+
+
+###
+
+GET http://localhost:3000/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInRI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ3IiwiaWF0IjoxNjMyNjg1MDg5LCJleHAiOjE2MzM5ODEwODl9.KSPr6INRIiTkQOawc_DXajpnpCwPTF8DQ3TIWLrP7e8
+
