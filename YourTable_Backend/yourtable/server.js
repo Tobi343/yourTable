@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require("dotenv").config();
 
 //https://dev.to/carminezacc/user-authentication-jwt-authorization-with-flutter-and-node-176l
 
@@ -47,29 +45,20 @@ app.get("/trySelect/:id", (req, res) => {
 });
 
 app.get("/reservations", (req, res) => {
-  //if (verify(req)) {
-
-    pool.query(
-      "SELECT * FROM RESERVATIONS",
-      function (err, row) {
-        if (row.rowCount < 1) {
-          res.status(409).send(null);
-        } else {
-          res.status(201).json(row.rows);
-        }
-      }
-    );
-
- // } else {
- //   res.status(403).send("Du Hund");
- // }
+  pool.query("SELECT * FROM RESERVATION", function (err, row) {
+    if (row.rowCount < 1) {
+      res.status(409).send(null);
+    } else {
+      res.status(201).json(row.rows);
+    }
+  });
 });
 
-app.get("/reservations", (req, res) => {
+app.get("/users", (req, res) => {
   if (verify(req)) {
-    res.send("lol");
+    res.send("Allowed");
   } else {
-    res.status(403).send("Du Hund");
+    res.status(403).send("Forbidden");
   }
 });
 
@@ -113,7 +102,7 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
               console.log(error);
               res.status(403);
             } else {
-              login(req.body.username,req.body.password,res);
+              login(req.body.email, req.body.password, res);
               res.status(201);
               res.send("Success");
               console.log("User created!!");
@@ -125,26 +114,21 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
   );
 });
 
-const login = (username, password,res) => {
-  //Get Salt Value to compare hashed pw
+const login = (username, password, res) => {
+  console.log("Trying to login with " + username + " and " + password);
   pool.query(
-    `Select * from customer where ${
+    `Select * from customer where (${
       username.split("@").length > 0 ? "customer_email" : "customer_username"
-    } = $1`,
+    }) = ($1)`,
     [username],
     async (error, results) => {
       if (error) {
-        console.log(error);
+        console.log("Error: " + error);
         return;
       }
-      const hashedPW = await bcrypt.hash(
-        password,
-        results.rows[0].customer_salt
-      );
-      console.log("Login with: " + hashedPW);
 
       bcrypt.compare(
-        hashedPW,
+        password,
         results.rows[0].customer_password,
         function (err, result) {
           if (result) {
@@ -160,7 +144,7 @@ const login = (username, password,res) => {
             console.log(token);
             res.send(token);
           } else {
-            console.log(err);
+            console.log("Error: " + err);
             res.status(403).send(null);
           }
         }
@@ -170,9 +154,8 @@ const login = (username, password,res) => {
 };
 
 app.post("/users/login", express.urlencoded(), async function (req, res) {
-
-  login(req.body.username,req.body.password,res);
-
+  console.log("login");
+  login(req.body.email, req.body.password, res);
 });
 
 const verify = (req) => {
