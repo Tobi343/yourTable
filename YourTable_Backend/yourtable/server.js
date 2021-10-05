@@ -47,7 +47,7 @@ app.get("/trySelect/:id", (req, res) => {
 });
 
 app.get("/reservations", (req, res) => {
-  if (verify(req)) {
+  //if (verify(req)) {
 
     pool.query(
       "SELECT * FROM RESERVATIONS",
@@ -60,9 +60,9 @@ app.get("/reservations", (req, res) => {
       }
     );
 
-  } else {
-    res.status(403).send("Du Hund");
-  }
+ // } else {
+ //   res.status(403).send("Du Hund");
+ // }
 });
 
 app.get("/reservations", (req, res) => {
