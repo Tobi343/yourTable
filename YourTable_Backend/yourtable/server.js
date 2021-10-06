@@ -76,14 +76,12 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
     function (err, row) {
       if (err) {
         console.log(err);
-        res.status(401);
-        res.send(err);
+        res.status(401).send(err);
         return;
       }
       if (row.rowCount > 0) {
         console.error("can't create user " + req.body.email);
-        res.status(409);
-        res.send("An user with that username already exists");
+        res.status(409).send("An user with that username already exists");
       } else {
         console.log("Can create user " + req.body.email);
         pool.query(
@@ -103,8 +101,6 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
               res.status(403);
             } else {
               login(req.body.email, req.body.password, res);
-              res.status(201);
-              res.send("Success");
               console.log("User created!!");
             }
           }
@@ -132,7 +128,6 @@ const login = (username, password, res) => {
         results.rows[0].customer_password,
         function (err, result) {
           if (result) {
-            console.log(result);
             var payload = {
               username: username,
             };
@@ -142,7 +137,7 @@ const login = (username, password, res) => {
             });
             console.log("Success");
             console.log(token);
-            res.send(token);
+            res.status(200).send(token);
           } else {
             console.log("Error: " + err);
             res.status(403).send(null);
