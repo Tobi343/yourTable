@@ -56,7 +56,7 @@ app.get("/reservations", (req, res) => {
 
 app.get("/users", (req, res) => {
   if (verify(req)) {
-    res.send("Allowed");
+    res.status(200).send("Allowed");
   } else {
     res.status(403).send("Forbidden");
   }
