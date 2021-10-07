@@ -44,7 +44,7 @@ app.get("/trySelect/:id", (req, res) => {
   );
 });
 
-app.get("/reservations", (req, res) => {
+app.get("/reservation", (req, res) => {
   pool.query("SELECT * FROM RESERVATION", function (err, row) {
     if (row.rowCount < 1) {
       res.status(409).send(null);
