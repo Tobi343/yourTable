@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require("dotenv").config();
 
 //https://dev.to/carminezacc/user-authentication-jwt-authorization-with-flutter-and-node-176l
 
@@ -13,21 +11,21 @@ const Pool = require("pg").Pool;
 const app = express();
 const bodyparser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const serverPort = process.env.serverPort || 8000;
+const serverPort = process.env.PORT || 8000;
 const port = 5432; //db port
 
 const pool = new Pool({
-  user: "postgres",
-  host: "193.170.109.2",
-  database: "postgres",
-  password: "vKK7SyQLcJ6cI0p3h0iG",
+  user: "yfnktala",
+  host: "tai.db.elephantsql.com",
+  database: "yfnktala",
+  password: "M81ZjaAvNDzWhIcTaxjfO2l__1ZJosAX",
   port: port,
 });
 
 app.use(bodyparser());
 app.use(bodyparser.urlencoded({ extended: true }));
 
-app.get("", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Welcome to the API of YourTable!");
 });
 
@@ -46,11 +44,21 @@ app.get("/trySelect/:id", (req, res) => {
   );
 });
 
+app.get("/reservations", (req, res) => {
+  pool.query("SELECT * FROM RESERVATION", function (err, row) {
+    if (row.rowCount < 1) {
+      res.status(409).send(null);
+    } else {
+      res.status(201).json(row.rows);
+    }
+  });
+});
+
 app.get("/users", (req, res) => {
   if (verify(req)) {
-    res.send("lol");
+    res.status(200).send("Allowed");
   } else {
-    res.status(403).send("Du Hund");
+    res.status(403).send("Forbidden");
   }
 });
 
@@ -68,14 +76,12 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
     function (err, row) {
       if (err) {
         console.log(err);
-        res.status(401);
-        res.send(err);
+        res.status(401).send(err);
         return;
       }
       if (row.rowCount > 0) {
         console.error("can't create user " + req.body.email);
-        res.status(409);
-        res.send("An user with that username already exists");
+        res.status(409).send("An user with that username already exists");
       } else {
         console.log("Can create user " + req.body.email);
         pool.query(
@@ -94,9 +100,7 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
               console.log(error);
               res.status(403);
             } else {
-              login(req.body.username,req.body.password,res);
-              res.status(201);
-              res.send("Success");
+              login(req.body.email, req.body.password, res);
               console.log("User created!!");
             }
           }
@@ -106,30 +110,24 @@ app.post("/users/register", express.urlencoded(), async function (req, res) {
   );
 });
 
-const login = (username, password,res) => {
-  //Get Salt Value to compare hashed pw
+const login = (username, password, res) => {
+  console.log("Trying to login with " + username + " and " + password);
   pool.query(
-    `Select * from customer where ${
+    `Select * from customer where (${
       username.split("@").length > 0 ? "customer_email" : "customer_username"
-    } = $1`,
+    }) = ($1)`,
     [username],
     async (error, results) => {
       if (error) {
-        console.log(error);
+        console.log("Error: " + error);
         return;
       }
-      const hashedPW = await bcrypt.hash(
-        password,
-        results.rows[0].customer_salt
-      );
-      console.log("Login with: " + hashedPW);
 
       bcrypt.compare(
-        hashedPW,
+        password,
         results.rows[0].customer_password,
         function (err, result) {
           if (result) {
-            console.log(result);
             var payload = {
               username: username,
             };
@@ -139,9 +137,9 @@ const login = (username, password,res) => {
             });
             console.log("Success");
             console.log(token);
-            res.send(token);
+            res.status(200).send(token);
           } else {
-            console.log(err);
+            console.log("Error: " + err);
             res.status(403).send(null);
           }
         }
@@ -151,9 +149,8 @@ const login = (username, password,res) => {
 };
 
 app.post("/users/login", express.urlencoded(), async function (req, res) {
-
-  login(req.body.username,req.body.password,res);
-
+  console.log("login");
+  login(req.body.email, req.body.password, res);
 });
 
 const verify = (req) => {

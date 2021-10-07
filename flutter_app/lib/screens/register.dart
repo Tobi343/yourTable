@@ -180,7 +180,7 @@ class _RegisterState extends State<Register> {
                                     var jwt = await auth.attemptSignUp(email, password);
                                     print(jwt);
                                     setState(() {
-                                      if(jwt != 201) {
+                                      if(jwt != 200) {
                                         setState(() {
                                           error = "Registrieren fehlgeschlagen!";
                                           loading = false;

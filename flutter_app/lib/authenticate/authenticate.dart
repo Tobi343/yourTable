@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService{
 
-  static const SERVER_IP = 'http://10.15.55.136:8000';
+  static const SERVER_IP = 'https://yourtable.herokuapp.com';
   final storage = FlutterSecureStorage();
 
 
