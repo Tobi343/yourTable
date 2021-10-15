@@ -153,6 +153,22 @@ app.post("/users/login", express.urlencoded(), async function (req, res) {
   login(req.body.email, req.body.password, res);
 });
 
+app.get("/users/data/:email", express.urlencoded(), async function (req, res) {
+  const email = req.params.email;
+  pool.query(
+    "SELECT * FROM CUSTOMER WHERE CUSTOMER_EMAIL = $1",
+    [email],
+    function (err, row) {
+      if(err){
+        res.status(405).send("No Data found")
+      }
+      else{
+        res.status(201).send(row.rows[0])
+      }
+    }
+  );
+});
+
 const verify = (req) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
