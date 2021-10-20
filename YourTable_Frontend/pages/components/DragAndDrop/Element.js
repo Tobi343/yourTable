@@ -1,25 +1,8 @@
 import React from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  resetServerContext,
-} from "react-beautiful-dnd";
-import Element from "./components/DragAndDrop/Element";
-import { ViewState } from '@devexpress/dx-react-scheduler';
-import {
-  Scheduler,
-  DayView,
-  Appointments,
-} from '@devexpress/dx-react-scheduler-material-ui';
-function RestauranteLayout() {
-  function onDragEnd(result) {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-  }
+import { DragDropContext, Droppable, Draggable,resetServerContext  } from "react-beautiful-dnd";
 
+
+function Element() {
   const arr = [
     {
       Name: "Meris Bihorac",
@@ -58,11 +41,6 @@ function RestauranteLayout() {
     },
   ];
 
-  const currentDate = '2018-11-01';
-  const schedulerData = [
-    { startDate: '2018-11-01T09:45', endDate: '2018-11-01T11:00', title: 'Meeting' },
-    { startDate: '2018-11-01T12:00', endDate: '2018-11-01T13:30', title: 'Go to a gym' },
-  ];
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 
@@ -72,15 +50,31 @@ function RestauranteLayout() {
 
     // updateCharacters(items);
   }
+
+  
   return (
-    <Paper>
-      <Scheduler data={schedulerData}>
-        <ViewState currentDate={currentDate} />
-        <DayView startDayHour={9} endDayHour={14} />
-        <Appointments />
-      </Scheduler>
-    </Paper>
+    <Droppable droppableId="droppable" >
+      {(provided, snapshot) => (
+        <div {...provided.droppableProps} ref={provided.innerRef} className="bg-blue-400">
+          {arr.map((item, index) => (
+            <Draggable key={item.id} draggableId={item.id} index={index}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  className="bg-red-100 m-3"
+                >
+                  {item.Name}
+                </div>
+              )}
+            </Draggable>
+          ))}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
   );
 }
 
-export default RestauranteLayout;
+export default Element;

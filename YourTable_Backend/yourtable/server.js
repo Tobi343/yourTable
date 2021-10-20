@@ -44,12 +44,12 @@ app.get("/trySelect/:id", (req, res) => {
   );
 });
 
-app.get("/reservations", (req, res) => {
+app.get("/reservation", (req, res) => {
   pool.query("SELECT * FROM RESERVATION", function (err, row) {
     if (row.rowCount < 1) {
       res.status(409).send(null);
     } else {
-      res.status(201).json(row.rows);
+      res.status(200).json(row.rows);
     }
   });
 });
@@ -151,6 +151,22 @@ const login = (username, password, res) => {
 app.post("/users/login", express.urlencoded(), async function (req, res) {
   console.log("login");
   login(req.body.email, req.body.password, res);
+});
+
+app.get("/users/data/:email", express.urlencoded(), async function (req, res) {
+  const email = req.params.email;
+  pool.query(
+    "SELECT * FROM CUSTOMER WHERE CUSTOMER_EMAIL = $1",
+    [email],
+    function (err, row) {
+      if(err){
+        res.status(405).send("No Data found")
+      }
+      else{
+        res.status(201).send(row.rows[0])
+      }
+    }
+  );
 });
 
 const verify = (req) => {

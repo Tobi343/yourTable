@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node ./bin/www",
+    "deploy": "gcloud preview app deploy"
   },
   "keywords": [],
   "author": "",
