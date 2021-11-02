@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:animated_search_bar/animated_search_bar.dart';
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.only(top: 5),
                     child: FittedBox(
                       fit: BoxFit.fitWidth,
-                      child: Text('tobias.breffler@gmail.com',style: TextStyle(color: mainColor, fontWeight: FontWeight.w400),),
+                      child: Text(AuthService.email == "" ? "Email" : AuthService.email,style: TextStyle(color: mainColor, fontWeight: FontWeight.w400),),
                     ),
                   ),
                 ],
