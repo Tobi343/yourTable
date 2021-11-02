@@ -105,14 +105,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: FittedBox(
                         fit: BoxFit.fitWidth,
-                        child: Text('Tobias Breffler',style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),),
+                        child: Text(
+                          "${AuthService.user["customer_firstname"]} ${AuthService.user["customer_secondname"]}"
+                          ,style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: FittedBox(
                       fit: BoxFit.fitWidth,
-                      child: Text(AuthService.email == "" ? "Email" : AuthService.email,style: TextStyle(color: mainColor, fontWeight: FontWeight.w400),),
+                      child: Text("${AuthService.email} ",style: TextStyle(color: mainColor, fontWeight: FontWeight.w400),),
                     ),
                   ),
                 ],

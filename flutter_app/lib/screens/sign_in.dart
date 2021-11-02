@@ -168,7 +168,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                         jwt = "authorization " + jwt;
                                         var resp = await auth.getUserData(email, jwt);
                                         print(resp);
-                                        //print(AuthService.user.customer_id);
+                                        //print(AuthService.user["customer_id"]);
                                         error = "";
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(

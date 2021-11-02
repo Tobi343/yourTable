@@ -7,10 +7,10 @@ class AuthService{
   static const SERVER_IP = 'http://34.139.54.192';
   final storage = FlutterSecureStorage();
 
-  static String email = "";
-  static String fistname = "";
-  static String lastname = "";
-  static Map user = new Map();
+  static String email = "Email";
+  static String fistname = "Name";
+  static String lastname = "Nachname";
+  static Map<String,dynamic> user = new Map();
 
   Future<String?> attemptLogIn(String username, String password) async {
     var res = await http.post(

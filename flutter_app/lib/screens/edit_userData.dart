@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:lottie/lottie.dart';
 
 class EditUserData extends StatefulWidget {
@@ -28,13 +29,13 @@ class _EditUserDataState extends State<EditUserData> {
   @override
   void initState() {
     _firstnameController = new TextEditingController();
-    _firstnameController.text = "Tobias";
+    _firstnameController.text = AuthService.user["customer_firstname"].toString();
     _lastnameController = new TextEditingController();
-    _lastnameController.text = "Breffler";
+    _lastnameController.text = AuthService.user["customer_secondname"].toString();
     _emailController = new TextEditingController();
-    _emailController.text = "tobias.breffler@gmail.com";
+    _emailController.text = AuthService.user["customer_email"].toString();
     _numberController = new TextEditingController();
-    _numberController.text = "06647485234";
+    _numberController.text = AuthService.user["customer_phone"].toString();
     super.initState();
   }
 
@@ -54,7 +55,7 @@ class _EditUserDataState extends State<EditUserData> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: FittedBox(fit: BoxFit.fitWidth, child: Text("Tobias Breffler")),
+        title: FittedBox(fit: BoxFit.fitWidth, child: Text("${AuthService.user["customer_firstname"]} ${AuthService.user["customer_secondname"]}")),
         backgroundColor: secondColor,
       ),
       body: GestureDetector(

@@ -1,17 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import 'home_screen.dart';
 
 class CreateAccount extends StatefulWidget {
+  late final String email;
+  late final String pw;
+
+  CreateAccount({required this.email, required this.pw});
+
   @override
   _CreateAccountState createState() => _CreateAccountState();
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+
+  AuthService auth = new AuthService();
 
   Color mainColor = Colors.white;
 
@@ -152,13 +160,33 @@ class _CreateAccountState extends State<CreateAccount> {
                                       height: 100,
                                       width: 100
                                     ),*/
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if(_formKey.currentState!.validate()){
                                         setState(() {
                                           loading = true;
                                         });
-                                        Future.delayed(const Duration(milliseconds: 8000), () {
 
+                                        var jwt = await auth.attemptLogIn(widget.email, widget.pw);
+                                        print(jwt);
+                                        if(jwt == null || jwt == "null") {
+                                          setState(() {
+                                            error = "Einloggen fehlgeschlagen!";
+                                            loading = false;
+                                          });
+                                        }
+                                        else {
+                                          jwt = "authorization " + jwt;
+                                          var resp = await auth.getUserData(widget.email, jwt);
+                                          print(resp);
+                                          //print(AuthService.user["customer_id"]);
+                                          error = "";
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen()), (
+                                              Route<dynamic> route) => false);
+                                        }
 
                                           setState(() {
                                             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -166,7 +194,6 @@ class _CreateAccountState extends State<CreateAccount> {
                                             //loading = false;
                                           });
 
-                                        });
                                       }
                                       else{}
                                     }
