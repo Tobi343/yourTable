@@ -1,11 +1,17 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AuthService{
 
-  static const SERVER_IP = 'https://yourtable.herokuapp.com';
+  static const SERVER_IP = 'http://34.139.54.192';
   final storage = FlutterSecureStorage();
 
+  static String email = "Email";
+  static String fistname = "Name";
+  static String lastname = "Nachname";
+  static String jwToken = "";
+  static Map<String,dynamic> user = new Map();
 
   Future<String?> attemptLogIn(String username, String password) async {
     var res = await http.post(
@@ -15,7 +21,11 @@ class AuthService{
           "password": password
         }
     );
-    if(res.statusCode == 200) return res.body;
+    if(res.statusCode == 200) {
+      email = username;
+      jwToken = res.body;
+      return res.body;
+    }
     return null;
   }
 
@@ -29,5 +39,28 @@ class AuthService{
     );
     return res.statusCode;
 
+  }
+  
+  Future<String?> getUserData(String email, String jwt) async{
+    var res = await http.get(
+      Uri.parse("$SERVER_IP/users/data/$email"),
+      headers: {"authorization": jwt}
+    );
+    user = json.decode(res.body);
+    return res.body;
+  }
+
+  Future<int?> writeUserData(String wfirstname, String wlastname, String wphone) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/users/data/updateUserData"),
+        body: {
+          "firstName": wfirstname,
+          "lastName": wlastname,
+          "phone": wphone,
+          "email": email
+        }
+    );
+    //print(res.statusCode);
+    return res.statusCode;
   }
 }

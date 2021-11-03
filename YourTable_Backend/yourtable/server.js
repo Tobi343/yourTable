@@ -18,7 +18,7 @@ const pool = new Pool({
   user: "yfnktala",
   host: "tai.db.elephantsql.com",
   database: "yfnktala",
-  password: "M81ZjaAvNDzWhIcTaxjfO2l__1ZJosAX",
+  password: "",
   port: port,
 });
 

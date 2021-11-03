@@ -1,17 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import 'home_screen.dart';
 
 class CreateAccount extends StatefulWidget {
+  late final String email;
+  late final String pw;
+
+  CreateAccount({required this.email, required this.pw});
+
   @override
   _CreateAccountState createState() => _CreateAccountState();
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+
+  AuthService auth = new AuthService();
 
   Color mainColor = Colors.white;
 
@@ -152,21 +160,48 @@ class _CreateAccountState extends State<CreateAccount> {
                                       height: 100,
                                       width: 100
                                     ),*/
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if(_formKey.currentState!.validate()){
                                         setState(() {
                                           loading = true;
                                         });
-                                        Future.delayed(const Duration(milliseconds: 8000), () {
 
-
+                                        var jwt = await auth.attemptLogIn(widget.email, widget.pw);
+                                        //print(jwt);
+                                        if(jwt == null || jwt == "null") {
                                           setState(() {
-                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-                                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
-                                            //loading = false;
+                                            error = "Einloggen fehlgeschlagen!";
+                                            loading = false;
                                           });
+                                        }
+                                        else {
+                                          int? statusCode = await auth.writeUserData(firstName, lastName, number);
+                                          if(statusCode != null && statusCode != 201){
+                                            error = "Einloggen fehlgeschlagen!";
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                          }
+                                          else{
+                                            jwt = "authorization " + jwt;
+                                            var resp = await auth.getUserData(widget.email, jwt);
+                                            //print(resp);
+                                            error = "";
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomeScreen()), (
+                                                Route<dynamic> route) => false);
+                                            setState(() {
+                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
+                                              //loading = false;
+                                            });
+                                          }
+                                        }
 
-                                        });
+
                                       }
                                       else{}
                                     }
