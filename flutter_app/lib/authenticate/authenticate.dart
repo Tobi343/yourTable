@@ -10,6 +10,7 @@ class AuthService{
   static String email = "Email";
   static String fistname = "Name";
   static String lastname = "Nachname";
+  static String jwToken = "";
   static Map<String,dynamic> user = new Map();
 
   Future<String?> attemptLogIn(String username, String password) async {
@@ -22,6 +23,7 @@ class AuthService{
     );
     if(res.statusCode == 200) {
       email = username;
+      jwToken = res.body;
       return res.body;
     }
     return null;
@@ -46,5 +48,19 @@ class AuthService{
     );
     user = json.decode(res.body);
     return res.body;
+  }
+
+  Future<int?> writeUserData(String wfirstname, String wlastname, String wphone) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/users/data/updateUserData"),
+        body: {
+          "firstName": wfirstname,
+          "lastName": wlastname,
+          "phone": wphone,
+          "email": email
+        }
+    );
+    //print(res.statusCode);
+    return res.statusCode;
   }
 }

@@ -14,12 +14,15 @@ class EditUserData extends StatefulWidget {
 
 class _EditUserDataState extends State<EditUserData> {
   static const IconData person = IconData(0xe491, fontFamily: 'MaterialIcons');
+  AuthService auth = new AuthService();
 
   final _formKey = GlobalKey<FormState>();
 
   late String firstname;
   late String lastname;
   late String phone;
+
+  String error = "";
 
   bool loading = false;
 
@@ -233,17 +236,35 @@ class _EditUserDataState extends State<EditUserData> {
                             setState(() {
                               loading=true;
                             });
-                            Future.delayed(const Duration(milliseconds: 3000), () {
+                            //print(firstname);
+                            int? statusCode = await auth.writeUserData(firstname, lastname, phone);
+                            if(statusCode != null && statusCode != 201) {
+                              error = "Speichern fehlgeschlagen!";
                               setState(() {
-                                //loading = false;
-                                Navigator.pop(context);
+                                loading = false;
                               });
-                            });
+                            }
+                            else{
+                              String jwt = "authorization " + AuthService.jwToken;
+                              var resp = await auth.getUserData(AuthService.email, jwt);
+                              //print(resp);
+                              error = "";
+                              Navigator.pop(context);
+                              Navigator.of(context)
+                                  .pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeScreen()), (Route<dynamic> route) => false);
+                            }
                           }
                           else{
                           }
                         }
                     ),
+                  ),
+                  SizedBox(height: 12,),
+                  Text(error,
+                    style: TextStyle(color: Colors.red, fontSize: 16),
                   ),
                 ],
               ),

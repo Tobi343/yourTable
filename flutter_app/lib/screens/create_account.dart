@@ -167,7 +167,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                         });
 
                                         var jwt = await auth.attemptLogIn(widget.email, widget.pw);
-                                        print(jwt);
+                                        //print(jwt);
                                         if(jwt == null || jwt == "null") {
                                           setState(() {
                                             error = "Einloggen fehlgeschlagen!";
@@ -175,24 +175,32 @@ class _CreateAccountState extends State<CreateAccount> {
                                           });
                                         }
                                         else {
-                                          jwt = "authorization " + jwt;
-                                          var resp = await auth.getUserData(widget.email, jwt);
-                                          print(resp);
-                                          //print(AuthService.user["customer_id"]);
-                                          error = "";
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HomeScreen()), (
-                                              Route<dynamic> route) => false);
+                                          int? statusCode = await auth.writeUserData(firstName, lastName, number);
+                                          if(statusCode != null && statusCode != 201){
+                                            error = "Einloggen fehlgeschlagen!";
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                          }
+                                          else{
+                                            jwt = "authorization " + jwt;
+                                            var resp = await auth.getUserData(widget.email, jwt);
+                                            //print(resp);
+                                            error = "";
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomeScreen()), (
+                                                Route<dynamic> route) => false);
+                                            setState(() {
+                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
+                                              //loading = false;
+                                            });
+                                          }
                                         }
 
-                                          setState(() {
-                                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-                                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
-                                            //loading = false;
-                                          });
 
                                       }
                                       else{}
