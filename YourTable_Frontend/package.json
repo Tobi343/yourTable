@@ -21,16 +21,22 @@
     "@devexpress/dx-react-scheduler-material-ui": "^2.7.6",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@headlessui/react": "^1.4.1",
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
     "chart.js": "^3.5.1",
     "install": "^0.13.0",
+    "lodash": "^4.17.21",
     "next": "^11.1.2",
     "npm": "^7.24.0",
+    "paper": "^0.12.15",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-chartjs-2": "^3.0.5",
     "react-dom": "^17.0.2",
-    "react-helmet": "^6.1.0"
+    "react-grid-layout": "^1.3.0",
+    "react-gridlines": "^1.1.7",
+    "react-helmet": "^6.1.0",
+    "react-rnd": "^10.3.5"
   }
 }

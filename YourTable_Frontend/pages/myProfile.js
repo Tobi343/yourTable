@@ -64,7 +64,7 @@ function myProfile() {
                   </p>
                 </a>
                 <a
-                  href="#"
+                  href="/RestauranteLayout"
                   className="text-base flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
                 >
                   <AppsIcon className="mr-3" />{" "}
