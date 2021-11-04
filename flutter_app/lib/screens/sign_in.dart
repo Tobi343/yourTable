@@ -62,6 +62,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             Image.asset("lib/assets/orange_logo.png",width: 175,height: 175,),
                             SizedBox(height: 20,),
                             TextFormField(
+                              keyboardType: TextInputType.emailAddress,
                               style: TextStyle(color: mainColor),
                               validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {

@@ -63,6 +63,7 @@ class _RegisterState extends State<Register> {
                             Image.asset("lib/assets/white_logo.png",width: 175,height: 175,),
                             SizedBox(height: 20,),
                             TextFormField(
+                              keyboardType: TextInputType.emailAddress,
                               style: TextStyle(color: mainColor),
                               validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
