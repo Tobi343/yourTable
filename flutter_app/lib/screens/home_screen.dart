@@ -10,11 +10,31 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   static const IconData restaurant = IconData(0xe532, fontFamily: 'MaterialIcons');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Color secondColor = Color(0xffF7761E);
   Color mainColor = Colors.white;
+
+  AuthService auth = new AuthService();
+
+  @override
+  void initState() {
+    initGetRestaurants();
+    super.initState();
+  }
+
+  initGetRestaurants() async{
+    await auth.getRestaurantData();
+  }
 
   final _avatarKey = GlobalKey();
 
@@ -154,7 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Container(),
+      body: Container(
+      ),
     );
   }
 }
