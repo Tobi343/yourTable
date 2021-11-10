@@ -49,9 +49,13 @@ class AuthService{
       Uri.parse("$SERVER_IP/Restaurant"),
     );
     restaurantsJSON = json.decode(res.body);
-    restaurants = restaurantsJSON.map((item) => Restaurant.fromMap(json.decode(item))).toList();
+    //restaurants = restaurantsJSON[0].map((item) => Restaurant.fromMap(json.decode(item))).toList();
     //print(restaurants[0]);
-    print(restaurants[0]);
+    restaurants = [];
+    for (var o in restaurantsJSON) {
+      restaurants.add(new Restaurant(restaurantName: o["restaurant_name"], restaurantId: o["restaurant_id"], ownerId: o["owner_id"]));
+    }
+    //print(restaurants[0].restaurantName);
     return res.body;
   }
 

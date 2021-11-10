@@ -34,6 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   initGetRestaurants() async{
     await auth.getRestaurantData();
+    setState(() {
+
+    });
   }
 
   final _avatarKey = GlobalKey();
@@ -175,6 +178,34 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Container(
+        child: ScrollConfiguration(
+            behavior: MyBehavior(),
+            child: ListView.builder(
+              itemCount: AuthService.restaurants.length,
+                itemBuilder: (context, index){
+                    return Card(
+                      shadowColor: secondColor,
+                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white70, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 7,
+                      child: InkWell(
+                        splashColor: secondColor,
+                        onTap: (){},
+                        child: Container(
+                          height: 100,
+                          //margin: EdgeInsets.symmetric(vertical: 40),
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Center(child: Text(AuthService.restaurants[index].restaurantName)),
+                        ),
+                      ),
+                    );
+                    return Container(color: Colors.blue,child: Text(AuthService.restaurants[index].restaurantName));
+                }
+            ),
+        ),
       ),
     );
   }
