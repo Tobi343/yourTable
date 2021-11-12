@@ -10,11 +10,34 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   static const IconData restaurant = IconData(0xe532, fontFamily: 'MaterialIcons');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Color secondColor = Color(0xffF7761E);
   Color mainColor = Colors.white;
+
+  AuthService auth = new AuthService();
+
+  @override
+  void initState() {
+    initGetRestaurants();
+    super.initState();
+  }
+
+  initGetRestaurants() async{
+    await auth.getRestaurantData();
+    setState(() {
+
+    });
+  }
 
   final _avatarKey = GlobalKey();
 
@@ -154,7 +177,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Container(),
+      body: Container(
+        child: ScrollConfiguration(
+            behavior: MyBehavior(),
+            child: ListView.builder(
+              itemCount: AuthService.restaurants.length,
+                itemBuilder: (context, index){
+                    return Card(
+                      shadowColor: secondColor,
+                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white70, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 7,
+                      child: InkWell(
+                        splashColor: secondColor,
+                        onTap: (){},
+                        child: Container(
+                          height: 100,
+                          //margin: EdgeInsets.symmetric(vertical: 40),
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Center(child: Text(AuthService.restaurants[index].restaurantName)),
+                        ),
+                      ),
+                    );
+                    return Container(color: Colors.blue,child: Text(AuthService.restaurants[index].restaurantName));
+                }
+            ),
+        ),
+      ),
     );
   }
 }
