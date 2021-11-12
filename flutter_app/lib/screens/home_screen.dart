@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
+import 'package:flutter_app/screens/restaurant_home.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:circular_clip_route/circular_clip_route.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AuthService auth = new AuthService();
 
+  bool loaded = false;
+
   @override
   void initState() {
     initGetRestaurants();
@@ -35,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   initGetRestaurants() async{
     await auth.getRestaurantData();
     setState(() {
-
+      loaded = true;
     });
   }
 
@@ -177,7 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Container(
+      body:loaded == false ? WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+        ),
+      )
+          : Container(
         child: ScrollConfiguration(
             behavior: MyBehavior(),
             child: ListView.builder(
@@ -193,7 +204,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       elevation: 7,
                       child: InkWell(
                         splashColor: secondColor,
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
+                        },
                         child: Container(
                           height: 100,
                           //margin: EdgeInsets.symmetric(vertical: 40),
