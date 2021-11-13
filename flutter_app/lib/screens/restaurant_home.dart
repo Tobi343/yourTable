@@ -45,7 +45,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
               child: Padding(
                 padding: EdgeInsets.only(top: height/4.7),
                 child: CircleAvatar(
-                  radius: 50,
+                  radius: 40,
                   child: Image.asset("lib/assets/app_icon.png"),
                 ),
               ),
@@ -53,9 +53,12 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           ],),
           FittedBox(
           fit: BoxFit.fitWidth,
-          child: Text(
-              AuthService.restaurants[widget.restaurantIndex].restaurantName,
-              style: TextStyle(fontSize: 25),
+          child: Padding(
+            padding: EdgeInsets.only(top: 5.0, left: 8),
+            child: Text(
+                AuthService.restaurants[widget.restaurantIndex].restaurantName,
+                style: TextStyle(fontSize: 25),
+            ),
           )
           ),
         ],

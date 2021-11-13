@@ -47,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: mainColor,
@@ -208,10 +210,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
                         },
                         child: Container(
-                          height: 100,
+                          height: height/4.5,
                           //margin: EdgeInsets.symmetric(vertical: 40),
                           padding: EdgeInsets.only(bottom: 10),
-                          child: Center(child: Text(AuthService.restaurants[index].restaurantName)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Stack(children: [
+                                Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: (height/5)/1.5,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                                        child: Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                                    )
+                                ),
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: (height/5)/2.3),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      child: Image.asset("lib/assets/app_icon.png"),
+                                    ),
+                                  ),
+                                )
+                              ],),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8.0,top: 5),
+                                child: FittedBox(fit: BoxFit.fitWidth, child: Text(AuthService.restaurants[index].restaurantName,style: TextStyle(fontSize: 18),)),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
