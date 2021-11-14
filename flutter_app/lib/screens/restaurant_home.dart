@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
+import 'package:geocode/geocode.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RestaurantHome extends StatefulWidget {
 
@@ -18,11 +20,35 @@ class _RestaurantHomeState extends State<RestaurantHome> {
 
   AuthService auth = new AuthService();
 
+  CameraPosition _initianalCameraPosition = CameraPosition(target: LatLng(48.210033, 16.363449),zoom: 15);
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    //getRestaurantLocation();
+    super.initState();
+  }
+
+  getRestaurantLocation()async{
+    GeoCode geoCode = GeoCode();
+
+    try {
+      Coordinates coordinates = await geoCode.forwardGeocoding(
+          address: "532 S Olive St, Los Angeles, CA 90013");
+
+      print("Latitude: ${coordinates.latitude}");
+      print("Longitude: ${coordinates.longitude}");
+      _initianalCameraPosition = CameraPosition(target: LatLng(coordinates.latitude!, coordinates.longitude!),zoom: 15);
+      print(_initianalCameraPosition.target);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -54,12 +80,25 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           FittedBox(
           fit: BoxFit.fitWidth,
           child: Padding(
-            padding: EdgeInsets.only(top: 5.0, left: 8),
+            padding: EdgeInsets.only(top: 5.0, left: 8,bottom:20),
             child: Text(
                 AuthService.restaurants[widget.restaurantIndex].restaurantName,
                 style: TextStyle(fontSize: 25),
             ),
           )
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30)
+              ),
+              width: width - width/6,
+              height: height/3,
+              child: GoogleMap(
+                myLocationEnabled: true,
+                initialCameraPosition: _initianalCameraPosition,
+              ),
+            ),
           ),
         ],
       ),
