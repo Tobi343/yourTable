@@ -20,12 +20,13 @@ class _RestaurantHomeState extends State<RestaurantHome> {
 
   AuthService auth = new AuthService();
 
-  CameraPosition _initianalCameraPosition = CameraPosition(target: LatLng(48.210033, 16.363449),zoom: 15);
+  late CameraPosition _initianalCameraPosition;
 
   @override
   void initState() {
     // TODO: implement initState
     //getRestaurantLocation();
+    _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 15);
     super.initState();
   }
 
@@ -65,14 +66,14 @@ class _RestaurantHomeState extends State<RestaurantHome> {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: height/3.5,
-                child: Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
             ),
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: height/4.7),
                 child: CircleAvatar(
                   radius: 40,
-                  child: Image.asset("lib/assets/app_icon.png"),
+                  child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
                 ),
               ),
             )
@@ -80,12 +81,22 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           FittedBox(
           fit: BoxFit.fitWidth,
           child: Padding(
-            padding: EdgeInsets.only(top: 5.0, left: 8,bottom:20),
+            padding: EdgeInsets.only(top: 5.0, left: 8,bottom:10),
             child: Text(
                 AuthService.restaurants[widget.restaurantIndex].restaurantName,
                 style: TextStyle(fontSize: 25),
             ),
           )
+          ),
+          FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Padding(
+                padding: EdgeInsets.only(left: 8,bottom:20),
+                child: Text(
+                  "Adresse: ${AuthService.restaurants[widget.restaurantIndex].restaurantAdress}",
+                  style: TextStyle(fontSize: 18),
+                ),
+              )
           ),
           Center(
             child: Container(

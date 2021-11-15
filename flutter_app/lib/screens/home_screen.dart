@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shadowColor: secondColor,
                       margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.white70, width: 1),
+                        side: BorderSide(color: secondColor, width: 1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       elevation: 7,
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: (height/5)/1.5,
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                                        child: Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                                        child: Image.network(AuthService.restaurants[index].restaurantTitlePicture),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
                                     )
                                 ),
                                 Center(
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: EdgeInsets.only(top: (height/5)/2.3),
                                     child: CircleAvatar(
                                       radius: 25,
-                                      child: Image.asset("lib/assets/app_icon.png"),
+                                      child: Image.network(AuthService.restaurants[index].restaurantLogo)//Image.asset("lib/assets/app_icon.png"),
                                     ),
                                   ),
                                 )
