@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
@@ -222,15 +223,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: (height/5)/1.5,
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                                        child: Image.network(AuthService.restaurants[index].restaurantTitlePicture),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.fitWidth,
+                                          imageUrl: AuthService.restaurants[index].restaurantTitlePicture,
+                                          placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                        ),
+                                        //child: Image.network(AuthService.restaurants[index].restaurantTitlePicture,fit:BoxFit.fitWidth),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
                                     )
                                 ),
                                 Center(
                                   child: Padding(
                                     padding: EdgeInsets.only(top: (height/5)/2.3),
                                     child: CircleAvatar(
+                                      backgroundColor: Colors.white,
                                       radius: 25,
-                                      child: Image.network(AuthService.restaurants[index].restaurantLogo)//Image.asset("lib/assets/app_icon.png"),
+                                      backgroundImage: NetworkImage(AuthService.restaurants[index].restaurantLogo)//Image.asset("lib/assets/app_icon.png"),
                                     ),
                                   ),
                                 )

@@ -58,6 +58,13 @@ class _RestaurantHomeState extends State<RestaurantHome> {
         elevation: 0,
         //title: Text(AuthService.restaurants[widget.restaurantIndex].restaurantName),
         backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: secondColor,
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,14 +73,15 @@ class _RestaurantHomeState extends State<RestaurantHome> {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: height/3.5,
-                child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture,fit: BoxFit.fill,),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
             ),
             Center(
               child: Padding(
                 padding: EdgeInsets.only(top: height/4.7),
                 child: CircleAvatar(
+                  backgroundColor: Colors.white,
                   radius: 40,
-                  child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
+                  backgroundImage: NetworkImage(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
                 ),
               ),
             )
@@ -99,15 +107,15 @@ class _RestaurantHomeState extends State<RestaurantHome> {
               )
           ),
           Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30)
-              ),
-              width: width - width/6,
-              height: height/3,
-              child: GoogleMap(
-                myLocationEnabled: true,
-                initialCameraPosition: _initianalCameraPosition,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                width: width - width/6,
+                height: height/3,
+                child: GoogleMap(
+                  myLocationEnabled: true,
+                  initialCameraPosition: _initianalCameraPosition,
+                ),
               ),
             ),
           ),

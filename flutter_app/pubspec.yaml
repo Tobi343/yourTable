@@ -38,6 +38,7 @@ dependencies:
   circular_clip_route: ^0.2.0
   google_maps_flutter: ^2.0.9
   geocode: ^1.0.1
+  cached_network_image: ^3.1.0+1
 
 
 flutter_native_splash:
