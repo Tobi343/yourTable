@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(top: (height/5)/2.3),
                                     child: CircleAvatar(
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Colors.transparent,
                                       radius: 25,
                                       backgroundImage: NetworkImage(AuthService.restaurants[index].restaurantLogo)//Image.asset("lib/assets/app_icon.png"),
                                     ),

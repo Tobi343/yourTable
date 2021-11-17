@@ -26,7 +26,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
   void initState() {
     // TODO: implement initState
     //getRestaurantLocation();
-    _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 15);
+    _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 17);
     super.initState();
   }
 
@@ -39,7 +39,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
 
       print("Latitude: ${coordinates.latitude}");
       print("Longitude: ${coordinates.longitude}");
-      _initianalCameraPosition = CameraPosition(target: LatLng(coordinates.latitude!, coordinates.longitude!),zoom: 15);
+      _initianalCameraPosition = CameraPosition(target: LatLng(coordinates.latitude!, coordinates.longitude!),zoom: 20);
       print(_initianalCameraPosition.target);
     } catch (e) {
       print(e);
@@ -89,7 +89,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           FittedBox(
           fit: BoxFit.fitWidth,
           child: Padding(
-            padding: EdgeInsets.only(top: 5.0, left: 8,bottom:10),
+            padding: EdgeInsets.only(top: 5.0, left: 10,bottom:10),
             child: Text(
                 AuthService.restaurants[widget.restaurantIndex].restaurantName,
                 style: TextStyle(fontSize: 25),
@@ -99,7 +99,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           FittedBox(
               fit: BoxFit.fitWidth,
               child: Padding(
-                padding: EdgeInsets.only(left: 8,bottom:20),
+                padding: EdgeInsets.only(left: 15,bottom:20, right: 15),
                 child: Text(
                   "Adresse: ${AuthService.restaurants[widget.restaurantIndex].restaurantAdress}",
                   style: TextStyle(fontSize: 18),
