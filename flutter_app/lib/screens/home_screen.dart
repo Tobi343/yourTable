@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: CachedNetworkImage(
                                           fit: BoxFit.fitWidth,
                                           imageUrl: AuthService.restaurants[index].restaurantTitlePicture,
-                                          placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+                                          placeholder: (context, url) => Container(color: Colors.transparent,),//Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
                                           errorWidget: (context, url, error) => Icon(Icons.error),
                                         ),
                                         //child: Image.network(AuthService.restaurants[index].restaurantTitlePicture,fit:BoxFit.fitWidth),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
@@ -238,7 +238,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: CircleAvatar(
                                       backgroundColor: Colors.white,
                                       radius: 25,
-                                      child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[index].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
+                                      child: ClipRRect(
+                                        borderRadius:BorderRadius.circular(300),
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.fitWidth,
+                                          imageUrl: AuthService.restaurants[index].restaurantLogo,
+                                          placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),//Container(color: Colors.transparent,),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                        ),
+                                      ),
+                                      //child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[index].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
                                     ),
                                   ),
                                 )
