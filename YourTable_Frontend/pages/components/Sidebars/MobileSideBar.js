@@ -13,7 +13,7 @@ function MobileSideBar() {
         <SideBarCard Text="Dashboard" Icon={<DashboardIcon className="mr-3"/>} Link="/"/>
         <SideBarCard Text="Reservierungen" Icon={<DateRangeIcon className="mr-3"/>} Link="/Reservations"/>
         <SideBarCard Text="Chats" Icon={<ForumIcon className="mr-3"/>} Link="/Reservations"/>
-        <SideBarCard Text="Mein Profil" Icon={<RestaurantIcon className="mr-3"/>} Link="/myProfile"/>
+        <SideBarCard Text="Meine Restaurants" Icon={<RestaurantIcon className="mr-3"/>} Link="/myProfile"/>
         <SideBarCard Text="Einstellungen" Icon={<SettingsIcon className="mr-3"/>} Link="#"/>
         <SideBarCard Text="Ausloggen" Icon={<LogoutIcon className="mr-3"/>} Link="#"/>
 
