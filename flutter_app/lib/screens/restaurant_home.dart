@@ -26,7 +26,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
   void initState() {
     // TODO: implement initState
     //getRestaurantLocation();
-    _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 17);
+    _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 18);
     super.initState();
   }
 
@@ -81,7 +81,8 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 40,
-                  backgroundImage: NetworkImage(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
+                    child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
+                  //backgroundImage: NetworkImage(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
                 ),
               ),
             )
