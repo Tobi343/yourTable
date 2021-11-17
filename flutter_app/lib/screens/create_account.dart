@@ -119,6 +119,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                 ),
                                 SizedBox(height: 20),
                                 TextFormField(
+                                  keyboardType: TextInputType.phone,
                                   inputFormatters: [
                                     new LengthLimitingTextInputFormatter(30),
                                   ],

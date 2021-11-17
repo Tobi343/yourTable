@@ -192,6 +192,7 @@ class _EditUserDataState extends State<EditUserData> {
                   Padding(
                     padding: EdgeInsets.only(top: 30,left: 40,right: 40,bottom: 40),
                     child: TextFormField(
+                      keyboardType: TextInputType.phone,
                       controller: _numberController,
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(30),
