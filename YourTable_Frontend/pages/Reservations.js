@@ -6,7 +6,20 @@ import Navbar from "./components/Sidebars/Navbar";
 import { useState } from "react";
 
 import Table from "./components/table";
-function Reservations() {
+
+export async function getStaticProps() {
+  
+  const res = await fetch('http://34.139.54.192/reservations')
+  const reser = await res.json()
+
+  return {
+    props: {
+      reser,
+    },
+  }
+}
+
+function Reservations({ reser }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
 
   const arr = [
@@ -44,7 +57,7 @@ function Reservations() {
 
         <div className="w-full flex flex-col h-screen overflow-y-hidden">
           <MobileSideBar />
-          <Table Reservations={arr} />
+          <Table Reservations={reser} />
         </div>
       </main>
     </div>

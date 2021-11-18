@@ -9,11 +9,11 @@ function EditRestaurant(props) {
       </div>
       <div className="flex flex-row ">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/usedado.appspot.com/o/29793231_1307220342744842_4532781675288985600_n.png?alt=media&token=adcc1c7c-f1b1-4444-bab8-4332deb037f7"
+          src={props.restaurant.restaurant_logo}
           className="rounded-full h-20 ml-6 mb-3"
         />
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/usedado.appspot.com/o/Burgerista_Combo.jpg?alt=media&token=67d23c60-57c5-4da4-8a2e-1f7b59c47f5a"
+          src={props.restaurant.restaurant_image}
           className="ml-10 h-20"
         />
       </div>
@@ -27,7 +27,7 @@ function EditRestaurant(props) {
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="username"
             type="fname"
-            value={props.title.split(' ')[1]}
+            value={props.restaurant.restaurant_name}
             placeholder="Max"
           />
         </div>
@@ -57,6 +57,7 @@ function EditRestaurant(props) {
               }
 
             }}
+            value={props.restaurant.restaurant_address}
             options={{
               types: ["address"],
               componentRestrictions: { country: "at" },
@@ -82,6 +83,7 @@ function EditRestaurant(props) {
           <input
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="city"
+
             type="lname"
             placeholder="Musterort"
           />

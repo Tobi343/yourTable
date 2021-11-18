@@ -16,8 +16,18 @@ import InnerSidebar from "./components/Sidebars/innerSidebar";
 import MyProfile from "./components/MyProfile";
 import EditRestaurant from "./components/EditRestaurant";
 
+export async function getStaticProps() {
+  
+  const res = await fetch('http://34.139.54.192/restaurant/2')
+  const restaurant = await res.json()
+  return {
+    props: {
+      restaurant,
+    },
+  }
+}
 
-function myProfile() {
+function myProfile({restaurant}) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
 
   function sidebarOpenMobile(e) {
@@ -33,6 +43,8 @@ function myProfile() {
   function setState(n,text){
     setModuleNumber(n);
     setTitle(text);
+
+
     console.log(n)
   }
 
@@ -48,13 +60,13 @@ function myProfile() {
           <MobileSideBar />
           <div className="flex h-full">
             
-            <InnerSidebar method={setState}/>
+            <InnerSidebar method={setState} arr={restaurant}/>
 
 
             {(moduleNumber == 0 ? 
             <MyProfile title={title} className=" flex-1 h-full" id="editProfile"></MyProfile>
              : 
-             <EditRestaurant title={title} className=" flex-1 h-full" id="editRestaurant"></EditRestaurant>)
+             <EditRestaurant restaurant={restaurant[moduleNumber-1]} className=" flex-1 h-full" id="editRestaurant"></EditRestaurant>)
 
             }
 

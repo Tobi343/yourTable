@@ -21,7 +21,7 @@ function MyProfile(props) {
           </p>
           <input
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="username"
+            id="firstNameProfileEdit"
             type="fname"
             placeholder="Max"
           />
@@ -32,7 +32,7 @@ function MyProfile(props) {
           </p>
           <input
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="username"
+            id="lastNameProfileEdit"
             type="lname"
             placeholder="Mustermann"
           />
@@ -43,26 +43,35 @@ function MyProfile(props) {
           </p>
           <input
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="username"
+            id="emailProfileEdit"
             type="email"
             placeholder="max.mustermann@example.com"
           />
         </div>
         {edit ? (
           <div className="flex h-12 mt-5">
-            <div className="bg-blue-500 h-10 inline-block text-center w-28 rounded-xl text-white font-bold ml-6 ">
-              <p className=" align-middle h-10">SAVE</p>
-            </div>
-            <div className="bg-red-500 h-10  text-center inline-block w-28 rounded-xl text-white font-bold ml-6 ">
-              <p className=" align-middle h-10">ABORT</p>
-            </div>
+            <button
+              onClick={() => setEdit(false)}
+              className=" bg-green-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
+            >
+              Save
+            </button>
+
+            <button
+              onClick={() => setEdit(false)}
+              className="bg-red-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
+            >
+              Abort
+            </button>
           </div>
         ) : (
           <div className="flex h-12 mt-5">
-            <div className="bg-blue-500 h-10 inline-block text-center w-28 rounded-xl text-white font-bold ml-6 "
-            onClick={()=>setEdit(true)}>
-              <p className=" align-middle h-10">EDIT</p>
-            </div>
+            <button
+              className="bg-blue-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
+              onClick={() => setEdit(true)}
+            >
+              Edit
+            </button>
           </div>
         )}
       </div>

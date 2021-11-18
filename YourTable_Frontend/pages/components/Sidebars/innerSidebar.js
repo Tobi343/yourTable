@@ -10,7 +10,6 @@ import SecurityIcon from "@mui/icons-material/Security";
 import MyProfile from "../MyProfile";
 
 function InnerSidebar(props) {
-  const arr = ["Burgerrista", "ABC", "LeBruger"];
   function sidebarOpenMobile(e) {
     e.preventDefault();
     containerProfileSidebar.classList.toggle("w-16");
@@ -40,19 +39,22 @@ function InnerSidebar(props) {
           onClick={()=>props.method(0,"Mein Profildaten")}
           className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
         >
-          <EditIcon className="mr-3" />{" "}
+          <EditIcon className="mr-3" />
           <p id="editProfileBtn" className=" hidden md:flex">
             Mein Profil
           </p>
         </a>
-        {arr.map((reservation) => (
+        {props.arr.map((reservation,index) => (
+
+
+
           <a
-            onClick={()=>props.method(1,reservation)}
+            onClick={()=>props.method(index+1,reservation.restaurant_name)}
             className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
           >
-            <EditIcon className="mr-3" />{" "}
+            <EditIcon className="mr-3" />
             <p id="editProfileBtn" className=" hidden md:flex">
-              {reservation}
+              {reservation.restaurant_name}
             </p>
           </a>
         ))}
