@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
+import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
 import 'package:flutter_app/screens/restaurant_home.dart';
 import 'package:flutter_app/screens/sign_in.dart';
@@ -54,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       backgroundColor: mainColor,
       appBar: AppBar(
+        elevation: 10,
+        shadowColor: secondColor,
         toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(restaurant),
@@ -192,78 +195,93 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       )
           : Container(
-        child: ScrollConfiguration(
-            behavior: MyBehavior(),
-            child: ListView.builder(
-              itemCount: AuthService.restaurants.length,
-                itemBuilder: (context, index){
-                    return Card(
-                      shadowColor: secondColor,
-                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: secondColor, width: 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 7,
-                      child: InkWell(
-                        splashColor: secondColor,
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
-                        },
-                        child: Container(
-                          height: height/4.5,
-                          //margin: EdgeInsets.symmetric(vertical: 40),
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(children: [
-                                Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: (height/5)/1.5,
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                                        child: CachedNetworkImage(
-                                          fit: BoxFit.fitWidth,
-                                          imageUrl: AuthService.restaurants[index].restaurantTitlePicture,
-                                          placeholder: (context, url) => Container(color: Colors.transparent,),//Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
-                                        ),
-                                        //child: Image.network(AuthService.restaurants[index].restaurantTitlePicture,fit:BoxFit.fitWidth),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
-                                    )
-                                ),
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: (height/5)/2.3),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 25,
+        child: RefreshIndicator(
+          color: mainColor,
+          backgroundColor: secondColor,
+          onRefresh: ()async{
+            setState(() {
+              loaded = false;
+            });
+            await auth.getRestaurantData();
+            //print(AuthService.jwToken);
+            var x = await auth.getUserData(AuthService.email,"authorization " + AuthService.jwToken);
+            setState(() {
+              loaded = true;
+            });
+          },
+          child: ScrollConfiguration(
+              behavior: MyBehavior(),
+              child: ListView.builder(
+                itemCount: AuthService.restaurants.length,
+                  itemBuilder: (context, index){
+                      return Card(
+                        shadowColor: secondColor,
+                        margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: secondColor, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 7,
+                        child: InkWell(
+                          splashColor: secondColor,
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
+                          },
+                          child: Container(
+                            height: height/4.5,
+                            //margin: EdgeInsets.symmetric(vertical: 40),
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(children: [
+                                  Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: (height/5)/1.5,
                                       child: ClipRRect(
-                                        borderRadius:BorderRadius.circular(300),
-                                        child: CachedNetworkImage(
-                                          fit: BoxFit.fitWidth,
-                                          imageUrl: AuthService.restaurants[index].restaurantLogo,
-                                          placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),//Container(color: Colors.transparent,),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
-                                        ),
-                                      ),
-                                      //child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[index].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
-                                    ),
+                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.fitWidth,
+                                            imageUrl: AuthService.restaurants[index].restaurantTitlePicture,
+                                            placeholder: (context, url) => Container(color: Colors.transparent,),//Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                          ),
+                                          //child: Image.network(AuthService.restaurants[index].restaurantTitlePicture,fit:BoxFit.fitWidth),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+                                      )
                                   ),
-                                )
-                              ],),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0,top: 5),
-                                child: FittedBox(fit: BoxFit.fitWidth, child: Text(AuthService.restaurants[index].restaurantName,style: TextStyle(fontSize: 18),)),
-                              ),
-                            ],
+                                  Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: (height/5)/2.3),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 25,
+                                        child: ClipRRect(
+                                          borderRadius:BorderRadius.circular(300),
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.fitWidth,
+                                            imageUrl: AuthService.restaurants[index].restaurantLogo,
+                                            placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),//Container(color: Colors.transparent,),
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                          ),
+                                        ),
+                                        //child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[index].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
+                                      ),
+                                    ),
+                                  )
+                                ],),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8.0,top: 5),
+                                  child: FittedBox(fit: BoxFit.fitWidth, child: Text(AuthService.restaurants[index].restaurantName,style: TextStyle(fontSize: 18),)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                    return Container(color: Colors.blue,child: Text(AuthService.restaurants[index].restaurantName));
-                }
-            ),
+                      );
+                      return Container(color: Colors.blue,child: Text(AuthService.restaurants[index].restaurantName));
+                  }
+              ),
+          ),
         ),
       ),
     );
