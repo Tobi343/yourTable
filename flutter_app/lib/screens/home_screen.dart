@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/main.dart';
+import 'package:flutter_app/models/restaurant.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
 import 'package:flutter_app/screens/restaurant_home.dart';
 import 'package:flutter_app/screens/sign_in.dart';
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Container(
           height: 52,
           child: TextFormField(
+
             maxLines: 1,
             textInputAction: TextInputAction.search,
             style: TextStyle(color: mainColor),
@@ -85,8 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             onChanged: (value) {
-              print("value on Change");
+              //print("value on Change");
               setState(() {
+                if(AuthService.fixRestaurants.where((element) => element.restaurantName.toLowerCase().contains(value.toLowerCase())).toList().length > 0)
+                  {
+                    AuthService.restaurants = AuthService.fixRestaurants.where((element) => element.restaurantName.toLowerCase().contains(value.toLowerCase())).toList();
+                  }
                 //value = "${value[0].toUpperCase()}${value.substring(1)}";
               });
             }, ),

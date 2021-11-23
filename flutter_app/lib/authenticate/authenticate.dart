@@ -17,6 +17,8 @@ class AuthService{
   static Map<String,dynamic> user = new Map();
   static List<dynamic> restaurantsJSON = [];
   static List<Restaurant> restaurants = [];
+  static List<Restaurant> fixRestaurants = [];
+
 
   Future<String?> attemptLogIn(String username, String password) async {
     var res = await http.post(
@@ -55,8 +57,11 @@ class AuthService{
     //restaurants = restaurantsJSON[0].map((item) => Restaurant.fromMap(json.decode(item))).toList();
     //print(restaurants[0]);
     restaurants = [];
+    fixRestaurants = [];
     for (var o in restaurantsJSON) {
-      restaurants.add(new Restaurant(restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"]));
+      var r = new Restaurant(restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"],details: o["details"]);
+      restaurants.add(r);
+      fixRestaurants.add(r);
     }
     //print(restaurants[0].restaurantName);
     return res.body;
