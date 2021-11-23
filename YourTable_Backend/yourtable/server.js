@@ -49,7 +49,7 @@ app.get("/reservations", (req, res) => {
     if (row.rowCount < 1) {
       res.status(409).send(null);
     } else {
-      res.status(201).json(row.rows);
+      res.status(200).json(row.rows);
     }
   });
 });
