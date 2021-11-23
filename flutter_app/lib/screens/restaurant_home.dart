@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 class RestaurantHome extends StatefulWidget {
 
@@ -73,7 +75,13 @@ class _RestaurantHomeState extends State<RestaurantHome> {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: height/3.5,
-                child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture,fit: BoxFit.fill,),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
+              child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture,
+                placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),//Container(color: Colors.transparent,),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+              //child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantTitlePicture,fit: BoxFit.fill,),//Image.asset("lib/assets/restaurantTest.jpg",fit: BoxFit.fitWidth,)
             ),
             Center(
               child: Padding(
@@ -81,7 +89,16 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 40,
-                    child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
+                  child: ClipRRect(
+                    borderRadius:BorderRadius.circular(300),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fitWidth,
+                      imageUrl: AuthService.restaurants[widget.restaurantIndex].restaurantLogo,
+                      placeholder: (context, url) => Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),//Container(color: Colors.transparent,),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                  //child: ClipRRect(borderRadius:BorderRadius.circular(300),child: Image.network(AuthService.restaurants[widget.restaurantIndex].restaurantLogo))//Image.asset("lib/assets/app_icon.png"),
                   //backgroundImage: NetworkImage(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
                 ),
               ),
