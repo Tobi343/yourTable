@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/authenticate/authenticate.dart';
+import 'package:flutter_app/screens/home_screen.dart';
 import 'package:lottie/lottie.dart';
 
 class EditUserData extends StatefulWidget {
@@ -12,29 +14,40 @@ class EditUserData extends StatefulWidget {
 
 class _EditUserDataState extends State<EditUserData> {
   static const IconData person = IconData(0xe491, fontFamily: 'MaterialIcons');
+  AuthService auth = new AuthService();
 
   final _formKey = GlobalKey<FormState>();
 
+  late String firstname;
+  late String lastname;
+  late String phone;
+
+  String error = "";
+
+  bool loading = false;
 
   Color secondColor = Color(0xffF7761E);
   Color mainColor = Colors.white;
 
-  late TextEditingController _firstnameController;
-  late TextEditingController _lastnameController;
-  late TextEditingController _emailController;
-  late TextEditingController _numberController;
+  late final TextEditingController _firstnameController;
+  late final TextEditingController _lastnameController;
+  //late final TextEditingController _emailController;
+  late final TextEditingController _numberController;
 
 
   @override
   void initState() {
     _firstnameController = new TextEditingController();
-    _firstnameController.text = "Tobias";
+    _firstnameController.text = AuthService.user["customer_firstname"].toString();
     _lastnameController = new TextEditingController();
-    _lastnameController.text = "Breffler";
-    _emailController = new TextEditingController();
-    _emailController.text = "tobias.breffler@gmail.com";
+    _lastnameController.text = AuthService.user["customer_secondname"].toString();
+    //_emailController = new TextEditingController();
+    //_emailController.text = AuthService.user["customer_email"].toString();
     _numberController = new TextEditingController();
-    _numberController.text = "06647485234";
+    _numberController.text = AuthService.user["customer_phone"].toString();
+    firstname = _firstnameController.text;
+    lastname = _lastnameController.text;
+    phone = _numberController.text;
     super.initState();
   }
 
@@ -42,19 +55,25 @@ class _EditUserDataState extends State<EditUserData> {
   void dispose() {
     _firstnameController.dispose();
     _lastnameController.dispose();
-    _emailController.dispose();
+    //_emailController.dispose();
     _numberController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ?  WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Color(0xffF7761E),
+        body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+      ),
+    ) :  Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: FittedBox(fit: BoxFit.fitWidth, child: Text("Tobias Breffler")),
+        title: FittedBox(fit: BoxFit.fitWidth, child: Text("${AuthService.user["customer_firstname"]} ${AuthService.user["customer_secondname"]}")),
         backgroundColor: secondColor,
       ),
       body: GestureDetector(
@@ -87,7 +106,7 @@ class _EditUserDataState extends State<EditUserData> {
                       style: TextStyle(color: secondColor),
                       validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
                       onChanged: (val) {
-                        setState(() => _firstnameController.text = val);
+                        setState(() => firstname = val);
                       },
                       decoration: InputDecoration(labelText: 'Vorname', labelStyle: TextStyle(color: secondColor),
                         errorBorder: OutlineInputBorder(
@@ -118,7 +137,7 @@ class _EditUserDataState extends State<EditUserData> {
                       style: TextStyle(color: secondColor),
                       validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
                       onChanged: (val) {
-                        setState(() => _lastnameController.text = val);
+                        setState(() => lastname = val);
                       },
                       decoration: InputDecoration(labelText: 'Nachname', labelStyle: TextStyle(color: secondColor),
                         errorBorder: OutlineInputBorder(
@@ -139,7 +158,7 @@ class _EditUserDataState extends State<EditUserData> {
                       ),
                     ),
                   ),
-                  Padding(
+                  /*Padding(
                     padding: EdgeInsets.only(top: 30,left: 40,right: 40),
                     child: TextFormField(
                       controller: _emailController,
@@ -169,10 +188,11 @@ class _EditUserDataState extends State<EditUserData> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   Padding(
                     padding: EdgeInsets.only(top: 30,left: 40,right: 40,bottom: 40),
                     child: TextFormField(
+                      keyboardType: TextInputType.phone,
                       controller: _numberController,
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(30),
@@ -180,7 +200,7 @@ class _EditUserDataState extends State<EditUserData> {
                       style: TextStyle(color: secondColor),
                       validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
                       onChanged: (val) {
-                        setState(() => _numberController.text = val);
+                        setState(() => phone = val);
                       },
                       decoration: InputDecoration(labelText: 'Handynummer', labelStyle: TextStyle(color: secondColor),
                         errorBorder: OutlineInputBorder(
@@ -211,41 +231,41 @@ class _EditUserDataState extends State<EditUserData> {
                           'Speichern',
                           style:TextStyle(color: mainColor,fontSize: 16),
                         ),
-                        onPressed: () async {/*
+                        onPressed: () async {
 
                           if(_formKey.currentState!.validate()){
                             setState(() {
-                              email = email.trim();
                               loading=true;
                             });
-                            var jwt = await auth.attemptLogIn(email, password);
-                            print(jwt);
-                            setState(() {
-                              if(jwt == null || jwt == "null") {
-                                setState(() {
-                                  error = "Einloggen fehlgeschlagen!";
-                                  loading = false;
-                                });
-                              }
-                              else {
-                                error = "";
-                                Navigator.of(context)
-                                    .pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            HomeScreen()), (
-                                    Route<dynamic> route) => false);
-                              }
-                            });
+                            //print(firstname);
+                            int? statusCode = await auth.writeUserData(firstname, lastname, phone);
+                            if(statusCode != null && statusCode != 201) {
+                              error = "Speichern fehlgeschlagen!";
+                              setState(() {
+                                loading = false;
+                              });
+                            }
+                            else{
+                              String jwt = "authorization " + AuthService.jwToken;
+                              var resp = await auth.getUserData(AuthService.email, jwt);
+                              //print(resp);
+                              error = "";
+                              Navigator.pop(context);
+                              Navigator.of(context)
+                                  .pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeScreen()), (Route<dynamic> route) => false);
+                            }
                           }
                           else{
-
                           }
-                          */
-
-
                         }
                     ),
+                  ),
+                  SizedBox(height: 12,),
+                  Text(error,
+                    style: TextStyle(color: Colors.red, fontSize: 16),
                   ),
                 ],
               ),

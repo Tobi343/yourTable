@@ -62,6 +62,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             Image.asset("lib/assets/orange_logo.png",width: 175,height: 175,),
                             SizedBox(height: 20,),
                             TextFormField(
+                              keyboardType: TextInputType.emailAddress,
                               style: TextStyle(color: mainColor),
                               validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
@@ -158,7 +159,6 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                     });
                                     var jwt = await auth.attemptLogIn(email, password);
                                     print(jwt);
-                                    setState(() {
                                       if(jwt == null || jwt == "null") {
                                         setState(() {
                                           error = "Einloggen fehlgeschlagen!";
@@ -166,6 +166,10 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                         });
                                       }
                                       else {
+                                        jwt = "authorization " + jwt;
+                                        var resp = await auth.getUserData(email, jwt);
+                                        print(resp);
+                                        //print(AuthService.user["customer_id"]);
                                         error = "";
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
@@ -174,7 +178,6 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                                     HomeScreen()), (
                                             Route<dynamic> route) => false);
                                       }
-                                    });
                                   }
                                   else{
 

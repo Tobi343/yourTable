@@ -63,6 +63,7 @@ class _RegisterState extends State<Register> {
                             Image.asset("lib/assets/white_logo.png",width: 175,height: 175,),
                             SizedBox(height: 20,),
                             TextFormField(
+                              keyboardType: TextInputType.emailAddress,
                               style: TextStyle(color: mainColor),
                               validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
@@ -151,26 +152,6 @@ class _RegisterState extends State<Register> {
                                   style:TextStyle(color: Color(0xffF7761E),fontSize: 16),
                                 ),
                                 onPressed: () async {
-                                  /*
-                                  if(_formKey.currentState!.validate()){
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    Future.delayed(const Duration(milliseconds: 8000), () {
-
-
-                                      setState(() {
-                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                            CreateAccount()), (Route<dynamic> route) => false);
-                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => CreateAccount()));
-                                        //loading = false;
-                                      });
-
-                                    });
-                                  }
-                                  else{}
-
-                                   */
 
                                   if(_formKey.currentState!.validate()){
                                     setState(() {
@@ -192,8 +173,7 @@ class _RegisterState extends State<Register> {
                                             .pushAndRemoveUntil(
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateAccount()), (
-                                            Route<dynamic> route) => false);
+                                                    CreateAccount(email: email,pw: password)), (Route<dynamic> route) => false);
                                       }
 
                                     });

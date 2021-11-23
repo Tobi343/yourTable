@@ -151,7 +151,7 @@ function Navbar(props) {
                 className="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700">
-                  <i className="fas fa-user mr-2"></i>Your Profile
+                  <i className="fas fa-user mr-2"></i>Meine Restaurants
                 </a>
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700">
                   <i className="fas fa-cog mr-2"></i>Settings
