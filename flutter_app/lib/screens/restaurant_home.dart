@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:geocode/geocode.dart';
@@ -65,6 +67,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       //backgroundColor: secondColor,
+      /*
       appBar: AppBar(
         elevation: 0,
         //title: Text(AuthService.restaurants[widget.restaurantIndex].restaurantName),
@@ -77,9 +80,12 @@ class _RestaurantHomeState extends State<RestaurantHome> {
           },
         ),
       ),
+
+       */
       body: ScrollConfiguration(
         behavior: MyBehavior(),
         child: ListView(
+          //physics: NeverScrollableScrollPhysics(),
           children:[
             Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +121,8 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                       //backgroundImage: NetworkImage(AuthService.restaurants[widget.restaurantIndex].restaurantLogo),//Image.asset("lib/assets/app_icon.png"),
                     ),
                   ),
-                )
+                ),
+                IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back_sharp,color: secondColor,)),
               ],),
               FittedBox(
               fit: BoxFit.fitWidth,
@@ -128,7 +135,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
               )
               ),
               Padding(
-                padding: EdgeInsets.only(top: 5.0, left: 10,bottom:0),
+                padding: EdgeInsets.only(top: 5.0, left: 10,bottom:0,right: 10),
                 child: Text(AuthService.restaurants[widget.restaurantIndex].details),
               ),
               Divider(
@@ -138,27 +145,38 @@ class _RestaurantHomeState extends State<RestaurantHome> {
               FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 10,bottom:20, right: 10),
+                    padding: EdgeInsets.only(left: 10,right: 10),
                     child: Text(
-                      "Adresse: ${AuthService.restaurants[widget.restaurantIndex].restaurantAdress}",
+                      "Adresse:",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+              ),
+              FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10,bottom:10, right: 10),
+                    child: Text(
+                      "${AuthService.restaurants[widget.restaurantIndex].restaurantAdress}",
                       style: TextStyle(fontSize: 18),
                     ),
                   )
               ),
               Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    padding: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: secondColor)
+                    ),
                     width: width - width/6,
                     height: height/3,
                     child: GoogleMap(
+                      gestureRecognizers: Set()..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
                       myLocationEnabled: true,
                       initialCameraPosition: _initianalCameraPosition,
                     ),
                   ),
                 ),
-              ),
+              SizedBox(height: 20,)
             ],
           )],
         ),
