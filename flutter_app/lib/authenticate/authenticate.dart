@@ -5,6 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class AuthService{
 
   static const SERVER_IP = 'http://34.139.54.192';
@@ -31,6 +33,9 @@ class AuthService{
     if(res.statusCode == 200) {
       email = username;
       jwToken = res.body;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("email", username);
+      prefs.setString("jwt", jwToken);
       return res.body;
     }
     return null;
