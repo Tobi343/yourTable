@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
+import 'package:flutter_app/screens/reservation.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -188,8 +189,10 @@ class _RestaurantHomeState extends State<RestaurantHome> {
         child: FloatingActionButton(
           isExtended: true,
           backgroundColor: secondColor,
-          child: Image.asset("lib/assets/table.png",height: height/10.5,width: width/10.5,),
-          onPressed: (){},
+          child: Image.asset("lib/assets/table.png",height: height/10.5,width: width/10.5,color: Colors.white,),
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Reservation(restaurant: AuthService.restaurants[widget.restaurantIndex])));
+          },
         ),
       ),
     );
