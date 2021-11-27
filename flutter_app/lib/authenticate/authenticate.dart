@@ -36,6 +36,9 @@ class AuthService{
       final prefs = await SharedPreferences.getInstance();
       prefs.setString("email", username);
       prefs.setString("jwt", jwToken);
+      DateTime now = DateTime.now();
+      String dateOfLogin = "${now.year}-${now.month}-${now.day}";
+      prefs.setString("date", dateOfLogin);
       return res.body;
     }
     return null;

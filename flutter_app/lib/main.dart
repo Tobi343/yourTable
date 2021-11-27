@@ -10,24 +10,31 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   String email = prefs.getString("email") ?? "";
-  if(email == "") runApp(MyApp());
-  else{
-    AuthService auth = new AuthService();
-    String jwt = prefs.getString("jwt") ?? "";
-    AuthService.email = email;
-    AuthService.jwToken = jwt;
-    jwt = "authorization " + jwt;
-    var resp = await auth.getUserData(email, jwt);
+  String date = prefs.getString("date") ?? "";
+  if(date == "") runApp(MyApp());
+  else {
+    DateTime now = DateTime.now();
+    DateTime dateOfLogin = DateTime.parse(date);
+    Duration diff = now.difference(dateOfLogin);
+    if (email == "")
+      runApp(MyApp());
+    else if (diff.inDays > 25)
+      runApp(MyApp());
+    else {
+      AuthService auth = new AuthService();
+      String jwt = prefs.getString("jwt") ?? "";
+      AuthService.email = email;
+      AuthService.jwToken = jwt;
+      jwt = "authorization " + jwt;
+      var resp = await auth.getUserData(email, jwt);
 
-    runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: MyBehavior(),
-      home: HomeScreen(),)
-    );
-
-
+      runApp(MaterialApp(
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: MyBehavior(),
+        home: HomeScreen(),)
+      );
+    }
   }
-
 }
 
 class MyBehavior extends ScrollBehavior {

@@ -176,9 +176,20 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                     ),
                   ),
                 ),
-              SizedBox(height: 20,)
+              SizedBox(height: 100,)
             ],
           )],
+        ),
+      ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.all(10),
+        width: width/6.2,
+        height: height/13,
+        child: FloatingActionButton(
+          isExtended: true,
+          backgroundColor: secondColor,
+          child: Image.asset("lib/assets/table.png",height: height/10.5,width: width/10.5,),
+          onPressed: (){},
         ),
       ),
     );
