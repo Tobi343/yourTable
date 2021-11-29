@@ -18,7 +18,7 @@ Future<void> main() async {
     Duration diff = now.difference(dateOfLogin);
     if (email == "")
       runApp(MyApp());
-    else if (diff.inDays > 25)
+    else if (diff.inDays > 12)
       runApp(MyApp());
     else {
       AuthService auth = new AuthService();

@@ -1,3 +1,6 @@
+import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:day_night_time_picker/lib/constants.dart';
+import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
@@ -25,9 +28,21 @@ class _ReservationState extends State<Reservation> {
 
   int peopleCounter = 2;
 
+  TimeOfDay _time = TimeOfDay.now().replacing(minute: 30);
+  bool iosStyle = true;
+
+  DateTime _date = DateTime.now();
+
+  void onTimeChanged(TimeOfDay newTime) {
+    setState(() {
+      _time = newTime;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: secondColor,
         centerTitle: true,
@@ -92,7 +107,7 @@ class _ReservationState extends State<Reservation> {
               children: [
                 SizedBox(height: height/15,),
                 Container(
-                    child: Lottie.asset('lib/assets/monkey.json',fit: BoxFit.scaleDown),
+                    child: Lottie.asset('lib/assets/wok.json',fit: BoxFit.scaleDown),
                     height: height/3.5,
                 ),
                 SizedBox(height: height/30,),
@@ -134,6 +149,61 @@ class _ReservationState extends State<Reservation> {
             ),
           ),
         );
+      case 1:
+        return Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(30))
+                ),
+                padding: EdgeInsets.all(10),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text("Datum und Uhrzeit",style: TextStyle(fontSize: 22,color: secondColor)),
+                ),
+              ),
+              Container(
+                color: Colors.white,
+                child: DatePicker(
+                  DateTime.now(),
+                  height: height/10,
+                  locale: "de",
+                  initialSelectedDate: _date,
+                  selectionColor: secondColor,
+                  selectedTextColor: Colors.white,
+                  onDateChange: (date) {
+                    // New date selected
+                    setState(() {
+                      _date = date;
+                    });
+                  },
+                ),
+              ),
+              createInlinePicker(
+                elevation: 0,
+                barrierColor: secondColor,
+                okText: "Speichern",
+                cancelText: "Zurücksetzten",
+                okCancelStyle: TextStyle(color: secondColor),
+                isOnChangeValueMode: false,
+                hourLabel: "Stunde",
+                minuteLabel: "Minute",
+                accentColor: secondColor,
+                  minuteInterval: MinuteInterval.FIFTEEN,
+                  maxMinute: 50,
+                  is24HrFormat: true,
+                  iosStylePicker: true,
+                  context: context,
+                  value: _time,
+                  onChange: onTimeChanged,
+                  displayHeader: true
+              ),
+            ],
+          ),
+        );
       default:
         return Expanded(child: Container());
   }
@@ -148,6 +218,7 @@ class _ReservationState extends State<Reservation> {
         // Increment activeStep, when the next button is tapped. However, check for upper bound.
         if (activeStep < upperBound) {
           setState(() {
+            print(_time);
             activeStep++;
           });
         }
