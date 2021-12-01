@@ -42,7 +42,6 @@ class _ReservationState extends State<Reservation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: secondColor,
         centerTitle: true,
@@ -102,50 +101,63 @@ class _ReservationState extends State<Reservation> {
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: height/15,),
-                Container(
-                    child: Lottie.asset('lib/assets/wok.json',fit: BoxFit.scaleDown),
-                    height: height/3.5,
-                ),
-                SizedBox(height: height/30,),
-                FittedBox(child: Text("Für wie viele Personen wird reserviert?",style: TextStyle(color: Colors.black,fontSize: 22),)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      iconSize: 30,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        color: Colors.black,
-                        onPressed: (){
-                          setState(() {
-                            if(peopleCounter > 1) peopleCounter--;
-                          });
-                        },
-                        icon: Icon(Icons.remove_circle_outline_sharp)
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: height/15,),
+                  Container(
+                        child: Lottie.asset('lib/assets/monkey.json',fit: BoxFit.scaleDown),
+                        height: height/3.5,
+                  ),
+                  SizedBox(height: height/30,),
+                  Material(
+                    elevation: 20,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Container(child: FittedBox(child: Text("Für wie viele Personen wird reserviert?",style: TextStyle(color: Colors.black,fontSize: 22),))),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                  iconSize: 30,
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  color: Colors.black,
+                                  onPressed: (){
+                                    setState(() {
+                                      if(peopleCounter > 1) peopleCounter--;
+                                    });
+                                  },
+                                  icon: Icon(Icons.remove_circle_outline_sharp)
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text("$peopleCounter",style: TextStyle(color: Colors.black,fontSize: 22),),
+                              ),
+                              IconButton(
+                                  iconSize: 30,
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  color: Colors.black,
+                                  onPressed: (){
+                                    setState(() {
+                                      peopleCounter++;
+                                    });
+                                  },
+                                  icon: Icon(Icons.add_circle_outline_sharp)
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text("$peopleCounter",style: TextStyle(color: Colors.black,fontSize: 22),),
-                    ),
-                    IconButton(
-                        iconSize: 30,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        color: Colors.black,
-                        onPressed: (){
-                          setState(() {
-                            peopleCounter++;
-                          });
-                        },
-                        icon: Icon(Icons.add_circle_outline_sharp)
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -154,36 +166,43 @@ class _ReservationState extends State<Reservation> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(30))
-                ),
-                padding: EdgeInsets.all(10),
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text("Datum und Uhrzeit",style: TextStyle(fontSize: 22,color: secondColor)),
+              Material(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                elevation: 20,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(30))
+                  ),
+                  padding: EdgeInsets.all(10),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text("Datum und Uhrzeit",style: TextStyle(fontSize: 22,color: secondColor)),
+                  ),
                 ),
               ),
-              Container(
-                color: Colors.white,
-                child: DatePicker(
-                  DateTime.now(),
-                  height: height/10,
-                  locale: "de",
-                  initialSelectedDate: _date,
-                  selectionColor: secondColor,
-                  selectedTextColor: Colors.white,
-                  onDateChange: (date) {
-                    // New date selected
-                    setState(() {
-                      _date = date;
-                    });
-                  },
+              Material(
+                elevation: 20,
+                child: Container(
+                  color: Colors.white,
+                  child: DatePicker(
+                    DateTime.now(),
+                    height: height/10,
+                    locale: "de",
+                    initialSelectedDate: _date,
+                    selectionColor: secondColor,
+                    selectedTextColor: Colors.white,
+                    onDateChange: (date) {
+                      // New date selected
+                      setState(() {
+                        _date = date;
+                      });
+                    },
+                  ),
                 ),
               ),
               createInlinePicker(
-                elevation: 0,
+                elevation: 20,
                 barrierColor: secondColor,
                 okText: "Speichern",
                 cancelText: "Zurücksetzten",
@@ -210,22 +229,26 @@ class _ReservationState extends State<Reservation> {
   }
 
   Widget nextButton() {
-    if(activeStep != upperBound) return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: secondColor,
-      ),
-      onPressed: () {
-        // Increment activeStep, when the next button is tapped. However, check for upper bound.
-        if (activeStep < upperBound) {
-          setState(() {
-            print(_time);
-            activeStep++;
-          });
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text('Weiter'),
+    if(activeStep != upperBound) return Material(
+      elevation: 20,
+      color: Colors.transparent,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: secondColor,
+        ),
+        onPressed: () {
+          // Increment activeStep, when the next button is tapped. However, check for upper bound.
+          if (activeStep < upperBound) {
+            setState(() {
+              print(_time);
+              activeStep++;
+            });
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Weiter'),
+        ),
       ),
     );
     else return Container();
@@ -233,21 +256,25 @@ class _ReservationState extends State<Reservation> {
 
   /// Returns the previous button.
   Widget previousButton() {
-    if(activeStep > 0) return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: secondColor,
-      ),
-      onPressed: () {
-        // Decrement activeStep, when the previous button is tapped. However, check for lower bound i.e., must be greater than 0.
-        if (activeStep > 0) {
-          setState(() {
-            activeStep--;
-          });
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Text('Zurück'),
+    if(activeStep > 0) return Material(
+      elevation: 20,
+      color: Colors.transparent,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: secondColor,
+        ),
+        onPressed: () {
+          // Decrement activeStep, when the previous button is tapped. However, check for lower bound i.e., must be greater than 0.
+          if (activeStep > 0) {
+            setState(() {
+              activeStep--;
+            });
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Zurück'),
+        ),
       ),
     );
     else return Container();
