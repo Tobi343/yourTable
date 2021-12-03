@@ -14,7 +14,8 @@ Future<void> main() async {
   if(date == "") runApp(MyApp());
   else {
     DateTime now = DateTime.now();
-    DateTime dateOfLogin = DateTime.parse(date);
+    List<String> parts = date.split("-");
+    DateTime dateOfLogin = new DateTime(int.parse(parts[0]),int.parse(parts[1]),int.parse(parts[2]));
     Duration diff = now.difference(dateOfLogin);
     if (email == "")
       runApp(MyApp());

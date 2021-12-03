@@ -31,6 +31,7 @@ class AuthService{
         }
     );
     if(res.statusCode == 200) {
+      print("test");
       email = username;
       jwToken = res.body;
       final prefs = await SharedPreferences.getInstance();
@@ -38,6 +39,7 @@ class AuthService{
       prefs.setString("jwt", jwToken);
       DateTime now = DateTime.now();
       String dateOfLogin = "${now.year}-${now.month}-${now.day}";
+      print(dateOfLogin);
       prefs.setString("date", dateOfLogin);
       return res.body;
     }

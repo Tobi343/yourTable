@@ -33,6 +33,12 @@ class _ReservationState extends State<Reservation> {
 
   DateTime _date = DateTime.now();
 
+  late TextEditingController informationController;
+  String informationText = "";
+
+  bool childChair = false;
+  bool dog = false;
+
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
       _time = newTime;
@@ -40,54 +46,76 @@ class _ReservationState extends State<Reservation> {
   }
 
   @override
+  void initState() {
+    informationController = new TextEditingController();
+    informationController.text = informationText;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    informationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: secondColor,
         centerTitle: true,
         title: Text("Tischreservierung"),
       ),
-      body: Column(
-        children: [
-          IconStepper(
-            lineLength: 75,
-            scrollingDisabled: false,
-            enableNextPreviousButtons: false,
-            enableStepTapping: false,
-            stepReachedAnimationEffect: Curves.linearToEaseOut,
-            activeStepColor: secondColor,
-            activeStepBorderColor: secondColor,
-            icons: [
-              Icon(Icons.people_alt_sharp),
-              Icon(Icons.access_alarm),
-              Icon(Icons.restaurant_menu_sharp),
-              Icon(Icons.info_outline_rounded),
-              Icon(Icons.done_sharp)
-            ],
-
-            // activeStep property set to activeStep variable defined above.
-            activeStep: activeStep,
-
-            // This ensures step-tapping updates the activeStep.
-            onStepReached: (index) {
-              setState(() {
-                activeStep = index;
-              });
-            },
-          ),
-          reservationBody(),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                previousButton(),
-                nextButton(),
+      body: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Column(
+          children: [
+            IconStepper(
+              lineLength: 75,
+              scrollingDisabled: false,
+              enableNextPreviousButtons: false,
+              enableStepTapping: false,
+              stepReachedAnimationEffect: Curves.linearToEaseOut,
+              activeStepColor: secondColor,
+              activeStepBorderColor: secondColor,
+              icons: [
+                Icon(Icons.people_alt_sharp),
+                Icon(Icons.access_alarm),
+                Icon(Icons.restaurant_menu_sharp),
+                Icon(Icons.info_outline_rounded),
+                Icon(Icons.done_sharp)
               ],
-            ),
-          ),
-        ],
 
+              // activeStep property set to activeStep variable defined above.
+              activeStep: activeStep,
+
+              // This ensures step-tapping updates the activeStep.
+              onStepReached: (index) {
+                setState(() {
+                  activeStep = index;
+                });
+              },
+            ),
+            reservationBody(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0,right: 20,left: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  previousButton(),
+                  nextButton(),
+                ],
+              ),
+            ),
+          ],
+
+        ),
       ),
     );
   }
@@ -163,65 +191,181 @@ class _ReservationState extends State<Reservation> {
         );
       case 1:
         return Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Material(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                elevation: 20,
-                child: Container(
-                  decoration: BoxDecoration(
+          child: ListView(
+            children: [Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Material(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  elevation: 20,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(30))
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text("Datum und Uhrzeit",style: TextStyle(fontSize: 22,color: secondColor)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Material(
+                  elevation: 20,
+                  child: Container(
                     color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(30))
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text("Datum und Uhrzeit",style: TextStyle(fontSize: 22,color: secondColor)),
-                  ),
-                ),
-              ),
-              Material(
-                elevation: 20,
-                child: Container(
-                  color: Colors.white,
-                  child: DatePicker(
-                    DateTime.now(),
-                    height: height/10,
-                    locale: "de",
-                    initialSelectedDate: _date,
-                    selectionColor: secondColor,
-                    selectedTextColor: Colors.white,
-                    onDateChange: (date) {
-                      // New date selected
-                      setState(() {
-                        _date = date;
-                      });
-                    },
+                    child: DatePicker(
+                      DateTime.now(),
+                      height: height/9,
+                      locale: "de",
+                      initialSelectedDate: _date,
+                      selectionColor: secondColor,
+                      selectedTextColor: Colors.white,
+                      onDateChange: (date) {
+                        // New date selected
+                        setState(() {
+                          _date = date;
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-              createInlinePicker(
-                elevation: 20,
-                barrierColor: secondColor,
-                okText: "Speichern",
-                cancelText: "Zurücksetzten",
-                okCancelStyle: TextStyle(color: secondColor),
-                isOnChangeValueMode: false,
-                hourLabel: "Stunde",
-                minuteLabel: "Minute",
-                accentColor: secondColor,
-                  minuteInterval: MinuteInterval.FIFTEEN,
-                  maxMinute: 50,
-                  is24HrFormat: true,
-                  iosStylePicker: true,
-                  context: context,
-                  value: _time,
-                  onChange: onTimeChanged,
-                  displayHeader: true
-              ),
-            ],
+                createInlinePicker(
+                  elevation: 20,
+                  barrierColor: secondColor,
+                  okText: "Speichern",
+                  cancelText: "Zurücksetzten",
+                  okCancelStyle: TextStyle(color: secondColor),
+                  isOnChangeValueMode: false,
+                  hourLabel: "Stunde",
+                  minuteLabel: "Minute",
+                  accentColor: secondColor,
+                    minuteInterval: MinuteInterval.FIFTEEN,
+                    maxMinute: 50,
+                    is24HrFormat: true,
+                    iosStylePicker: true,
+                    context: context,
+                    value: _time,
+                    onChange: onTimeChanged,
+                    displayHeader: true
+                ),
+              ],
+            )],
           ),
+        );
+      case 2:
+        return Expanded(
+            child: Container(
+              child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+            ),
+        );
+      case 3:
+        return Expanded(
+            child: ListView(
+              //mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                  child: Material(
+                    elevation: 20,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: ExpansionTile(
+                      textColor: Colors.black,
+                      title: Text("Information:",style: TextStyle(fontSize: 20),),
+                      subtitle: Text("Teilen Sie uns ihre Wünsche mit"),
+                      children: [
+                        SizedBox(height: 5,),
+                        TextFormField(
+                          controller: informationController,
+                          onChanged: (value){
+                            setState(() {
+                              informationText = value;
+                            });
+                          },
+                          maxLines: null,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(labelText: 'Ihr Anliegen', labelStyle: TextStyle(color: secondColor),
+                            //prefixIcon: Icon(Icons.email_sharp,color: secondColor,),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: secondColor,width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        )
+
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                  child: Material(
+                    elevation: 20,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: ExpansionTile(
+                      textColor: Colors.black,
+                        title: Text("Extras:",style: TextStyle(fontSize: 20),),
+                      subtitle: Text("Wählen Sie aus zahlreichen Optionen aus"),
+                      children: [
+                        InkWell(
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Text("Kinderstuhl"),
+                                    Checkbox(
+                                      activeColor: secondColor,
+                                        value: childChair,
+                                        onChanged: (value){
+                                          setState(() {
+                                            childChair = value!;
+                                          });
+                                        }
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(5),
+                              ),
+                              onTap: (){
+                                setState(() {
+                                  childChair = !childChair;
+                                });
+                              },
+                            ),
+                        InkWell(
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Text("Hund"),
+                                    Checkbox(
+                                        activeColor: secondColor,
+                                        value: dog,
+                                        onChanged: (value){
+                                          setState(() {
+                                            dog = value!;
+                                          });
+                                        }
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(5),
+                              ),
+                              onTap: (){
+                                setState(() {
+                                  dog = !dog;
+                                });
+                              },
+                            ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
         );
       default:
         return Expanded(child: Container());
