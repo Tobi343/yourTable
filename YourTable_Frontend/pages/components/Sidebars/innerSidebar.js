@@ -8,7 +8,9 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AppsIcon from "@mui/icons-material/Apps";
 import SecurityIcon from "@mui/icons-material/Security";
 import MyProfile from "../MyProfile";
+import AddIcon from '@mui/icons-material/Add';
 
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 function InnerSidebar(props) {
   function sidebarOpenMobile(e) {
     e.preventDefault();
@@ -52,7 +54,7 @@ function InnerSidebar(props) {
             onClick={()=>props.method(index+1,reservation.restaurant_name)}
             className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
           >
-            <EditIcon className="mr-3" />
+            <RestaurantIcon className="mr-3" />
             <p id="editProfileBtn" className=" hidden md:flex">
               {reservation.restaurant_name}
             </p>
@@ -60,10 +62,10 @@ function InnerSidebar(props) {
         ))}
 
         <a
-          onClick={()=>props.method(1,"Restaurant hinzufügen")}
+          onClick={()=>props.method(props.arr.length+1,"Restaurant hinzufügen")}
           className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
         >
-          <EditIcon className="mr-3" />{" "}
+          <AddIcon className="mr-3" />{" "}
           <p id="editProfileBtn" className=" hidden md:flex">
             Add Restaurant
           </p>

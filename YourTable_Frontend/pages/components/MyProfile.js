@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+
+
+
 
 function MyProfile(props) {
   const [edit, setEdit] = useState(false);
+
+  const [user,setUser] = useState(props.user)
+
+  useEffect(()=>{
+    setUser(props.user)
+  },[props.user]);
 
   return (
     <div className="flex-1 h-full">
@@ -23,6 +32,8 @@ function MyProfile(props) {
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="firstNameProfileEdit"
             type="fname"
+            onChange={e=>{edit?setUser({...user, ['customer_firstname']:e.target.value}):setUser(user)}}
+            value={user.customer_firstname}
             placeholder="Max"
           />
         </div>
@@ -34,7 +45,35 @@ function MyProfile(props) {
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="lastNameProfileEdit"
             type="lname"
+            onChange={e=>{edit?setUser({...user, ['customer_secondname']:e.target.value}):setUser(user)}}
+            value={user.customer_secondname}
             placeholder="Mustermann"
+          />
+        </div>
+        <div className="flex flex-col mx-6 my-3">
+          <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+            Username
+          </p>
+          <input
+            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="lastNameProfileEdit"
+            type="lname"
+            onChange={e=>{edit?setUser({...user, ['customer_username']:e.target.value}):setUser(user)}}
+            value={user.customer_username}
+            placeholder="Mustermann"
+          />
+        </div>
+        <div className="flex flex-col mx-6 my-3">
+          <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+            Phone
+          </p>
+          <input
+            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="lastNameProfileEdit"
+            type="phone"
+            onChange={e=>{edit?setUser({...user, ['customer_phone']:e.target.value}):setUser(user)}}
+            value={user.customer_phone}
+            placeholder="+43 00000000"
           />
         </div>
         <div className="flex flex-col mx-6 my-3 lg:col-span-2">
@@ -45,20 +84,29 @@ function MyProfile(props) {
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="emailProfileEdit"
             type="email"
+            value={user.customer_email}
             placeholder="max.mustermann@example.com"
           />
         </div>
         {edit ? (
           <div className="flex h-12 mt-5">
             <button
-              onClick={() => setEdit(false)}
+              onClick={() => {
+                
+                props.click(user)
+
+                setEdit(false)
+              
+              }}
               className=" bg-green-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
             >
               Save
             </button>
 
             <button
-              onClick={() => setEdit(false)}
+              onClick={() => {
+                setUser(props.user)
+                setEdit(false)}}
               className="bg-red-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
             >
               Abort

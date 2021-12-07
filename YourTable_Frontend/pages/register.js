@@ -15,7 +15,7 @@ const handleLogin = (email, password) => {
   });
 };
 
-function login() {
+function register() {
   return (
     <section class="min-h-screen flex items-stretch text-white ">
       <div className="lg:flex w-1/2 hidden bg-gray-900 relative items-center">
@@ -103,11 +103,11 @@ function login() {
             <div class="text-right text-gray-400 hover:underline hover:text-gray-100">
               <a href="#">Forgot your password?</a>
             </div>
-            <div class="px-4 pb-2 pt-4">
+            <div class="flex-row px-4 pb-2 pt-4">
               <button class="uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none">
-                Einloggen
+                Regestrieren
               </button>
-              <a href="/register">Oder regestrieren</a>
+              <a href="/login" classname="text-gray-400 hover:underline hover:text-gray-100 mt-5">Oder einloggen</a>
 
             </div>
 
@@ -153,4 +153,4 @@ function login() {
   );
 }
 
-export default login;
+export default register;
