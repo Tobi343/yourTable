@@ -5,6 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class AuthService{
 
   static const SERVER_IP = 'http://34.139.54.192';
@@ -17,6 +19,8 @@ class AuthService{
   static Map<String,dynamic> user = new Map();
   static List<dynamic> restaurantsJSON = [];
   static List<Restaurant> restaurants = [];
+  static List<Restaurant> fixRestaurants = [];
+
 
   Future<String?> attemptLogIn(String username, String password) async {
     var res = await http.post(
@@ -27,8 +31,16 @@ class AuthService{
         }
     );
     if(res.statusCode == 200) {
+      print("test");
       email = username;
       jwToken = res.body;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("email", username);
+      prefs.setString("jwt", jwToken);
+      DateTime now = DateTime.now();
+      String dateOfLogin = "${now.year}-${now.month}-${now.day}";
+      print(dateOfLogin);
+      prefs.setString("date", dateOfLogin);
       return res.body;
     }
     return null;
@@ -55,8 +67,11 @@ class AuthService{
     //restaurants = restaurantsJSON[0].map((item) => Restaurant.fromMap(json.decode(item))).toList();
     //print(restaurants[0]);
     restaurants = [];
+    fixRestaurants = [];
     for (var o in restaurantsJSON) {
-      restaurants.add(new Restaurant(restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"]));
+      var r = new Restaurant(restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"],details: o["details"]);
+      restaurants.add(r);
+      fixRestaurants.add(r);
     }
     //print(restaurants[0].restaurantName);
     return res.body;
