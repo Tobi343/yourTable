@@ -34,92 +34,96 @@ function chat({ name }) {
   const [arr, setArr] = useState(["Hallo"]);
   const [sockets, setSockets] = useState([]);
   const [userState, setUserState] = useState([{}]);
-  var userStateArr = [];
   const [selectedUser, setSelectedUser] = useState(0);
+  const [socketState, setSocketState] = useState();
   //const username = Math.random()*1000+"";
-
-  const socket = io("http://localhost:8080", {
-    withCredentials: true,
-    autoConnect: false,
-    extraHeaders: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-
- 
+  const forceUpdate = React.useCallback(() => setUserState(userState), []);
 
   useEffect(() => {
+    const socket = io("http://localhost:8080", {
+      withCredentials: true,
+      autoConnect: false,
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+
+    var usersArr = [];
+
+    socket.on("users", (users) => {
+      console.log("GOT SOME USERS");
+      users.forEach((user) => {
+        user.self = user.userID === socket.id;
+        user.messages = user.messages === undefined ? [] : user.messages;
+      });
+      usersArr = users;
+      setUserState(users);
+    });
+
+    socket.on("private message", ({ content, from }) => {
+      console.log(usersArr);
+      console.log(selectedUser);
+      for (let i = 0; i < usersArr.length; i++) {
+        const user = usersArr[i];
+
+        if (user.userID === from) {
+          user.messages.push({
+            content,
+            fromSelf: false,
+          });
+          break;
+        }
+      }
+      console.log("rerender");
+      forceUpdate();
+      setUserState(usersArr);
+    });
+
+    socket.on("error", function (err) {
+      console.log("err:" + err);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
+    socket.on("disconnect", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
     socket.auth = { username: name.name };
     socket.connect();
+
+    setSocketState(socket);
+
+    return () => clearInterval(timerID);
   }, []);
 
-  socket.onAny((event, ...args) => {
-    console.log(event, args);
-  });
-
-  socket.on("connect", () => {
-    //console.log("Connected: " + socket.connected); // true
-  });
-
-  socket.on("sockets", (data) => {
-    //console.log("sockets: "+(data))
-  });
-
-  socket.on("chat message", (data) => {
-    console.log("sockets: " + data);
-  });
-
-  socket.on("users", (users) => {
-    console.log("USERS:" + users);
-    const usersArr = [];
-    users.map((element) => {
-      console.log(element)
-      usersArr.push(element);
-    });
-    console.log("LOST:" + JSON.stringify(usersArr));
-    userStateArr = usersArr;
-    console.log(socket.connected)
-  });
-
-  socket.on("user connected", (user) => {
-    console.log("Connected: " + user);
-    setUserState((prevState) => [...prevState, user]);
-  });
-
-  socket.on("private message", ({ content, from }) => {
-    for (let i = 0; i < userStateArr.length; i++) {
-      const user = userStateArr[i];
-      if (user.userID === from) {
-        userStateArr[i].messages.push({
-          content,
-          fromSelf: false,
-        });
-        if (userStateArr[i] !== userStateArr[selectedUser]) {
-          userStateArr[i].hasNewMessages = true;
-        }
-        break;
-      }
-    }
-    userStateArr=users;
-    console.log("getMessage: " + userStateArr[selectedUser]);
-  });
-
-  socket.on("error", function (err) {
-    console.log("err:" + err);
-  });
+  useEffect(() => {
+    console.log("ABC");
+  }, [userState]);
 
   function sendMessage() {
-    console.log(socket.connected);
-    console.log(userStateArr);
-    const val = message.value;
-    socket.emit("abc", "abc");
-    console.log("Sended message " + val);
+    const content = message.value;
+    socketState.emit("private message", {
+      content,
+      to: userState[selectedUser].userID,
+    });
+    const users = [...userState];
+    users[selectedUser].messages.push({
+      content,
+      fromSelf: true,
+    });
+    setUserState(users);
+    console.log(users);
+    console.log("Sended message " + content);
     message.value = "";
   }
 
   function setStateNumber(i) {
-    console.log(userState[i]);
-    setSelectedUser(i);
+    console.log(userState[i+1]);
+    console.log(selectedUser);
+    setSelectedUser(i+1);
   }
 
   return (
@@ -134,7 +138,7 @@ function chat({ name }) {
           <div className="flex-1 bg-gray-200 flex">
             <div className="bg-white w-16 md:w-72 h-full pt-24">
               <div className="">
-                {userStateArr.map((el, i) => (
+                {userState.filter(x=>!x.self).map((el, i) => (
                   <a
                     key={i}
                     onClick={() => setStateNumber(i)}
@@ -152,12 +156,12 @@ function chat({ name }) {
               <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
                 <div className="flex flex-col overflow-x-auto overflow-y-scroll max-h-96 mb-4">
                   <div className="grid grid-cols-12 gap-y-2">
-                    {userStateArr[selectedUser] === undefined ||
-                    userStateArr[selectedUser].messages === undefined ? (
-                      <ChatItem message={"el"}></ChatItem>
+                    {userState[selectedUser] === undefined ||
+                    userState[selectedUser].messages === undefined ? (
+                      <ChatItem name={"e"} color={NavColor} message={"error"} self={true}></ChatItem>
                     ) : (
-                      userStateArr[selectedUser].messages.map((el) => (
-                        <ChatItem message={el}></ChatItem>
+                      userState[selectedUser].messages.map((el) => (
+                        <ChatItem name={el.fromSelf?name.name.substring(0,1).toUpperCase():userState[selectedUser].username} color={NavColor} message={el.content} self={el.fromSelf}></ChatItem>
                       ))
                     )}
                   </div>
@@ -182,7 +186,7 @@ function chat({ name }) {
                       onClick={(e) => {
                         sendMessage();
                       }}
-                      className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                      className={`flex items-center justify-center ${NavColor} hover:${NavColor.replace("5","6")} rounded-xl text-white px-4 py-1 flex-shrink-0`}
                     >
                       <span>Send</span>
                       <span className="ml-2">

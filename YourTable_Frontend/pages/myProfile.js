@@ -18,16 +18,26 @@ import EditRestaurant from "./components/EditRestaurant";
 import Router from "next/router";
 import CreateRestaurant from "./components/CreateRestaurant";
 import RestauranteLayout from "./components/RestauranteLayout";
+import { getSession } from "next-auth/react";
 
-export async function getServerSideProps() {
-  //http://34.139.54.192/users/data/sebi@gmail.com
+export async function getServerSideProps(context) {
 
-  const res = await fetch("http://34.139.54.192/restaurant/2");
-  const res1 = await fetch("http://34.139.54.192/users/data/sebi@gmail.com", {
+  const session =  await getSession(context)
+  console.log("Session: "+session.accessToken)
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  const res = await fetch(`http://localhost:8080/restaurant/2`);
+  const res1 = await fetch(`http://localhost:8080/users/data/`+session.email, {
     method: "GET",
     headers: new Headers({
       Authorization:
-        "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlYmlAZ21haWwuY29tIiwiaWF0IjoxNjM4MjU4ODY1LCJleHAiOjE2Mzk1NTQ4NjV9.dNb7ffHqqXvcF3p0PyVojWAqVARirra1jmYpl_X022c",
+      "Token "+session.accessToken,
       "Content-Type": "application/x-www-form-urlencoded",
     }),
   });
@@ -77,7 +87,7 @@ async function editRestaurant(restaurant) {
 
 async function editProfile(profile) {
   console.log(profile);
-  const res = await fetch("http://34.139.54.192/users/data/updateUserData", {
+  const res = await fetch("http://localhost:8080/users/data/updateUserData", {
     method: "POST",
     headers: new Headers({
       "Access-Control-Allow-Origin": "*",
@@ -86,6 +96,7 @@ async function editProfile(profile) {
     body: JSON.stringify({
       lastName: profile.customer_secondname,
       firstName: profile.customer_firstname,
+      userName: profile.customer_username,
       phone: profile.customer_phone,
       email: profile.customer_email,
     }),

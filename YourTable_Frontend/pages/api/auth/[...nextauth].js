@@ -25,7 +25,6 @@ const providers = [
         email: credentials.email,
       }
       
-      console.log(object);
 
       if (user) {
         console.log("success");
@@ -62,6 +61,8 @@ const callbacks = {
     if(token){
       session.accessToken = token.accessToken;
       session.name = token.name;
+      session.email = token.email;
+      session.picture = token.picture;
     }
     return session;
 
@@ -81,6 +82,7 @@ const callbacks = {
 const session = {
   jwt: true,
 };
+
 
 const options = {
   providers,

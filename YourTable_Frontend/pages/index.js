@@ -9,7 +9,7 @@ import { useSession, signIn, signOut,getSession } from "next-auth/react"
 
 export async function getServerSideProps(context) {
  const session =  await getSession(context)
-  console.log("Session: "+session)
+  console.log("Session: "+Object.get)
   if (!session) {
     return {
       redirect: {
@@ -30,7 +30,6 @@ export default function Home({session}) {
   const [NavColor,setNavColor] = useState("bg-blue-500");
   //const { data: session, status } = useSession()
 
-  console.log('Pic: '+session)
   //console.log("Session: "+session)
   //if(session)
     //console.log("Success");
@@ -49,7 +48,7 @@ export default function Home({session}) {
           <Sidebar NavColorField={NavColor}/>
           <div className="w-full flex flex-col h-screen overflow-y-hidden">
             <MobileSideBar />
-            <CardContainer />
+            <CardContainer  Color={NavColor}/>
           </div>
         </main>
       </div>
