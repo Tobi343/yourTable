@@ -50,7 +50,7 @@ async function editRestaurant(restaurant) {
     logoImage: restaurant.restaurant_logo,
     details: restaurant.details,
     id: restaurant.id,
-    layout: restaurant.layout,
+    layout: restaurant.restaurant_layout,
   }));
   const res = await fetch(
     "http://34.139.54.192/restaurants/data/updateRestaurantData",
@@ -67,7 +67,7 @@ async function editRestaurant(restaurant) {
         logoImage: restaurant.restaurant_logo,
         details: restaurant.details,
         id: restaurant.id,
-        layout: restaurant.layout,
+        layout: restaurant.restaurant_layout,
       }),
     }
   );
@@ -112,9 +112,11 @@ function myProfile({ restaurant, user }) {
     setTitle(text);
     setEditLayout(false);
 
+    //restaurant[moduleNumber - 1].layout = tables;
+
     console.log(moduleNumber);
     console.log(restaurant.length);
-    console.log(restaurant[moduleNumber - 1]);
+   // console.log(restaurant[moduleNumber - 1].layout);
   }
 
   const [moduleNumber, setModuleNumber] = useState(0);
@@ -122,6 +124,7 @@ function myProfile({ restaurant, user }) {
   const [editLayout, setEditLayout] = useState(false);
 
   const size = 50;
+
 
   const [tables, setTables] = useState([
     [
@@ -145,6 +148,7 @@ function myProfile({ restaurant, user }) {
     [],
     [],
   ]);
+
 
   return (
     <div>
@@ -178,6 +182,7 @@ function myProfile({ restaurant, user }) {
               ></RestauranteLayout>
             ) : (
               <EditRestaurant
+                tables={tables}
                 restaurant={restaurant[moduleNumber - 1]}
                 className=" flex-1 h-full"
                 edit={setEditLayout}

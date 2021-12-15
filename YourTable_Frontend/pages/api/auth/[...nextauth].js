@@ -20,11 +20,16 @@ const providers = [
 
       const user = res.data;
 
-      console.log(user);
+      const object = {
+        token: user,
+        email: credentials.email,
+      }
+      
+      console.log(object);
 
       if (user) {
         console.log("success");
-        return user;
+        return object;
       }
       console.log("error");
       return null;
@@ -37,17 +42,15 @@ const callbacks = {
   async jwt({ token, user, account, profile, isNewUser }) {
     // This user return by provider {} as you mentioned above MY CONTENT {token:}
     if (user) {
-      console.log("LOL: " + user);
-      console.log("LOL: " + account);
+
       token = {
-        name: 'sebi@gmail.com'.split("@")[0],
-        email: 'sebi@gmail.com',
-        picture: "undefined",
+        name: user.email.split("@")[0],
+        email: user.email,
+        picture: "https://firebasestorage.googleapis.com/v0/b/usedado.appspot.com/o/UserImage%2Fdeafult.jpeg?alt=media&token=70fee5c5-4cb3-4695-9778-8698a50c6c8c",
         sub: "undefined",
-        accessToken: user
+        accessToken: user.token
       };
 
-      console.log('ABC: '+token);
 
     }
     return token;
@@ -55,12 +58,10 @@ const callbacks = {
   },
   async session({ session, user, token }) {
     // this token return above jwt()
-    console.log("Session");
-    console.log(token)
+
     if(token){
-      console.log("Token set")
-      session.accessToken = token.accessToken
-  
+      session.accessToken = token.accessToken;
+      session.name = token.name;
     }
     return session;
 
@@ -85,6 +86,9 @@ const options = {
   providers,
   callbacks,
   session,
+  pages: {
+    error: '/login' // Changing the error redirect page to our custom login page
+  }
 };
 
 export default (req, res) => NextAuth(req, res, options);

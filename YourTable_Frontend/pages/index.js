@@ -8,7 +8,7 @@ import Navbar from "./components/Sidebars/Navbar";
 import { useSession, signIn, signOut,getSession } from "next-auth/react"
 
 export async function getServerSideProps(context) {
- /*const session =  await getSession(context)
+ const session =  await getSession(context)
   console.log("Session: "+session)
   if (!session) {
     return {
@@ -18,22 +18,24 @@ export async function getServerSideProps(context) {
       },
     }
   }
-*/
+
   return {
-    props: { session: 'session'   }
+    props: { session: session   }
   
   }
 }
 
-export default function Home() {
+export default function Home({session}) {
 
   const [NavColor,setNavColor] = useState("bg-blue-500");
-  const { data: session, status } = useSession()
+  //const { data: session, status } = useSession()
 
-  if(session)
-    console.log("Success");
-  else
-    console.log("No Success")
+  console.log('Pic: '+session)
+  //console.log("Session: "+session)
+  //if(session)
+    //console.log("Success");
+  //else
+    //console.log("No Success")
 
   return (
     <div>
@@ -42,7 +44,7 @@ export default function Home() {
         <link rel="icon" href="/orange_logo.png" />
       </Head>
       <div>
-        <Navbar setNavColorField={setNavColor}/>
+        <Navbar setNavColorField={setNavColor} session={session} />
         <main className="flex bg-gray-100">
           <Sidebar NavColorField={NavColor}/>
           <div className="w-full flex flex-col h-screen overflow-y-hidden">

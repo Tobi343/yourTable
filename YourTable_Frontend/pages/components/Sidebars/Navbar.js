@@ -37,7 +37,7 @@ function Navbar(props) {
     <nav className="bg-white">
       <div className="max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
-          <div className="flex-1 flex items-center justify-center md:items-stretch md:justify-start">
+          <div className="flex-1 flex items-center justify-start">
             <button
               id="sidebarBtn"
               onClick={triggerNavBar}
@@ -45,25 +45,7 @@ function Navbar(props) {
             >
               <MenuIcon />
             </button>
-            <form method="GET" className="w-full invisible sm:visible">
-              <div className="relative text-gray-500 ml-6 px-3 pt-1">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-2 pt-1">
-                  <button
-                    type="submit"
-                    className="p-1 focus:outline-none focus:shadow-outline"
-                  >
-                    <SearchIcon />
-                  </button>
-                </span>
-                <input
-                  type="search"
-                  className="py-2 text-md text-gray-900 w-full
-                rounded-md pl-10 bg-transparent placeholder-gray-800 focus:outline-none
-                focus:bg-white focus:text-gray-800"
-                  placeholder="Search..."
-                />
-              </div>
-            </form>
+            
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="ml-3 relative">
@@ -140,7 +122,7 @@ function Navbar(props) {
                   <span className="sr-only">Open user menu</span>
                   <img
                     className="h-8 w-8 rounded-full"
-                    src="/sample-profile.png"
+                    src={props.session === undefined || props.session == 'undefined' ? "/sample-profile.png":props.session.picture}
                     alt=""
                   />
                 </button>

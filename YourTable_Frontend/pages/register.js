@@ -2,12 +2,12 @@ import React from "react";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useSession, signIn, signOut, getSession } from "next-auth/react";
+import { useSession, signIn, signUp, getSession } from "next-auth/react";
 
-const handleLogin = (email, password) => {
+const handleRegister = (email, password) => {
   console.log(email + " " + password);
 
-  signIn("credentials", {
+  signUp("credentials", {
     email,
     password,
     // The page where you want to redirect to after a
@@ -70,15 +70,13 @@ function register() {
         <div class="w-full py-6 z-20 ">
           <img src="/YourTable.png" className="w-64 mx-auto" />
           <div class="py-6 space-x-5">
-            <FacebookIcon class="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white"></FacebookIcon>
             <GoogleIcon class="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white"></GoogleIcon>
-            <GitHubIcon class="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white"></GitHubIcon>
           </div>
           <p class="text-gray-100">or use email your account</p>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleLogin(email.value, password.value);
+              handleRegister(email.value, password.value);
             }}
             class="sm:w-2/3 w-full px-4 lg:px-0 mx-auto"
           >

@@ -12,7 +12,7 @@ function Sidebar(props) {
   return (
     <aside
       id="v_SideBar"
-      className={`bg-blue-500 relative h-screen w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
+      className={`${props.NavColorField} relative h-screen w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
     >
       <div className="p-6">
         <a
@@ -36,7 +36,7 @@ function Sidebar(props) {
         <SideBarCard
           Text="Chats"
           Icon={<ForumIcon className="mr-3" />}
-          Link="#"
+          Link="/chat"
         />
         <SideBarCard
           Text="Meine Restaurants"
@@ -51,10 +51,8 @@ function Sidebar(props) {
         <SideBarCard
           Text="Ausloggen"
           Icon={<LogoutIcon className="mr-3" />}
-          Link="#"
-          onClick={(e)=>signOut({
-            callbackUrl: `${window.location.origin}/login`
-          })}
+          Link="/"
+          onClick={(e)=>signOut()}
           
         />
       </nav>

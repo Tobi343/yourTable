@@ -7,9 +7,29 @@ import { useState } from "react";
 
 import Table from "./components/table";
 import _ from "lodash";
+import { getSession } from "next-auth/react";
 
-export async function getStaticProps() {
-  const res = await fetch("http://34.139.54.192/reservations");
+export async function getServerSideProps(context) {
+
+  const session =  await getSession(context)
+  console.log("Session: "+session.accessToken)
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  const res = await fetch("http://34.139.54.192/reservations", {
+    method: "GET",
+    headers: new Headers({
+      Authorization:
+        "Token "+session.accessToken,
+      "Content-Type": "application/x-www-form-urlencoded",
+    }),
+  });
   const reser = await res.json();
 
   return {

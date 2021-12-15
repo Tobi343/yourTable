@@ -4,24 +4,81 @@ import Autocomplete from "react-google-autocomplete";
 
 function EditRestaurant(props) {
   const [restaurant, setRestaurant] = useState(props.restaurant);
+  const [image, setImage] = useState({
+    preview: props.restaurant.restaurant_logo,
+    raw: "",
+  });
+
+  const handleChange = (e) => {
+    console.log({
+      preview: URL.createObjectURL(e.target.files[0]),
+      raw: e.target.files[0],
+    });
+    if (e.target.files.length) {
+      var binaryData = [];
+      binaryData.push(e.target.files[0]);
+      window.URL.createObjectURL(
+        new Blob(binaryData, { type: "application/zip" })
+      );
+      setImage({
+        preview:window.URL.createObjectURL( new Blob(binaryData, { type: "application/zip" })),
+        
+        raw: e.target.files[0],
+      });
+    }
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("image", image.raw);
+
+    await fetch("YOUR_URL", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: formData,
+    });
+  };
 
   useEffect(() => {
     setRestaurant(props.restaurant);
   }, [props.restaurant]);
+
+  function ImageHandler(e) {
+    const reader = new FileReader();
+    reader.onload = () => {};
+    reader.readAsDataURL(e.target.files[0]);
+  }
 
   return (
     <div className="flex-1 h-full">
       <div class="bg-white block">
         <div class="">
           <div class="w-full bg-blue-500  h-48 rounded-t-lg">
-            <img src={restaurant.restaurant_image} className="object-cover w-full h-48" />
+            <img
+              src={restaurant.restaurant_image}
+              className="object-cover w-full h-48"
+            />
           </div>
           <div class="absolute -mt-20 ml-5">
             <div class="bg-gray-200 border border-gray-300 h-36 w-36 rounded-lg shadow-md border-b border-primary">
-              <img src={restaurant.restaurant_logo} className="object-cover h-36 w-36 rounded-lg" />
+              <label htmlFor="upload-button">
+                <img 
+                  src={image.preview}
+                  className="object-cover h-36 w-36 rounded-lg"
+                />
+              </label>
             </div>
           </div>
         </div>
+        <input
+          type="file"
+          id="upload-button"
+          style={{ display: "none" }}
+          onChange={handleChange}
+        />
 
         <div class="bg-primary border border-primary rounded-b-lg p-5 pt-20 flex flex-col">
           <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -91,7 +148,15 @@ function EditRestaurant(props) {
             <div className="flex h-12 mt-5">
               <button
                 className="bg-green-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
-                onClick={() => props.click(restaurant)}
+                onClick={() => {
+                  handleUpload();
+                  setRestaurant({
+                    ...restaurant,
+                    ["restaurant_layout"]: props.tables,
+                  });
+                  console.log(restaurant);
+                  props.click(restaurant);
+                }}
               >
                 Save
               </button>
