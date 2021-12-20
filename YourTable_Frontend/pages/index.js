@@ -9,7 +9,6 @@ import { useSession, signIn, signOut,getSession } from "next-auth/react"
 
 export async function getServerSideProps(context) {
  const session =  await getSession(context)
-  console.log("Session: "+Object.get)
   if (!session) {
     return {
       redirect: {
@@ -27,7 +26,7 @@ export async function getServerSideProps(context) {
 
 export default function Home({session}) {
 
-  const [NavColor,setNavColor] = useState("bg-blue-500");
+  const [NavColor,setNavColor] = useState("bg-blue-500" );
   //const { data: session, status } = useSession()
 
   //console.log("Session: "+session)

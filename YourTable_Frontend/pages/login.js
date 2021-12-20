@@ -6,10 +6,11 @@ import { useSession, signIn, signOut, getSession } from "next-auth/react";
 
 const handleLogin = (email, password) => {
   console.log(email + " " + password);
-
+  const register = false;
   signIn("credentials", {
     email,
     password,
+    register,
     // The page where you want to redirect to after a
     // successful login
   });

@@ -36,11 +36,10 @@ function chat({ name }) {
   const [userState, setUserState] = useState([{}]);
   const [selectedUser, setSelectedUser] = useState(0);
   const [socketState, setSocketState] = useState();
-  //const username = Math.random()*1000+"";
   const forceUpdate = React.useCallback(() => setUserState(userState), []);
 
   useEffect(() => {
-    const socket = io("http://localhost:8080", {
+    const socket = io("http://10.15.55.136:8080", {
       withCredentials: true,
       autoConnect: false,
       extraHeaders: {
@@ -52,6 +51,7 @@ function chat({ name }) {
 
     socket.on("users", (users) => {
       console.log("GOT SOME USERS");
+      console.log(users);
       users.forEach((user) => {
         user.self = user.userID === socket.id;
         user.messages = user.messages === undefined ? [] : user.messages;

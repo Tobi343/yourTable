@@ -32,8 +32,8 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  const res = await fetch(`http://localhost:8080/restaurant/2`);
-  const res1 = await fetch(`http://localhost:8080/users/data/`+session.email, {
+  const res = await fetch(`http://34.139.54.192/restaurant/2`);
+  const res1 = await fetch(`http://34.139.54.192/users/data/`+session.email, {
     method: "GET",
     headers: new Headers({
       Authorization:
