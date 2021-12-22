@@ -3,8 +3,8 @@ import MobileSideBar from "./components/Sidebars/MobileSideBar";
 import Sidebar from "./components/Sidebars/Sidebar";
 import CardContainer from "./components/Cards/CardContainer";
 import Navbar from "./components/Sidebars/Navbar";
-import { useState } from "react";
-
+import { useState,useContext } from "react";
+import ColorContext from "./contexts/ColorContext";
 import Table from "./components/table";
 import _ from "lodash";
 import { getSession } from "next-auth/react";
@@ -41,6 +41,7 @@ export async function getServerSideProps(context) {
 
 function Reservations({ reser }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
+  const {color, setColor} = useContext(ColorContext);
 
   const days = [
     { day: "Mon", date: "5.12" },
@@ -81,9 +82,9 @@ function Reservations({ reser }) {
 
   return (
     <div>
-      <Navbar setNavColorField={setNavColor} />
+      <Navbar setNavColorField={setColor} />
       <main className="flex bg-gray-100">
-        <Sidebar NavColorField={NavColor} />
+        <Sidebar NavColorField={color} />
 
         <div className="w-full flex flex-col h-screen overflow-y-hidden">
           <MobileSideBar />

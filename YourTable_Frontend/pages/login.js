@@ -6,7 +6,7 @@ import { useSession, signIn, signOut, getSession } from "next-auth/react";
 
 const handleLogin = (email, password) => {
   console.log(email + " " + password);
-  const register = false;
+  const register = "false";
   signIn("credentials", {
     email,
     password,

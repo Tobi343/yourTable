@@ -7,12 +7,16 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import ForumIcon from "@mui/icons-material/Forum";
 import { signOut } from "next-auth/react";
+import { useContext } from "react";
+import ColorContext from "../../contexts/ColorContext";
 
 function Sidebar(props) {
+  const {color, setColor} = useContext(ColorContext);
+
   return (
     <aside
       id="v_SideBar"
-      className={`${props.NavColorField} relative h-screen w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
+      className={`${color} relative h-screen w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
     >
       <div className="p-6">
         <a

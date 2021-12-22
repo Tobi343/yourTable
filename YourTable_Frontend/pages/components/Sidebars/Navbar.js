@@ -1,19 +1,18 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import ColorContext from "../../contexts/ColorContext";
 
 function Navbar(props) {
   //localStorage.setItem('color', "bg-blue-500");
 
-  const setColor = (parameter) => (e) => {
-    e.preventDefault();
-    v_SideBar.classList.remove(localStorage.getItem("color"));
-    v_SideBar.classList.add(parameter);
-    //setNavColor(parameter);
-  };
+  const {color, setColor} = useContext(ColorContext);
+
+
+
 
   function showColors(e) {
     e.preventDefault();
@@ -89,23 +88,23 @@ function Navbar(props) {
                 <div className="py-2">
                   <button
                     className="bg-blue-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-blue-600"
-                    onClick={() => props.setNavColorField("bg-blue-500")}
+                    onClick={() => setColor("bg-blue-500")}
                   ></button>
                   <button
                     className="bg-indigo-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-indigo-600"
-                    onClick={() => props.setNavColorField("bg-indigo-500")}
+                    onClick={() => setColor("bg-indigo-500")}
                   ></button>
                   <button
                     className="bg-green-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-green-600"
-                    onClick={() => props.setNavColorField("bg-green-500")}
+                    onClick={() => setColor("bg-green-500")}
                   ></button>
                   <button
                     className="bg-red-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-red-600"
-                    onClick={() => props.setNavColorField("bg-red-500")}
+                    onClick={() => setColor("bg-red-500")}
                   ></button>
                   <button
                     className="bg-gray-800 w-24 h-8 rounded block mx-auto my-1 hover:bg-gray-900"
-                    onClick={() => props.setNavColorField("bg-gray-800")}
+                    onClick={() => setColor("bg-gray-800")}
                   ></button>
                 </div>
               </div>

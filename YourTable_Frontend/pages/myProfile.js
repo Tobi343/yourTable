@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import Sidebar from "./components/Sidebars/Sidebar";
 import Navbar from "./components/Sidebars/Navbar";
 import MobileSideBar from "./components/Sidebars/MobileSideBar";
@@ -19,7 +19,7 @@ import Router from "next/router";
 import CreateRestaurant from "./components/CreateRestaurant";
 import RestauranteLayout from "./components/RestauranteLayout";
 import { getSession } from "next-auth/react";
-
+import ColorContext from "./contexts/ColorContext";
 export async function getServerSideProps(context) {
 
   const session =  await getSession(context)
@@ -107,6 +107,8 @@ async function editProfile(profile) {
 
 function myProfile({ restaurant, user }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
+  const {color, setColor} = useContext(ColorContext);
+
 
   function sidebarOpenMobile(e) {
     e.preventDefault();
@@ -163,9 +165,9 @@ function myProfile({ restaurant, user }) {
 
   return (
     <div>
-      <Navbar setNavColorField={setNavColor} />
+      <Navbar setNavColorField={setColor} />
       <main className="flex bg-gray-100 h-full">
-        <Sidebar NavColorField={NavColor} />
+        <Sidebar NavColorField={color} />
         <div className="w-full flex flex-col h-screen ">
           <MobileSideBar />
           <div className="flex h-full">

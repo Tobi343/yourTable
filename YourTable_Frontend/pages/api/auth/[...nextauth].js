@@ -14,9 +14,12 @@ const providers = [
 
     async authorize(credentials, req) {
       
-      const path = credentials.register ? "/register" : "/login"
+      const path = credentials.register == "true" ? "/register" : "/login"
       
-     
+      
+
+      console.log(credentials.register)
+
       const res = await axios.post("http://34.139.54.192/users"+path, {
         email: credentials.email,
         password: credentials.password,
@@ -24,7 +27,7 @@ const providers = [
 
       const user = res.data;
 
-      const object = {s
+      const object = {
         token: user,
         email: credentials.email,
       };

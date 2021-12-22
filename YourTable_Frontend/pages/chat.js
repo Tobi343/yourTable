@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Navbar from "./components/Sidebars/Navbar";
 import Sidebar from "./components/Sidebars/Sidebar";
 import MobileSideBar from "./components/Sidebars/MobileSideBar";
@@ -8,7 +8,7 @@ import ChatItem from "./components/chatItem";
 import { io } from "socket.io-client";
 import { CompressOutlined } from "@mui/icons-material";
 import { getSession } from "next-auth/react";
-
+import ColorContext from "./contexts/ColorContext";
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
@@ -31,6 +31,8 @@ export async function getServerSideProps(context) {
 
 function chat({ name }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
+  const {color, setColor} = useContext(ColorContext);
+
   const [arr, setArr] = useState(["Hallo"]);
   const [sockets, setSockets] = useState([]);
   const [userState, setUserState] = useState([{}]);
@@ -39,7 +41,7 @@ function chat({ name }) {
   const forceUpdate = React.useCallback(() => setUserState(userState), []);
 
   useEffect(() => {
-    const socket = io("http://10.15.55.136:8080", {
+    const socket = io("http://34.139.54.192", {
       withCredentials: true,
       autoConnect: false,
       extraHeaders: {
@@ -128,9 +130,9 @@ function chat({ name }) {
 
   return (
     <div>
-      <Navbar setNavColorField={setNavColor} />
+      <Navbar setNavColorField={setColor} />
       <main className="flex bg-gray-100">
-        <Sidebar NavColorField={NavColor} />
+        <Sidebar NavColorField={color} />
 
         <div className="w-full flex flex-col h-screen overflow-y-hidden">
           <MobileSideBar />
@@ -152,16 +154,16 @@ function chat({ name }) {
                 ))}
               </div>
             </div>
-            <div className="flex flex-1 flex-col h-full p-6">
-              <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-                <div className="flex flex-col overflow-x-auto overflow-y-scroll max-h-96 mb-4">
+            <div className="flex flex-1 flex-col h-screen p-6">
+              <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full justify-end p-4">
+                <div className="flex flex-col overflow-x-auto overflow-y-scroll mb-4 ">
                   <div className="grid grid-cols-12 gap-y-2">
                     {userState[selectedUser] === undefined ||
                     userState[selectedUser].messages === undefined ? (
-                      <ChatItem name={"e"} color={NavColor} message={"error"} self={true}></ChatItem>
+                      <ChatItem name={"e"} color={color} message={"error"} self={true}></ChatItem>
                     ) : (
-                      userState[selectedUser].messages.map((el) => (
-                        <ChatItem name={el.fromSelf?name.name.substring(0,1).toUpperCase():userState[selectedUser].username} color={NavColor} message={el.content} self={el.fromSelf}></ChatItem>
+                      userState[selectedUser].messages.map((el,i) => (
+                        <ChatItem key={i} name={el.fromSelf?name.name.substring(0,1).toUpperCase():userState[selectedUser].username} color={color} message={el.content} self={el.fromSelf}></ChatItem>
                       ))
                     )}
                   </div>
