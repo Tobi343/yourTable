@@ -1,19 +1,18 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import ColorContext from "../../contexts/ColorContext";
 
 function Navbar(props) {
   //localStorage.setItem('color', "bg-blue-500");
 
-  const setColor = (parameter) => (e) => {
-    e.preventDefault();
-    v_SideBar.classList.remove(localStorage.getItem("color"));
-    v_SideBar.classList.add(parameter);
-    //setNavColor(parameter);
-  };
+  const {color, setColor} = useContext(ColorContext);
+
+
+
 
   function showColors(e) {
     e.preventDefault();
@@ -37,7 +36,7 @@ function Navbar(props) {
     <nav className="bg-white">
       <div className="max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
-          <div className="flex-1 flex items-center justify-center md:items-stretch md:justify-start">
+          <div className="flex-1 flex items-center justify-start">
             <button
               id="sidebarBtn"
               onClick={triggerNavBar}
@@ -45,25 +44,7 @@ function Navbar(props) {
             >
               <MenuIcon />
             </button>
-            <form method="GET" className="w-full invisible sm:visible">
-              <div className="relative text-gray-500 ml-6 px-3 pt-1">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-2 pt-1">
-                  <button
-                    type="submit"
-                    className="p-1 focus:outline-none focus:shadow-outline"
-                  >
-                    <SearchIcon />
-                  </button>
-                </span>
-                <input
-                  type="search"
-                  className="py-2 text-md text-gray-900 w-full
-                rounded-md pl-10 bg-transparent placeholder-gray-800 focus:outline-none
-                focus:bg-white focus:text-gray-800"
-                  placeholder="Search..."
-                />
-              </div>
-            </form>
+            
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="ml-3 relative">
@@ -107,23 +88,23 @@ function Navbar(props) {
                 <div className="py-2">
                   <button
                     className="bg-blue-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-blue-600"
-                    onClick={() => props.setNavColorField("bg-blue-500")}
+                    onClick={() => setColor("bg-blue-500")}
                   ></button>
                   <button
                     className="bg-indigo-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-indigo-600"
-                    onClick={() => props.setNavColorField("bg-indigo-500")}
+                    onClick={() => setColor("bg-indigo-500")}
                   ></button>
                   <button
                     className="bg-green-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-green-600"
-                    onClick={() => props.setNavColorField("bg-green-500")}
+                    onClick={() => setColor("bg-green-500")}
                   ></button>
                   <button
                     className="bg-red-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-red-600"
-                    onClick={() => props.setNavColorField("bg-red-500")}
+                    onClick={() => setColor("bg-red-500")}
                   ></button>
                   <button
                     className="bg-gray-800 w-24 h-8 rounded block mx-auto my-1 hover:bg-gray-900"
-                    onClick={() => props.setNavColorField("bg-gray-800")}
+                    onClick={() => setColor("bg-gray-800")}
                   ></button>
                 </div>
               </div>
@@ -140,7 +121,7 @@ function Navbar(props) {
                   <span className="sr-only">Open user menu</span>
                   <img
                     className="h-8 w-8 rounded-full"
-                    src="/sample-profile.png"
+                    src={props.session === undefined || props.session == 'undefined' ? "/sample-profile.png":props.session.picture}
                     alt=""
                   />
                 </button>
@@ -151,7 +132,7 @@ function Navbar(props) {
                 className="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700">
-                  <i className="fas fa-user mr-2"></i>Your Profile
+                  <i className="fas fa-user mr-2"></i>Meine Restaurants
                 </a>
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700">
                   <i className="fas fa-cog mr-2"></i>Settings

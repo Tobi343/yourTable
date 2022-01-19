@@ -1,7 +1,17 @@
-import '../styles/globals.css'
+import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+import ContextWrapper from "./components/ContextWrapper";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session}>
+      <ContextWrapper session={session}>
+        <Component {...pageProps} />
+      </ContextWrapper>
+    </SessionProvider>
+  );
 }
-
-export default MyApp
