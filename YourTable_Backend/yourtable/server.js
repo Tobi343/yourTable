@@ -25,6 +25,9 @@ const pool = new Pool({
 app.use(bodyparser());
 app.use(bodyparser.urlencoded({ extended: true }));
 
+
+
+
 app.get("/", (req, res) => {
   res.send("Welcome to the API of YourTable!");
 });
