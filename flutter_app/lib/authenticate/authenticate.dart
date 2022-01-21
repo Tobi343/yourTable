@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService{
 
-  static const SERVER_IP = 'http://34.139.54.192';
+  static const SERVER_IP = 'http://34.139.40.48';
   final storage = FlutterSecureStorage();
 
   static String email = "Email";
