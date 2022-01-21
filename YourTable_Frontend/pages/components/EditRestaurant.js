@@ -66,7 +66,7 @@ function EditRestaurant(props) {
             <div class="bg-gray-200 border border-gray-300 h-36 w-36 rounded-lg shadow-md border-b border-primary">
               <label htmlFor="upload-button">
                 <img 
-                  src={image.preview}
+                  src={restaurant.restaurant_logo}
                   className="object-cover h-36 w-36 rounded-lg"
                 />
               </label>

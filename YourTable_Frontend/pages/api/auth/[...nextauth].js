@@ -20,7 +20,7 @@ const providers = [
 
       console.log(credentials.register)
 
-      const res = await axios.post("http://34.139.54.192/users"+path, {
+      const res = await axios.post("http://34.139.40.48/users"+path, {
         email: credentials.email,
         password: credentials.password,
       });

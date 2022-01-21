@@ -22,7 +22,7 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const res = await fetch("http://34.139.54.192/reservations", {
+  const res = await fetch("http://34.139.40.48/reservations", {
     method: "GET",
     headers: new Headers({
       Authorization:
