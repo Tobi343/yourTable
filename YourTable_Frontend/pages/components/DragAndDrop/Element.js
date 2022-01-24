@@ -43,10 +43,12 @@ function Element(props) {
         console.log(props.tables)
 
       }}
-      className="bg-blue-300"
+      className=" rounded-lg"
     >
       <Popover className="relative">
-        <Popover.Button></Popover.Button>
+      <Popover.Button>
+         
+        </Popover.Button>
 
         <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl">
           <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">

@@ -32,8 +32,8 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  const res = await fetch(`http://34.139.54.192/restaurant/2`);
-  const res1 = await fetch(`http://34.139.54.192/users/data/`+session.email, {
+  const res = await fetch(`http://34.139.40.48/restaurant/2`);
+  const res1 = await fetch(`http://34.139.40.48/users/data/`+session.email, {
     method: "GET",
     headers: new Headers({
       Authorization:
@@ -63,7 +63,7 @@ async function editRestaurant(restaurant) {
     layout: restaurant.restaurant_layout,
   }));
   const res = await fetch(
-    "http://34.139.54.192/restaurants/data/updateRestaurantData",
+    "http://34.139.40.48/restaurants/data/updateRestaurantData",
     {
       method: "POST",
       headers: new Headers({
@@ -87,7 +87,7 @@ async function editRestaurant(restaurant) {
 
 async function editProfile(profile) {
   console.log(profile);
-  const res = await fetch("http://localhost:8080/users/data/updateUserData", {
+  const res = await fetch("http://34.139.40.48/users/data/updateUserData", {
     method: "POST",
     headers: new Headers({
       "Access-Control-Allow-Origin": "*",

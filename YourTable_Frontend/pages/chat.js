@@ -6,9 +6,9 @@ import ChatIcon from "@mui/icons-material/Chat";
 import _ from "lodash";
 import ChatItem from "./components/chatItem";
 import { io } from "socket.io-client";
-import { CompressOutlined } from "@mui/icons-material";
 import { getSession } from "next-auth/react";
 import ColorContext from "./contexts/ColorContext";
+
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
@@ -41,7 +41,7 @@ function chat({ name }) {
   const forceUpdate = React.useCallback(() => setUserState(userState), []);
 
   useEffect(() => {
-    const socket = io("http://34.139.54.192", {
+    const socket = io("http://34.139.40.48", {
       withCredentials: true,
       autoConnect: false,
       extraHeaders: {
