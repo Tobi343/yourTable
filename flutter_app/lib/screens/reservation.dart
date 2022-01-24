@@ -3,6 +3,7 @@ import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/models/restaurant.dart';
 import 'package:im_stepper/stepper.dart';
@@ -38,6 +39,13 @@ class _ReservationState extends State<Reservation> {
 
   bool childChair = false;
   bool dog = false;
+  bool birthday = false;
+
+  late final TextEditingController _emailController;
+  late String email;
+  late final TextEditingController _numberController;
+  late String phone;
+
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
@@ -49,12 +57,19 @@ class _ReservationState extends State<Reservation> {
   void initState() {
     informationController = new TextEditingController();
     informationController.text = informationText;
+    _emailController = new TextEditingController();
+    _emailController.text = AuthService.user["customer_email"].toString();
+    email = _emailController.text;
+    _numberController = new TextEditingController();
+    _numberController.text = AuthService.user["customer_phone"].toString();
+    phone = _numberController.text;
     super.initState();
   }
 
   @override
   void dispose() {
     informationController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -235,8 +250,8 @@ class _ReservationState extends State<Reservation> {
                   elevation: 20,
                   barrierColor: secondColor,
                   okText: "Speichern",
-                  cancelText: "Zurücksetzten",
-                  okCancelStyle: TextStyle(color: secondColor),
+                  cancelText: "",
+                  okStyle: TextStyle(color: secondColor),
                   isOnChangeValueMode: false,
                   hourLabel: "Stunde",
                   minuteLabel: "Minute",
@@ -360,12 +375,192 @@ class _ReservationState extends State<Reservation> {
                                 });
                               },
                             ),
+                        InkWell(
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text("Geburtstagsessen"),
+                                Checkbox(
+                                    activeColor: secondColor,
+                                    value: birthday,
+                                    onChanged: (value){
+                                      setState(() {
+                                        birthday = value!;
+                                      });
+                                    }
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.all(5),
+                          ),
+                          onTap: (){
+                            setState(() {
+                              birthday = !birthday;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+        );
+      case 4:
+        return Expanded(
+            child: ListView(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(30))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text("Reservierung",style: TextStyle(fontSize: 22,color: secondColor)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0),
+                            child: TextFormField(
+                              controller: _emailController,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(30),
+                              ],
+                              style: TextStyle(color: secondColor),
+                              validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
+                              onChanged: (val) {
+                                setState(() => email = val);
+                              },
+                              decoration: InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: secondColor),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                prefixIcon: Icon(Icons.email_sharp,color: secondColor,),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: secondColor,width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.phone,
+                              controller: _numberController,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(30),
+                              ],
+                              style: TextStyle(color: secondColor),
+                              validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
+                              onChanged: (val) {
+                                setState(() => phone = val);
+                              },
+                              decoration: InputDecoration(labelText: 'Handynummer', labelStyle: TextStyle(color: secondColor),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                prefixIcon: Icon(Icons.phone_android_sharp,color: secondColor,),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: secondColor,width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text("Anzahl der Personen: $peopleCounter",style: TextStyle(fontSize: 18, color: secondColor),),
+                              ),
+                              SizedBox(height: 10,),
+                              FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year} ${_time.hour}:${_time.minute}",style: TextStyle(fontSize: 18, color: secondColor),),
+                              ),
+                              SizedBox(height: 10,),
+                              Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: secondColor),),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      ElevatedButton(
+                          onPressed: (){},
+                          style: ElevatedButton.styleFrom(
+                            primary: secondColor,
+                            elevation: 20
+                          ),
+                          child: Text("Reservieren",style: TextStyle(fontSize: 16),)
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )
         );
       default:
         return Expanded(child: Container());

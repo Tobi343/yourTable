@@ -135,7 +135,7 @@ class _EditUserDataState extends State<EditUserData> {
                         new LengthLimitingTextInputFormatter(30),
                       ],
                       style: TextStyle(color: secondColor),
-                      validator: (val) => val!.isEmpty ? 'Vorname eingeben' : null,
+                      validator: (val) => val!.isEmpty ? 'Nachname eingeben' : null,
                       onChanged: (val) {
                         setState(() => lastname = val);
                       },
