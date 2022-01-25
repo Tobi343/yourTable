@@ -23,6 +23,7 @@ class _ReservationState extends State<Reservation> {
   AuthService auth = new AuthService();
 
   Color secondColor = Color(0xffF7761E);
+  Color frontColor = Colors.black;
 
   int activeStep = 0;
   int upperBound = 4;
@@ -481,7 +482,7 @@ class _ReservationState extends State<Reservation> {
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(30),
                               ],
-                              style: TextStyle(color: secondColor),
+                              style: TextStyle(color: frontColor),
                               validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
                               onChanged: (val) {
                                 setState(() => email = val);
@@ -526,7 +527,7 @@ class _ReservationState extends State<Reservation> {
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(30),
                               ],
-                              style: TextStyle(color: secondColor),
+                              style: TextStyle(color: frontColor),
                               validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
                               onChanged: (val) {
                                 setState(() => phone = val);
@@ -566,17 +567,19 @@ class _ReservationState extends State<Reservation> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text("Restaurant: ${widget.restaurant.restaurantName}",style: TextStyle(fontSize: 18,color: frontColor),),
+                              SizedBox(height: 10,),
                               FittedBox(
                                 fit: BoxFit.fitWidth,
-                                child: Text("Anzahl der Personen: $peopleCounter",style: TextStyle(fontSize: 18, color: secondColor),),
+                                child: Text("Anzahl der Personen: $peopleCounter",style: TextStyle(fontSize: 18, color: frontColor),),
                               ),
                               SizedBox(height: 10,),
                               FittedBox(
                                 fit: BoxFit.fitWidth,
-                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year}, ${_time.format(context)}",style: TextStyle(fontSize: 18, color: secondColor),),
+                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year}, ${_time.format(context)}",style: TextStyle(fontSize: 18, color: frontColor),),
                               ),
                               SizedBox(height: 10,),
-                              informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: secondColor),),
+                              informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),
                             ],
                           ),
                         ),
