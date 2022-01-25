@@ -49,12 +49,44 @@ class _ReservationState extends State<Reservation> {
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
-      _time = newTime;
+      _time = TimeOfDay.now().replacing(minute: 30);
+      if(_time.hour+2 >23){
+        int time = (_time.hour +2)-24;
+        _time = new TimeOfDay(hour: time, minute: _time.minute);
+      }
+      else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
+      double toDoubleTime = _time.hour+0;
+      double toDoubleNew = newTime.hour+0;
+      if(toDoubleNew >= toDoubleTime && _date.day == DateTime.now().day && _date.month == DateTime.now().month && _date.year == DateTime.now().year) _time = newTime;
+      else if(_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year) _time = newTime;
+      else{
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            backgroundColor: secondColor,
+            title: const Text('Ungültige Zeit!',style: TextStyle(color: Colors.white),),
+            content: const Text('Bitte geben Sie eine gültige Zeit für die Reservierung ein. Die Zeit muss mindestens 2 Stunden nach der jetzigen Zeit liegen.',style: TextStyle(color: Colors.white),),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.white),
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: Text('OK',style: TextStyle(color: secondColor),),
+              ),
+            ],
+          ),
+        );
+      }
+      print(_time);
     });
   }
 
   @override
   void initState() {
+    if(_time.hour+2 >23){
+      int time = (_time.hour +2)-24;
+      _time = new TimeOfDay(hour: time, minute: _time.minute);
+    }
+    else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
     informationController = new TextEditingController();
     informationController.text = informationText;
     _emailController = new TextEditingController();
@@ -255,6 +287,8 @@ class _ReservationState extends State<Reservation> {
                   isOnChangeValueMode: false,
                   hourLabel: "Stunde",
                   minuteLabel: "Minute",
+                  minHour: 8,
+                  maxHour: 22,
                   accentColor: secondColor,
                     minuteInterval: MinuteInterval.FIFTEEN,
                     maxMinute: 50,
@@ -539,10 +573,10 @@ class _ReservationState extends State<Reservation> {
                               SizedBox(height: 10,),
                               FittedBox(
                                 fit: BoxFit.fitWidth,
-                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year} ${_time.hour}:${_time.minute}",style: TextStyle(fontSize: 18, color: secondColor),),
+                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year}, ${_time.format(context)}",style: TextStyle(fontSize: 18, color: secondColor),),
                               ),
                               SizedBox(height: 10,),
-                              Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: secondColor),),
+                              informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: secondColor),),
                             ],
                           ),
                         ),
