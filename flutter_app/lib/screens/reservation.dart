@@ -3,6 +3,7 @@ import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/models/restaurant.dart';
 import 'package:im_stepper/stepper.dart';
@@ -22,6 +23,7 @@ class _ReservationState extends State<Reservation> {
   AuthService auth = new AuthService();
 
   Color secondColor = Color(0xffF7761E);
+  Color frontColor = Colors.black;
 
   int activeStep = 0;
   int upperBound = 4;
@@ -38,23 +40,69 @@ class _ReservationState extends State<Reservation> {
 
   bool childChair = false;
   bool dog = false;
+  bool birthday = false;
+
+  late final TextEditingController _emailController;
+  late String email;
+  late final TextEditingController _numberController;
+  late String phone;
+
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
-      _time = newTime;
+      _time = TimeOfDay.now().replacing(minute: 30);
+      if(_time.hour+2 >23){
+        int time = (_time.hour +2)-24;
+        _time = new TimeOfDay(hour: time, minute: _time.minute);
+      }
+      else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
+      double toDoubleTime = _time.hour+0;
+      double toDoubleNew = newTime.hour+0;
+      if(toDoubleNew >= toDoubleTime && _date.day == DateTime.now().day && _date.month == DateTime.now().month && _date.year == DateTime.now().year) _time = newTime;
+      else if(_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year) _time = newTime;
+      else{
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            backgroundColor: secondColor,
+            title: const Text('Ungültige Zeit!',style: TextStyle(color: Colors.white),),
+            content: const Text('Bitte geben Sie eine gültige Zeit für die Reservierung ein. Die Zeit muss mindestens 2 Stunden nach der jetzigen Zeit liegen.',style: TextStyle(color: Colors.white),),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.white),
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: Text('OK',style: TextStyle(color: secondColor),),
+              ),
+            ],
+          ),
+        );
+      }
+      print(_time);
     });
   }
 
   @override
   void initState() {
+    if(_time.hour+2 >23){
+      int time = (_time.hour +2)-24;
+      _time = new TimeOfDay(hour: time, minute: _time.minute);
+    }
+    else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
     informationController = new TextEditingController();
     informationController.text = informationText;
+    _emailController = new TextEditingController();
+    _emailController.text = AuthService.user["customer_email"].toString();
+    email = _emailController.text;
+    _numberController = new TextEditingController();
+    _numberController.text = AuthService.user["customer_phone"].toString();
+    phone = _numberController.text;
     super.initState();
   }
 
   @override
   void dispose() {
     informationController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -235,11 +283,13 @@ class _ReservationState extends State<Reservation> {
                   elevation: 20,
                   barrierColor: secondColor,
                   okText: "Speichern",
-                  cancelText: "Zurücksetzten",
-                  okCancelStyle: TextStyle(color: secondColor),
+                  cancelText: "",
+                  okStyle: TextStyle(color: secondColor),
                   isOnChangeValueMode: false,
                   hourLabel: "Stunde",
                   minuteLabel: "Minute",
+                  minHour: 8,
+                  maxHour: 22,
                   accentColor: secondColor,
                     minuteInterval: MinuteInterval.FIFTEEN,
                     maxMinute: 50,
@@ -360,12 +410,194 @@ class _ReservationState extends State<Reservation> {
                                 });
                               },
                             ),
+                        InkWell(
+                          child: Container(
+                            child: Row(
+                              children: [
+                                Text("Geburtstagsessen"),
+                                Checkbox(
+                                    activeColor: secondColor,
+                                    value: birthday,
+                                    onChanged: (value){
+                                      setState(() {
+                                        birthday = value!;
+                                      });
+                                    }
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.all(5),
+                          ),
+                          onTap: (){
+                            setState(() {
+                              birthday = !birthday;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+        );
+      case 4:
+        return Expanded(
+            child: ListView(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(30))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text("Reservierung",style: TextStyle(fontSize: 22,color: secondColor)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0),
+                            child: TextFormField(
+                              controller: _emailController,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(30),
+                              ],
+                              style: TextStyle(color: frontColor),
+                              validator: (val) => !val!.contains('@') ? 'Email eingeben' : null,
+                              onChanged: (val) {
+                                setState(() => email = val);
+                              },
+                              decoration: InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: secondColor),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                prefixIcon: Icon(Icons.email_sharp,color: secondColor,),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: secondColor,width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.phone,
+                              controller: _numberController,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(30),
+                              ],
+                              style: TextStyle(color: frontColor),
+                              validator: (val) => val!.isEmpty ? 'Handynummer eingeben' : null,
+                              onChanged: (val) {
+                                setState(() => phone = val);
+                              },
+                              decoration: InputDecoration(labelText: 'Handynummer', labelStyle: TextStyle(color: secondColor),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.red,width: 2),
+                                ),
+                                prefixIcon: Icon(Icons.phone_android_sharp,color: secondColor,),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: secondColor,width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: secondColor,width: 2), borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      Material(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        elevation: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Restaurant: ${widget.restaurant.restaurantName}",style: TextStyle(fontSize: 18,color: frontColor),),
+                              SizedBox(height: 10,),
+                              FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text("Anzahl der Personen: $peopleCounter",style: TextStyle(fontSize: 18, color: frontColor),),
+                              ),
+                              SizedBox(height: 10,),
+                              FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year}, ${_time.format(context)}",style: TextStyle(fontSize: 18, color: frontColor),),
+                              ),
+                              SizedBox(height: 10,),
+                              informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25,),
+                      ElevatedButton(
+                          onPressed: (){},
+                          style: ElevatedButton.styleFrom(
+                            primary: secondColor,
+                            elevation: 20
+                          ),
+                          child: Text("Reservieren",style: TextStyle(fontSize: 16),)
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )
         );
       default:
         return Expanded(child: Container());
