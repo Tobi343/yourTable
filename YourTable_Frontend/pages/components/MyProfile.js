@@ -84,6 +84,8 @@ function MyProfile(props) {
             className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="emailProfileEdit"
             type="email"
+            onChange={e=>{}}
+
             value={user.customer_email}
             placeholder="max.mustermann@example.com"
           />

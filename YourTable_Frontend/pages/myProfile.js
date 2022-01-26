@@ -1,5 +1,5 @@
 import React from "react";
-import { useState,useContext } from "react";
+import { useState,useContext,useEffect } from "react";
 import Sidebar from "./components/Sidebars/Sidebar";
 import Navbar from "./components/Sidebars/Navbar";
 import MobileSideBar from "./components/Sidebars/MobileSideBar";
@@ -81,6 +81,9 @@ async function editRestaurant(restaurant) {
       }),
     }
   );
+
+  console.log(restaurant.restaurant_layout)
+
   console.log("Finished!");
   Router.reload();
 }
@@ -109,6 +112,10 @@ function myProfile({ restaurant, user }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
   const {color, setColor} = useContext(ColorContext);
 
+
+  useEffect(()=>{
+    console.log(restaurant);
+  },[])
 
   function sidebarOpenMobile(e) {
     e.preventDefault();
@@ -190,7 +197,7 @@ function myProfile({ restaurant, user }) {
               <RestauranteLayout
                 restaurant={restaurant[moduleNumber - 1]}
                 edit={setEditLayout}
-                tables={tables}
+                tables={JSON.parse(restaurant[moduleNumber - 1].restaurant_layout)}
                 setTables={setTables}
               ></RestauranteLayout>
             ) : (

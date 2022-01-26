@@ -8,6 +8,10 @@ import { useEffect, useState } from "react";
 import GridLines from "react-gridlines";
 import { Rnd } from "react-rnd";
 import NavBar from "../components/navBar";
+import { TimePicker } from "@progress/kendo-react-dateinputs";
+import { DateTime } from "luxon";
+import Router from "next/router";
+
 
 export async function getServerSideProps(context) {
   /*const session =  await getSession(context)
@@ -28,6 +32,27 @@ export async function getServerSideProps(context) {
       restaurants,
     },
   };
+}
+
+async function editProfile(profile) {
+  console.log(profile);
+  const res = await fetch(`http://34.139.40.48/reservation`, {
+    method: "POST",
+    headers: new Headers({
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    }),
+    body: JSON.stringify({
+      restaurant_id: profile.restaurant,
+      customer_id: profile.customer,
+      reservation_time: profile.time,
+      reservation_date: profile.date,
+      reservation_table: profile.table,
+      reservation_extra: profile.extra,
+      reservation_personCount: profile.count,
+    }),
+  });
+  console.log("Finished!");
 }
 const items = [
   {
@@ -57,14 +82,21 @@ function restaurant({ restaurants }) {
   const router = useRouter();
   const id = router.query.restaurant;
   const date = new Date();
+  const minTime = DateTime.local(2020, 10, 12, 12, 0, 0);
+  const maxTime = DateTime.local(2020, 10, 12, 23, 0, 0);
+  const steps = 30;
 
   const [people, setPeople] = useState(0);
   const [extraText, setExtraText] = useState("");
   const [name, setName] = useState("");
+  const [time, setTime] = useState("");
   const [email, setEmail] = useState("");
   const [value, setValue] = useState(0);
   const [selectedTable, setSelectedTable] = useState(0);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(date.toDateString());
+  const [pickerVisible, setpickerVisible] = useState(false);
+  const [checkVisible, setCheckVisible] = useState(false);
+  const [makeReservation, setMakeReservation] = useState(false);
   const [table, setTable] = useState(
     JSON.parse(restaurants[id].restaurant_layout)
   );
@@ -75,12 +107,12 @@ function restaurant({ restaurants }) {
 
   useEffect(() => {
     console.log(selectedTable);
+    console.log(Math.abs(minTime.diff(maxTime).as("minutes")));
   }, []);
 
   return (
-    
     <div className="flex-col h-full bg-gray-200">
-      <NavBar className="" active={1}></NavBar>
+      <NavBar className="" active={2}></NavBar>
       <div className="flex-1 h-full">
         <div class="bg-white block h-full mx-2 xl:mx-28 lg:mx-20 md:mx-14">
           <div class="">
@@ -114,8 +146,9 @@ function restaurant({ restaurants }) {
                 </p>
               </div>
             </div>
+
             <div className="m-8 rounded-xl bg-gray-100 p-8">
-              <Stepper value={value} onChange={handleChange} items={items} />
+              <Stepper value={value} onChange={handleChange} items={items} disabled={checkVisible} />
               <div>
                 {value == 0 ? (
                   <div className="w-full h-full flex p-8 justify-center">
@@ -134,7 +167,7 @@ function restaurant({ restaurants }) {
                           >
                             <div className="flex ">
                               <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                                {i + 1}
+                                {i + 1 == 10 ? i + 1 + "+" : i + 1}
                               </p>
                             </div>
                           </div>
@@ -142,17 +175,79 @@ function restaurant({ restaurants }) {
                     </div>
                   </div>
                 ) : value == 1 ? (
-                  <div className="bg-blue-300 w-full h-60">
-                    <Calendar
-                      min={date}
-                      onChange={(e) => {
-                        setSelectedDate(e.value.toDateString());
-                        console.log(e.value);
+                  <div>
+                    <div
+                      className={`bg-blue-300 w-full h-80 ${
+                        pickerVisible ? "hidden" : ""
+                      }`}
+                    >
+                      <Calendar
+                        min={date}
+                        onChange={(e) => {
+                          setSelectedDate(e.value.toDateString());
+                          console.log(e.value);
+                          setpickerVisible(true);
+                        }}
+                        value={new Date(selectedDate)}
+                        className="w-full h-80 "
+                      />
+                    </div>
+                    <div
+                      className={`w-full ${
+                        pickerVisible ? "flex" : "hidden"
+                      } p-8 justify-center h-80 overflow-scroll`}
+                    >
+                      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 h-full ">
+                        <div
+                          className={`border-2 flex justify-evenly items-center bg-white rounded-lg hover:bg-gray-200 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
+                          onClick={(e) => {
+                            setpickerVisible(false);
+                          }}
+                        >
+                          <div className="flex ">
+                            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                              {"Back"}
+                            </p>
+                          </div>
+                        </div>
 
-                        setValue(2);
-                      }}
-                      className="w-full h-60"
-                    />
+                        {Array(
+                          Math.abs(minTime.diff(maxTime).as("minutes")) /
+                            steps +
+                            1
+                        )
+                          .fill()
+                          .map((v, i) => (
+                            <div
+                              className={` ${
+                                minTime
+                                  .plus({ minutes: steps * i })
+                                  .toLocaleString(DateTime.TIME_24_SIMPLE) ==
+                                time
+                                  ? "border-orange-400"
+                                  : ""
+                              } border-2 flex justify-evenly items-center bg-white rounded-lg hover:bg-gray-200 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
+                              onClick={(e) => {
+                                setTime(
+                                  minTime
+                                    .plus({ minutes: steps * i })
+                                    .toLocaleString(DateTime.TIME_24_SIMPLE)
+                                );
+                                setValue(2);
+                                setpickerVisible(false);
+                              }}
+                            >
+                              <div className="flex ">
+                                <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                                  {minTime
+                                    .plus({ minutes: steps * i })
+                                    .toLocaleString(DateTime.TIME_24_SIMPLE)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   </div>
                 ) : value == 2 ? (
                   <div className="w-full h-96">
@@ -210,6 +305,87 @@ function restaurant({ restaurants }) {
                                 placeholder="Eine spezielle Nachricht"
                               />
                             </div>
+                            <div class="md:col-span-1">
+                              <label for="email">Anzahl an Hunden</label>
+                              <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                <button
+                                  data-action="decrement"
+                                  class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                >
+                                  <span class="m-auto text-2xl font-thin">
+                                    −
+                                  </span>
+                                </button>
+                                <input
+                                  type="number"
+                                  class=" focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                  name="custom-input-number"
+                                  value="0"
+                                ></input>
+                                <button
+                                  data-action="increment"
+                                  class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                >
+                                  <span class="m-auto text-2xl font-thin">
+                                    +
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                            <div class="md:col-span-2">
+                              <label for="email">Anzahl an Hochstühlen</label>
+                              <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                <button
+                                  data-action="decrement"
+                                  class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                >
+                                  <span class="m-auto text-2xl font-thin">
+                                    −
+                                  </span>
+                                </button>
+                                <input
+                                  type="number"
+                                  class="focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                  name="custom-input-number"
+                                  value="0"
+                                ></input>
+                                <button
+                                  data-action="increment"
+                                  class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                >
+                                  <span class="m-auto text-2xl font-thin">
+                                    +
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                            <div class="md:col-span-2">
+                              <label for="email">Geschätzter Aufenthalt</label>
+                              <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                <button
+                                  data-action="decrement"
+                                  class=" bg-gray-300 text-gray-300 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                >
+                                  <span class="m-auto text-2xl font-thin">
+                                    −
+                                  </span>
+                                </button>
+                                <input
+                                  type="number"
+                                  class=" focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                  name="custom-input-number"
+                                  value="0"
+                                ></input>
+                                <button
+                                  data-action="increment"
+                                  class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                >
+                                  <span class="m-auto text-2xl font-thin ">
+                                    +
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -227,105 +403,152 @@ function restaurant({ restaurants }) {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-red-300 w-full ">
-                    <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                      <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                        <div class="text-gray-600">
-                          <p class="font-medium text-lg">Abschluss</p>
-                          <p>
-                            Bitte kontrolieren sie nocheinmal die Angaben und
-                            hinterlassen sie ihre perönlichen Details.
-                          </p>
-                        </div>
+                  <div>
+                    {checkVisible ?(
+                    <div className="">
+                      <svg
+                        className="h-96"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 130.2 130.2"
+                      >
+                        <circle
+                          class="path circle"
+                          fill="none"
+                          stroke="#73AF55"
+                          stroke-width="6"
+                          stroke-miterlimit="10"
+                          cx="65.1"
+                          cy="65.1"
+                          r="62.1"
+                        />
+                        <polyline
+                          class="path check"
+                          fill="none"
+                          stroke="#73AF55"
+                          stroke-width="6"
+                          stroke-linecap="round"
+                          stroke-miterlimit="10"
+                          points="100.2,40.2 51.5,88.8 29.8,67.5 "
+                        />
+                      </svg>
+                      <p>Sieh dir deine Reservation unter den Tab "Reservierungen" an. <br /> Möchtest du noch eine Reservierung machen, dann klick <span onClick={(e)=>Router.reload()} className=" text-blue-500 hover:underline">hier</span> </p>
+                    </div>
+                    ):(
+                    <div className="bg-red-300 w-full ">
+                      <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                        <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                          <div class="text-gray-600">
+                            <p class="font-medium text-lg">Abschluss</p>
+                            <p>
+                              Bitte kontrolieren sie nocheinmal die Angaben und
+                              hinterlassen sie ihre perönlichen Details.
+                            </p>
+                          </div>
 
-                        <div class="lg:col-span-2">
-                          <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                            <div class="md:col-span-5">
-                              <label for="full_name">Voller Name</label>
-                              <input
-                                type="text"
-                                name="full_name"
-                                id="full_name"
-                                class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                              />
-                            </div>
+                          <div class="lg:col-span-2">
+                            <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                              <div class="md:col-span-5">
+                                <label for="full_name">Voller Name</label>
+                                <input
+                                  type="text"
+                                  name="full_name"
+                                  id="full_name"
+                                  class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                  value={name}
+                                  onChange={(e) => setName(e.target.value)}
+                                />
+                              </div>
 
-                            <div class="md:col-span-5">
-                              <label for="email">Email Adress</label>
-                              <input
-                                type="text"
-                                name="email"
-                                id="email"
-                                class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="email@domain.com"
-                              />
-                            </div>
+                              <div class="md:col-span-5">
+                                <label for="email">Email Adress</label>
+                                <input
+                                  type="text"
+                                  name="email"
+                                  id="email"
+                                  class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                  placeholder="email@domain.com"
+                                />
+                              </div>
 
-                            <div class="md:col-span-1">
-                              <label for="address">Personen</label>
-                              <p
-                                name="address"
-                                id="address"
-                                class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                              >
-                                {people}
-                              </p>
-                            </div>
-
-                            <div class="md:col-span-3">
-                              <label for="city">Datum</label>
-                              <p
-                                name="city"
-                                id="city"
-                                class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                              >
-                                {selectedDate}
-                              </p>
-                            </div>
-
-                            <div class="md:col-span-1">
-                              <label for="zipcode">Tischnummer</label>
-                              <p
-                                name="zipcode"
-                                id="zipcode"
-                                class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                              >
-                                {selectedTable}
-                              </p>
-                            </div>
-
-                            <div class="md:col-span-5 w-full">
-                              <div class="inline-flex items-center w-full">
+                              <div class="md:col-span-1">
+                                <label for="address">Personen</label>
                                 <p
-                                  name="billing_same"
-                                  id="billing_same"
+                                  name="address"
+                                  id="address"
                                   class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
                                 >
-                                  {extraText}
+                                  {people}
                                 </p>
                               </div>
-                            </div>
 
-                            <div class="md:col-span-5 text-right">
-                              <div class="inline-flex items-end">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                  Reservieren
-                                </button>
+                              <div class="md:col-span-3">
+                                <label for="city">Datum</label>
+                                <p
+                                  name="city"
+                                  id="city"
+                                  class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                >
+                                  {selectedDate}
+                                </p>
+                              </div>
+
+                              <div class="md:col-span-1">
+                                <label for="zipcode">Tischnummer</label>
+                                <p
+                                  name="zipcode"
+                                  id="zipcode"
+                                  class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                >
+                                  {selectedTable}
+                                </p>
+                              </div>
+
+                              <div class="md:col-span-5 w-full">
+                                <div class="inline-flex items-center w-full">
+                                  <p
+                                    name="billing_same"
+                                    id="billing_same"
+                                    class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                  >
+                                    {extraText}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div class="md:col-span-5 text-right">
+                                <div class="inline-flex items-end">
+                                  <button
+                                    onClick={(e) => {
+                                      setCheckVisible(true);
+                                      /*editProfile({
+                                        restaurant: restaurants[id].id,
+                                        customer: 1,
+                                        time: time,
+                                        date: selectedDate,
+                                        table: selectedTable,
+                                        extra: extraText,
+                                        count: people,
+                                      });*/
+                                    }}
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  >
+                                    Reservieren
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div>)}
                   </div>
                 )}
               </div>
             </div>
-
+            
             <div>
               {Array(10)
                 .fill()

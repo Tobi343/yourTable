@@ -10,7 +10,6 @@ import InnerSidebar from "./Sidebars/innerSidebar";
 import EditIcon from "@mui/icons-material/Edit";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AppsIcon from "@mui/icons-material/Apps";
-
 import SecurityIcon from "@mui/icons-material/Security";
 import GridLines from "react-gridlines";
 
@@ -57,8 +56,7 @@ function RestauranteLayout(props) {
 
   useEffect(() => {
     console.log("width", ref.current);
-    console.log(tables);
-    // setTables((tables) => [...tables, <Element x={4*size} y={2*size} width={2*size} height={1*size}/>]);
+    console.log(props.tables)
   }, []);
 
   function addCount() {
@@ -98,17 +96,17 @@ function RestauranteLayout(props) {
             {_.times(tabCount, (el) => (
               <Tab.Panel className="flex-1 flex-col pxs-10">
                 <div className=" bg-gray-200 rounded-lg w-full h-16 my-3 flex">
-                  <div class="mb-4 flex">
+                  <div className="mb-4 flex">
                     <input
-                      class="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="width"
                       type="number"
                       placeholder="Width"
                     />
                   </div>
-                  <div class="mb-4 flex">
+                  <div className="mb-4 flex">
                     <input
-                      class="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="height"
                       type="number"
                       placeholder="Height"
@@ -116,7 +114,10 @@ function RestauranteLayout(props) {
                   </div>
                   <button
                     onClick={(e) => {
-                      props.restaurant.layout = props.tables;
+
+                      props.restaurant.restaurant_layout = tables;
+
+                      console.log(JSON.stringify(props.tables))
                       props.edit(false)}}
                     className=" bg-green-500 text-md h-10 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
                   >
@@ -138,8 +139,9 @@ function RestauranteLayout(props) {
                     <Element
                       roomNumber={el}
                       keyProp={e.key}
-                      setTables={props.setTables}
-                      tables={props.tables}
+                      key={i}
+                      setTables={setTables}
+                      tables={(props.tables)}
                       x={e.x}
                       y={e.y}
                       width={e.width}
@@ -147,7 +149,6 @@ function RestauranteLayout(props) {
                       size={size}
                     ></Element>
                   ))}
-                  {console.log(el)}
                 </GridLines>
               </Tab.Panel>
             ))}
