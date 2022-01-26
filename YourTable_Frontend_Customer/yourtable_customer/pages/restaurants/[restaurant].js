@@ -12,7 +12,6 @@ import { TimePicker } from "@progress/kendo-react-dateinputs";
 import { DateTime } from "luxon";
 import Router from "next/router";
 
-
 export async function getServerSideProps(context) {
   /*const session =  await getSession(context)
   console.log("Session: "+session.accessToken)
@@ -101,6 +100,9 @@ function restaurant({ restaurants }) {
     JSON.parse(restaurants[id].restaurant_layout)
   );
 
+
+
+
   const handleChange = (e) => {
     setValue(e.value);
   };
@@ -148,7 +150,12 @@ function restaurant({ restaurants }) {
             </div>
 
             <div className="m-8 rounded-xl bg-gray-100 p-8">
-              <Stepper value={value} onChange={handleChange} items={items} disabled={checkVisible} />
+              <Stepper
+                value={value}
+                onChange={handleChange}
+                items={items}
+                disabled={checkVisible}
+              />
               <div>
                 {value == 0 ? (
                   <div className="w-full h-full flex p-8 justify-center">
@@ -404,126 +411,136 @@ function restaurant({ restaurants }) {
                   </div>
                 ) : (
                   <div>
-                    {checkVisible ?(
-                    <div className="">
-                      <svg
-                        className="h-96"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 130.2 130.2"
-                      >
-                        <circle
-                          class="path circle"
-                          fill="none"
-                          stroke="#73AF55"
-                          stroke-width="6"
-                          stroke-miterlimit="10"
-                          cx="65.1"
-                          cy="65.1"
-                          r="62.1"
-                        />
-                        <polyline
-                          class="path check"
-                          fill="none"
-                          stroke="#73AF55"
-                          stroke-width="6"
-                          stroke-linecap="round"
-                          stroke-miterlimit="10"
-                          points="100.2,40.2 51.5,88.8 29.8,67.5 "
-                        />
-                      </svg>
-                      <p>Sieh dir deine Reservation unter den Tab "Reservierungen" an. <br /> Möchtest du noch eine Reservierung machen, dann klick <span onClick={(e)=>Router.reload()} className=" text-blue-500 hover:underline">hier</span> </p>
-                    </div>
-                    ):(
-                    <div className="bg-red-300 w-full ">
-                      <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                        <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                          <div class="text-gray-600">
-                            <p class="font-medium text-lg">Abschluss</p>
-                            <p>
-                              Bitte kontrolieren sie nocheinmal die Angaben und
-                              hinterlassen sie ihre perönlichen Details.
-                            </p>
-                          </div>
+                    {checkVisible ? (
+                      <div className="">
+                        <svg
+                          className="h-96"
+                          version="1.1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 130.2 130.2"
+                        >
+                          <circle
+                            class="path circle"
+                            fill="none"
+                            stroke="#73AF55"
+                            stroke-width="6"
+                            stroke-miterlimit="10"
+                            cx="65.1"
+                            cy="65.1"
+                            r="62.1"
+                          />
+                          <polyline
+                            class="path check"
+                            fill="none"
+                            stroke="#73AF55"
+                            stroke-width="6"
+                            stroke-linecap="round"
+                            stroke-miterlimit="10"
+                            points="100.2,40.2 51.5,88.8 29.8,67.5 "
+                          />
+                        </svg>
+                        <p>
+                          Sieh dir deine Reservation unter den Tab
+                          "Reservierungen" an. <br /> Möchtest du noch eine
+                          Reservierung machen, dann klick{" "}
+                          <span
+                            onClick={(e) => Router.reload()}
+                            className=" text-blue-500 hover:underline"
+                          >
+                            hier
+                          </span>{" "}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="bg-red-300 w-full ">
+                        <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                          <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                            <div class="text-gray-600">
+                              <p class="font-medium text-lg">Abschluss</p>
+                              <p>
+                                Bitte kontrolieren sie nocheinmal die Angaben
+                                und hinterlassen sie ihre perönlichen Details.
+                              </p>
+                            </div>
 
-                          <div class="lg:col-span-2">
-                            <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                              <div class="md:col-span-5">
-                                <label for="full_name">Voller Name</label>
-                                <input
-                                  type="text"
-                                  name="full_name"
-                                  id="full_name"
-                                  class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                  value={name}
-                                  onChange={(e) => setName(e.target.value)}
-                                />
-                              </div>
+                            <div class="lg:col-span-2">
+                              <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+                                <div class="md:col-span-5">
+                                  <label for="full_name">Voller Name</label>
+                                  <input
+                                    type="text"
+                                    name="full_name"
+                                    id="full_name"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                  />
+                                </div>
 
-                              <div class="md:col-span-5">
-                                <label for="email">Email Adress</label>
-                                <input
-                                  type="text"
-                                  name="email"
-                                  id="email"
-                                  class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                  placeholder="email@domain.com"
-                                />
-                              </div>
+                                <div class="md:col-span-5">
+                                  <label for="email">Email Adress</label>
+                                  <input
+                                    type="text"
+                                    name="email"
+                                    id="email"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="email@domain.com"
+                                  />
+                                </div>
 
-                              <div class="md:col-span-1">
-                                <label for="address">Personen</label>
-                                <p
-                                  name="address"
-                                  id="address"
-                                  class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                                >
-                                  {people}
-                                </p>
-                              </div>
-
-                              <div class="md:col-span-3">
-                                <label for="city">Datum</label>
-                                <p
-                                  name="city"
-                                  id="city"
-                                  class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                                >
-                                  {selectedDate}
-                                </p>
-                              </div>
-
-                              <div class="md:col-span-1">
-                                <label for="zipcode">Tischnummer</label>
-                                <p
-                                  name="zipcode"
-                                  id="zipcode"
-                                  class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
-                                >
-                                  {selectedTable}
-                                </p>
-                              </div>
-
-                              <div class="md:col-span-5 w-full">
-                                <div class="inline-flex items-center w-full">
+                                <div class="md:col-span-1">
+                                  <label for="address">Personen</label>
                                   <p
-                                    name="billing_same"
-                                    id="billing_same"
+                                    name="address"
+                                    id="address"
                                     class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
                                   >
-                                    {extraText}
+                                    {people}
                                   </p>
                                 </div>
-                              </div>
 
-                              <div class="md:col-span-5 text-right">
-                                <div class="inline-flex items-end">
-                                  <button
-                                    onClick={(e) => {
-                                      setCheckVisible(true);
-                                      /*editProfile({
+                                <div class="md:col-span-3">
+                                  <label for="city">Datum</label>
+                                  <p
+                                    name="city"
+                                    id="city"
+                                    class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                  >
+                                    {selectedDate}
+                                  </p>
+                                </div>
+
+                                <div class="md:col-span-1">
+                                  <label for="zipcode">Tischnummer</label>
+                                  <p
+                                    name="zipcode"
+                                    id="zipcode"
+                                    class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                  >
+                                    {selectedTable}
+                                  </p>
+                                </div>
+
+                                <div class="md:col-span-5 w-full">
+                                  <div class="inline-flex items-center w-full">
+                                    <p
+                                      name="billing_same"
+                                      id="billing_same"
+                                      class="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-400"
+                                    >
+                                      {extraText}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div class="md:col-span-5 text-right">
+                                  <div class="inline-flex items-end">
+                                    <button
+                                      onClick={(e) => {
+                                        setCheckVisible(true);
+                                        /*editProfile({
                                         restaurant: restaurants[id].id,
                                         customer: 1,
                                         time: time,
@@ -532,36 +549,233 @@ function restaurant({ restaurants }) {
                                         extra: extraText,
                                         count: people,
                                       });*/
-                                    }}
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  >
-                                    Reservieren
-                                  </button>
+                                      }}
+                                      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    >
+                                      Reservieren
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>)}
+                    )}
                   </div>
                 )}
               </div>
             </div>
-            
+
             <div>
-              {Array(10)
-                .fill()
-                .map((v, i) => (
-                  <div>
-                    <div className="flex ">
-                      <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                        {i + 1}
-                      </p>
+              <section class="text-gray-700">
+                <div class="container px-5 py-24 mx-auto">
+                  <div class="text-center mb-20">
+                    <h1 class="sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-4">
+                      Häufig gestellte Fragen
+                    </h1>
+                    <p class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">
+                      Fragen die von Kunden an das Restaurant gestellt wurden
+                    </p>
+                  </div>
+                  <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
+                    <div class="w-full lg:w-1/2 px-4 py-2">
+                      <details class="mb-4">
+                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                          How Long is this site live?
+                        </summary>
+
+                        <span>
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
+                      <details class="mb-4">
+                        <summary class="font-semibold bg-gray-200 rounded-md py-2 px-4">
+                          Can I install/upload anything I want on there?
+                        </summary>
+
+                        <span>
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
+                      <details class="mb-4">
+                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                          How can I migrate to another site?
+                        </summary>
+
+                        <span>
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
+                    </div>
+                    <div class="w-full lg:w-1/2 px-4 py-2">
+                      <details class="mb-4">
+                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                          Can I change the domain you give me?
+                        </summary>
+
+                        <span class="px-4 py-2">
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
+                      <details class="mb-4">
+                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                          How many sites I can create at once?
+                        </summary>
+
+                        <span class="px-4 py-2">
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
+                      <details class="mb-4">
+                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                          How can I communicate with you?
+                        </summary>
+
+                        <span class="px-4 py-2">
+                          Laboris qui labore cillum culpa in sunt quis sint
+                          veniam. Dolore ex aute deserunt esse ipsum elit
+                          aliqua. Aute quis minim velit nostrud pariatur culpa
+                          magna in aute.
+                        </span>
+                      </details>
                     </div>
                   </div>
-                ))}
+                </div>
+              </section>
             </div>
+
+            <section class="text-gray-600 body-font overflow-hidden">
+              <div class="container px-5 py-24 mx-auto">
+                <div class="-my-8 divide-y-2 divide-gray-100">
+                  <div class="py-8 flex flex-wrap md:flex-nowrap">
+                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                      <span class="font-semibold title-font text-gray-700">
+                        CATEGORY
+                      </span>
+                      <span class="mt-1 text-gray-500 text-sm">
+                        12 Jun 2019
+                      </span>
+                    </div>
+                    <div class="md:flex-grow">
+                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+                        Bitters hashtag waistcoat fashion axe chia unicorn
+                      </h2>
+                      <p class="leading-relaxed">
+                        Glossier echo park pug, church-key sartorial biodiesel
+                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
+                        wolf moon party messenger bag selfies, poke vaporware
+                        kombucha lumbersexual pork belly polaroid hoodie
+                        portland craft beer.
+                      </p>
+                      <a class="text-indigo-500 inline-flex items-center mt-4">
+                        Learn More
+                        <svg
+                          class="w-4 h-4 ml-2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M5 12h14"></path>
+                          <path d="M12 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="py-8 flex flex-wrap md:flex-nowrap">
+                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                      <span class="font-semibold title-font text-gray-700">
+                        CATEGORY
+                      </span>
+                      <span class="mt-1 text-gray-500 text-sm">
+                        12 Jun 2019
+                      </span>
+                    </div>
+                    <div class="md:flex-grow">
+                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+                        Meditation bushwick direct trade taxidermy shaman
+                      </h2>
+                      <p class="leading-relaxed">
+                        Glossier echo park pug, church-key sartorial biodiesel
+                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
+                        wolf moon party messenger bag selfies, poke vaporware
+                        kombucha lumbersexual pork belly polaroid hoodie
+                        portland craft beer.
+                      </p>
+                      <a class="text-indigo-500 inline-flex items-center mt-4">
+                        Learn More
+                        <svg
+                          class="w-4 h-4 ml-2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M5 12h14"></path>
+                          <path d="M12 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="py-8 flex flex-wrap md:flex-nowrap">
+                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                      <span class="font-semibold title-font text-gray-700">
+                        CATEGORY
+                      </span>
+                      <span class="text-sm text-gray-500">12 Jun 2019</span>
+                    </div>
+                    <div class="md:flex-grow">
+                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+                        Woke master cleanse drinking vinegar salvia
+                      </h2>
+                      <p class="leading-relaxed">
+                        Glossier echo park pug, church-key sartorial biodiesel
+                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
+                        wolf moon party messenger bag selfies, poke vaporware
+                        kombucha lumbersexual pork belly polaroid hoodie
+                        portland craft beer.
+                      </p>
+                      <a class="text-indigo-500 inline-flex items-center mt-4">
+                        Learn More
+                        <svg
+                          class="w-4 h-4 ml-2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M5 12h14"></path>
+                          <path d="M12 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            
           </div>
         </div>
       </div>
