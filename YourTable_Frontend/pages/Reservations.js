@@ -3,30 +3,29 @@ import MobileSideBar from "./components/Sidebars/MobileSideBar";
 import Sidebar from "./components/Sidebars/Sidebar";
 import CardContainer from "./components/Cards/CardContainer";
 import Navbar from "./components/Sidebars/Navbar";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import ColorContext from "./contexts/ColorContext";
 import Table from "./components/table";
-import _ from "lodash";
+import _, { drop } from "lodash";
 import { getSession } from "next-auth/react";
+import { DateTime } from "luxon";
 
 export async function getServerSideProps(context) {
-
-  const session =  await getSession(context)
-  console.log("Session: "+session.accessToken)
+  const session = await getSession(context);
+  console.log("Session: " + session.accessToken);
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
-    }
+    };
   }
 
   const res = await fetch("http://34.139.40.48/reservations", {
     method: "GET",
     headers: new Headers({
-      Authorization:
-        "Token "+session.accessToken,
+      Authorization: "Token " + session.accessToken,
       "Content-Type": "application/x-www-form-urlencoded",
     }),
   });
@@ -41,7 +40,9 @@ export async function getServerSideProps(context) {
 
 function Reservations({ reser }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
-  const {color, setColor} = useContext(ColorContext);
+  const { color, setColor } = useContext(ColorContext);
+
+  var dt = DateTime.now();
 
   const days = [
     { day: "Mon", date: "5.12" },
@@ -90,16 +91,16 @@ function Reservations({ reser }) {
           <MobileSideBar />
 
           <div className="flex-1">
-            <div class="flex justify-center py-4">
-              {days.map((el) => (
+            <div class="flex justify-center py-4 overflow-x-scroll mx-8">
+              {[...Array(365)].map((el, index) => (
                 <div class="flex group hover:bg-blue-500 hover:shadow-lg hover-dark-shadow rounded-lg mx-1 transition-all	duration-300	 cursor-pointer justify-center w-16">
                   <div class="flex items-center px-4 py-4">
                     <div class="text-center">
                       <p class="text-gray-900 group-hover:text-gray-100 text-sm transition-all	duration-300">
-                        {el.day}
+                        {dt.plus({ days: index }).toFormat("ccc")}
                       </p>
                       <p class="text-gray-900 group-hover:text-gray-100 mt-3 group-hover:font-bold transition-all	duration-300">
-                        {el.date}
+                        {dt.plus({ days: index }).toFormat("dd.LL")}
                       </p>
                     </div>
                   </div>

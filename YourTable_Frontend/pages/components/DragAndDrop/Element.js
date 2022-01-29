@@ -39,11 +39,11 @@ function Element(props) {
         props.setTables(copy);
 
       
-
-        console.log(props.tables)
+        console.log(g)
+        console.log(copy)
 
       }}
-      className=" rounded-lg"
+      className=" rounded-lg bg-blue-500"
     >
       <Popover className="relative">
       <Popover.Button>

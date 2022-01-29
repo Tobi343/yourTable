@@ -52,6 +52,7 @@ function InnerSidebar(props) {
 
           <a
             onClick={()=>props.method(index+1,reservation.restaurant_name)}
+            key={index}
             className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
           >
             <RestaurantIcon className="mr-3" />
