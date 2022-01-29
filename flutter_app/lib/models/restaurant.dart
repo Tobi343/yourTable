@@ -10,6 +10,7 @@ class Restaurant{
   double lat;
   String restaurantAdress;
   String details;
+  List<String> layout = [];
 
   Restaurant({
     required this.restaurantName,
@@ -20,7 +21,8 @@ class Restaurant{
     required this.long,
     required this.lat,
     required this.restaurantAdress,
-    required this.details
+    required this.details,
+    required this.layout
   });
 
   Restaurant.fromMap(Map map) :
@@ -32,7 +34,8 @@ class Restaurant{
         this.long = map['restaurant_long'],
         this.lat = map['restaurant_lat'],
         this.restaurantAdress = map["restaurant_address"],
-        this.details = map["details"];
+        this.details = map["details"],
+        this.layout = map["restaurant_layout"];
   /*
       Map toMap(){
     return{
