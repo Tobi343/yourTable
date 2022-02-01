@@ -69,8 +69,8 @@ class AuthService{
     restaurants = [];
     fixRestaurants = [];
     for (var o in restaurantsJSON) {
-      var test = jsonDecode(o["restaurant_layout"]);
-      var r = new Restaurant(layout: o["restaurant_layout"], restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"],details: o["details"]);
+      List<dynamic> tables = json.decode(o["restaurant_layout"]);
+      var r = new Restaurant(layout: tables, restaurantName: o["restaurant_name"], restaurantId: o["id"], ownerId: o["owner_id"],restaurantLogo: o["restaurant_logo"],restaurantTitlePicture: o["restaurant_image"],lat: double.parse(o["restaurant_lat"]), long: double.parse(o["restaurant_long"]),restaurantAdress: o["restaurant_address"],details: o["details"]);
       restaurants.add(r);
       fixRestaurants.add(r);
     }

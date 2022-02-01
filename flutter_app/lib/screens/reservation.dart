@@ -307,7 +307,11 @@ class _ReservationState extends State<Reservation> {
       case 2:
         return Expanded(
             child: Container(
-              child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+              child: Container(
+                height: widget.restaurant.layout[0][0]["height"]*1.0,
+                width: widget.restaurant.layout[0][0]["width"]*1.0,
+                color: secondColor,
+              )//Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
             ),
         );
       case 3:

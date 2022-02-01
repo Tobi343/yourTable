@@ -10,7 +10,7 @@ class Restaurant{
   double lat;
   String restaurantAdress;
   String details;
-  List<String> layout = [];
+  List<dynamic> layout = [];
 
   Restaurant({
     required this.restaurantName,
