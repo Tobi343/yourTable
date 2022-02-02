@@ -258,29 +258,54 @@ function restaurant({ restaurants }) {
                     <GridLines
                       cellWidth={50}
                       strokeWidth={2}
-                      className="  flex-1 h-full"
+                      className="  flex-1 h-full relative"
                     >
                       {table[0].map((e) => (
-                        <Rnd
-                          default={{
-                            x: e.x,
-                            y: e.y,
+                        <div
+                          className="bg-blue-500 z-20 absolute top-0 left-0 rounded-xl flex flex-col"
+                          style={{
                             width: e.width,
                             height: e.height,
+                            marginLeft: e.x,
+                            marginTop: e.y,
                           }}
-                          dragGrid={[0, 0]}
-                          resizeGrid={[0, 0]}
-                          bounds={"parent"}
-                          className={`${
-                            selectedTable == e.key ? "border-gray-700" : ""
-                          } border-2 rounded-lg bg-blue-500 hover:bg-blue-400`}
-                          onClick={(ex) => {
-                            setSelectedTable(e.key);
-                            console.log(e.key);
-                            console.log(selectedTable);
-                            setValue(3);
-                          }}
-                        ></Rnd>
+                        >
+                          <div className="flex flex-row">
+                            <div
+                              className="bg-red-300 z-10 h-6 w-6 rounded-xl relative"
+                              style={{
+                                marginLeft: 15,
+                                marginRight: 15,
+                                marginTop: -10
+                              }}
+                            ></div>
+                            <div
+                              className="bg-red-300 h-6 w-6 rounded-xl "
+                              style={{
+                                marginLeft: 15,
+                                marginRight: 15,
+                                marginTop: -10,
+                                
+                              }}
+                            ></div>
+                          </div>
+                          <div className="flex flex-row">
+                            <div
+                              className="bg-red-300 z-10 h-6 w-6 mt-6 rounded-xl "
+                              style={{
+                                marginLeft: 15,
+                                marginRight: 15,
+                              }}
+                            ></div>
+                            <div
+                              className="bg-red-300 h-6 w-6 mt-6 rounded-xl "
+                              style={{
+                                marginLeft: 15,
+                                marginRight: 15,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
                       ))}
                     </GridLines>
                   </div>
@@ -633,7 +658,6 @@ function restaurant({ restaurants }) {
                             Gefunden. Wirklich TOP. und YourTable ist auch
                             richtig nice
                           </p>
-                        
                         </div>
                       </div>
                     ))}
