@@ -27,36 +27,13 @@ function RestauranteLayout(props) {
 
   const size = 50;
 
-  const [tables, setTables] = useState([
-    [
-      { key: 1, x: 1 * size, y: 1 * size, width: 2 * size, height: 1 * size },
-      { key: 2, x: 1 * size, y: 3 * size, width: 2 * size, height: 1 * size },
-      { key: 3, x: 4 * size, y: 5 * size, width: 2 * size, height: 1 * size },
-      { key: 4, x: 4 * size, y: 2 * size, width: 2 * size, height: 1 * size },
-    ],
-    [
-      { key: 1, x: 1 * size, y: 1 * size, width: 2 * size, height: 1 * size },
-      { key: 2, x: 2 * size, y: 3 * size, width: 2 * size, height: 1 * size },
-      { key: 3, x: 4 * size, y: 5 * size, width: 2 * size, height: 1 * size },
-      { key: 4, x: 4 * size, y: 2 * size, width: 2 * size, height: 1 * size },
-    ],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-  ]);
+  const [tables, setTables] = useState(props.tables);
 
-
-  
   const ref = useRef();
 
   useEffect(() => {
     console.log("width", ref.current);
-    console.log(props.tables)
+    console.log(props.tables);
   }, []);
 
   function addCount() {
@@ -96,29 +73,29 @@ function RestauranteLayout(props) {
             {_.times(tabCount, (el) => (
               <Tab.Panel className="flex-1 flex-col pxs-10">
                 <div className=" bg-gray-200 rounded-lg w-full h-16 my-3 flex">
-                  <div className="mb-4 flex">
-                    <input
-                      className="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="width"
-                      type="number"
-                      placeholder="Width"
-                    />
-                  </div>
-                  <div className="mb-4 flex">
-                    <input
-                      className="shadow appearance-none border h-9 rounded w-28 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="height"
-                      type="number"
-                      placeholder="Height"
-                    />
-                  </div>
                   <button
                     onClick={(e) => {
-
+                      let copy = [...props.tables];
+                      copy[el].push({
+                        key: copy[el][copy[el].length-1].key+1,
+                        x: 0,
+                        y: 0,
+                        width: 50,
+                        height: 50,
+                      });
+                      setTables(copy);
+                      console.log(copy);
+                    }}
+                    className=" bg-blue-500 text-md h-10 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
+                  >
+                    Add Table
+                  </button>
+                  <button
+                    onClick={(e) => {
                       props.restaurant.restaurant_layout = tables;
-
-                      console.log(JSON.stringify(props.tables))
-                      props.edit(false)}}
+                      console.log(JSON.stringify(props.tables));
+                      props.edit(false);
+                    }}
                     className=" bg-green-500 text-md h-10 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
                   >
                     Save
@@ -135,13 +112,14 @@ function RestauranteLayout(props) {
                   strokeWidth={2}
                   className="  flex-1 h-full"
                 >
-                  {props.tables[el].map((e, i) => (
+                  {tables[el].map((e, i) => (
                     <Element
+                     
                       roomNumber={el}
                       keyProp={e.key}
                       key={i}
                       setTables={setTables}
-                      tables={(props.tables)}
+                      tables={tables}
                       x={e.x}
                       y={e.y}
                       width={e.width}

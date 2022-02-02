@@ -7,33 +7,37 @@ import Modal from "../Modal";
 
 function CardContainer(props) {
   const [items, setItems] = useState([
-    { item: "facebook", number: 232, visible: true },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: true },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: true },
-    { item: "facebook", number: 232, visible: true },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
-    { item: "facebook", number: 232, visible: false },
+    { item: "Tische", number: 232, visible: true },
+    { item: "Räume", number: 232, visible: false },
+    { item: "Kunden heute", number: 232, visible: false },
+    { item: "Kunden diese Woche", number: 232, visible: false },
+    { item: "Kunden diesen Monat", number: 232, visible: false },
+    { item: "Mitglied seit", number: "02.02.2022", visible: true },
+    { item: "Durchschnittszeit pro Tisch", number: "02:30h", visible: false },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    { item: "Sample Statistic", number: 232, visible: true },
+    
   ]);
   return (
     <div className="flex flex-wrap mx-6">
-      {items.map((e) => (
+      {items.filter(e=>e.visible).map((e) => (
         <InfoCard
           color={props.Color}
           title={e.item}
@@ -42,7 +46,7 @@ function CardContainer(props) {
         />
       ))}
 
-      <Modal Color={props.Color} itemsProp={items}></Modal>
+      <Modal Color={props.Color} itemsProp={items} setItemsProp={setItems}></Modal>
     </div>
   );
 }

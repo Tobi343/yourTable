@@ -46,15 +46,22 @@ export default function Modal(props) {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto h-44 overflow-y-auto">
-                  {props.itemsProp.map((e) => (
+                  {props.itemsProp.map((e,index) => (
                     <div class="flex items-center justify-between mb-5">
                       <div class="flex items-center">
                         <div class="pl-4 flex items-center">
-                          <div class="bg-gray-100 dark:bg-gray-800 border rounded-sm border-gray-200 dark:border-gray-700 w-5 h-5 flex flex-shrink-0 justify-center items-center relative">
-                          <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckDefault"/>
-
-                            <div class="check-icon hidden bg-indigo-700 text-white rounded-sm"></div>
-                          </div>
+                          <input
+                            class="form-check-input appearance-none h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="checkbox"
+                            value="A"
+                            id="flexCheckDefault"
+                            checked={e.visible}
+                            onChange={(e) => {
+                              const newState = [...props.itemsProp];
+                              newState[index].visible = e.target.checked;
+                              props.setItemsProp(newState);
+                            }}
+                          />
                           <p
                             id="fb1"
                             tabindex="0"
@@ -82,13 +89,7 @@ export default function Modal(props) {
                   >
                     Close
                   </button>
-                  <button
-                    className="bg-emerald-500 text-green-500 active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Save Changes
-                  </button>
+                  
                 </div>
               </div>
             </div>
