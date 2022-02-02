@@ -47,6 +47,9 @@ class _ReservationState extends State<Reservation> {
   late final TextEditingController _numberController;
   late String phone;
 
+  int roomNumber = 0;
+  int selectedTableRoomNumber = -1;
+  int selectedTableNumber = -1;
 
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
@@ -97,6 +100,82 @@ class _ReservationState extends State<Reservation> {
     _numberController.text = AuthService.user["customer_phone"].toString();
     phone = _numberController.text;
     super.initState();
+  }
+
+  int getNumberofRooms(){
+    int number = 0;
+    for(int i = 0; i < widget.restaurant.layout.length;i++) {
+      if (widget.restaurant.layout[i].length > 0) number++;
+    }
+    return number;
+  }
+
+  List<Container> roomPicker(){
+    List<Container> rooms = [];
+    for(int i = 0; i< getNumberofRooms();i++){
+      rooms.add(
+        Container(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: secondColor,
+              side: i == roomNumber ? BorderSide(width: 2, color: Colors.black) : BorderSide(width: 0)
+            ),
+            onPressed: (){
+              setState(() {
+                roomNumber = i;
+              });
+            },
+            child: Text("${i+1}"),
+          )
+        )
+      );
+    }
+    return rooms;
+  }
+
+  List<Container> createTables(int i){
+    List<Container> tables = [];
+    //tables.add(Container());
+    //for(int i = 0; i < widget.restaurant.layout.length;i++) {
+      //if (widget.restaurant.layout[i].length > 0) {
+        //print(widget.restaurant.layout[i][0]["key"]);
+        for (int j = 0; j < widget.restaurant.layout[i].length; j++) {
+          tables.add(
+              Container(
+                margin: EdgeInsets.only(top: widget.restaurant.layout[i][j]["y"]*0.5,left: widget.restaurant.layout[i][j]["x"]*0.5),
+                height: widget.restaurant.layout[i][j]["height"]*0.5,
+                width: widget.restaurant.layout[i][j]["width"]*0.5,
+                color: secondColor,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: secondColor,
+                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"] ? BorderSide(
+                      width: 2,
+                      color: Colors.black
+                    ) : BorderSide(
+                      width: 0
+                    ),
+                  ),
+                  onPressed: (){
+                    setState(() {
+                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"])) {
+                        selectedTableRoomNumber = roomNumber;
+                        selectedTableNumber = widget.restaurant.layout[i][j]["key"];
+                      }
+                      else{
+                        selectedTableRoomNumber = -1;
+                        selectedTableNumber = -1;
+                      }
+                    });
+                  },
+                  child: Text("${widget.restaurant.layout[i][j]["key"]}"),
+                )//Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",style: TextStyle(color: Colors.white),)),
+          ));
+        }
+      //}
+    //}
+    print(tables.length);
+    return tables;
   }
 
   @override
@@ -305,13 +384,41 @@ class _ReservationState extends State<Reservation> {
           ),
         );
       case 2:
-        return Expanded(
-            child: Container(
-              child: Container(
-                height: widget.restaurant.layout[0][0]["height"]*1.0,
-                width: widget.restaurant.layout[0][0]["width"]*1.0,
-                color: secondColor,
-              )//Lottie.asset('lib/assets/fast-food-mobile-app-loading.json'),
+        return Flexible(
+            child: Column(
+              children: [
+                Material(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  elevation: 20,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(30))
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text("Tischauswahl",style: TextStyle(fontSize: 22,color: secondColor)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 25,),
+                Wrap(
+                  spacing: 5,
+                  children: roomPicker(),
+                ),
+                SizedBox(height: 10,),
+                Container(
+                  height: height/2,
+                  width: width - 30,
+                  color: Colors.grey[400],
+                  child: Stack(
+                    alignment: Alignment.topLeft,
+                    children: createTables(roomNumber),
+                  ),
+                ),
+                Expanded(child: Container())
+              ],
             ),
         );
       case 3:
@@ -583,6 +690,10 @@ class _ReservationState extends State<Reservation> {
                                 child: Text("Datum und Uhrzeit: ${_date.day}.${_date.month}.${_date.year}, ${_time.format(context)}",style: TextStyle(fontSize: 18, color: frontColor),),
                               ),
                               SizedBox(height: 10,),
+                              FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: selectedTableNumber > 0 ? Text("Reservierter Tisch: Raum ${roomNumber+1}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
+                              ),
                               informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),
                             ],
                           ),
