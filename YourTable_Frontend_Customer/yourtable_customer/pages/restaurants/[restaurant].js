@@ -100,9 +100,6 @@ function restaurant({ restaurants }) {
     JSON.parse(restaurants[id].restaurant_layout)
   );
 
-
-
-
   const handleChange = (e) => {
     setValue(e.value);
   };
@@ -371,7 +368,7 @@ function restaurant({ restaurants }) {
                               <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
                                 <button
                                   data-action="decrement"
-                                  class=" bg-gray-300 text-gray-300 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                  class=" bg-gray-50 text-gray-300 hover:text-gray-700 hover:bg-gray-50 h-full w-20 rounded-l cursor-pointer outline-none"
                                 >
                                   <span class="m-auto text-2xl font-thin">
                                     −
@@ -379,13 +376,13 @@ function restaurant({ restaurants }) {
                                 </button>
                                 <input
                                   type="number"
-                                  class=" focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                                  class=" focus:outline-none text-center w-full bg-gray-50 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
                                   name="custom-input-number"
                                   value="0"
                                 ></input>
                                 <button
                                   data-action="increment"
-                                  class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                  class="bg-gray-50 text-gray-600 hover:text-gray-700 hover:bg-gray-50 h-full w-20 rounded-r cursor-pointer"
                                 >
                                   <span class="m-auto text-2xl font-thin ">
                                     +
@@ -448,7 +445,7 @@ function restaurant({ restaurants }) {
                             className=" text-blue-500 hover:underline"
                           >
                             hier
-                          </span>{" "}
+                          </span>
                         </p>
                       </div>
                     ) : (
@@ -580,80 +577,30 @@ function restaurant({ restaurants }) {
                   </div>
                   <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
                     <div class="w-full lg:w-1/2 px-4 py-2">
-                      <details class="mb-4">
-                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
-                          How Long is this site live?
-                        </summary>
+                      {Array(3)
+                        .fill()
+                        .map((v, i) => (
+                          <details class="mb-4">
+                            <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                              {"Frage " + i}
+                            </summary>
 
-                        <span>
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
-                      <details class="mb-4">
-                        <summary class="font-semibold bg-gray-200 rounded-md py-2 px-4">
-                          Can I install/upload anything I want on there?
-                        </summary>
-
-                        <span>
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
-                      <details class="mb-4">
-                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
-                          How can I migrate to another site?
-                        </summary>
-
-                        <span>
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
+                            <span>Antwort</span>
+                          </details>
+                        ))}
                     </div>
                     <div class="w-full lg:w-1/2 px-4 py-2">
-                      <details class="mb-4">
-                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
-                          Can I change the domain you give me?
-                        </summary>
+                      {Array(3)
+                        .fill()
+                        .map((v, i) => (
+                          <details class="mb-4">
+                            <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
+                              {"Frage " + i}
+                            </summary>
 
-                        <span class="px-4 py-2">
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
-                      <details class="mb-4">
-                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
-                          How many sites I can create at once?
-                        </summary>
-
-                        <span class="px-4 py-2">
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
-                      <details class="mb-4">
-                        <summary class="font-semibold  bg-gray-200 rounded-md py-2 px-4">
-                          How can I communicate with you?
-                        </summary>
-
-                        <span class="px-4 py-2">
-                          Laboris qui labore cillum culpa in sunt quis sint
-                          veniam. Dolore ex aute deserunt esse ipsum elit
-                          aliqua. Aute quis minim velit nostrud pariatur culpa
-                          magna in aute.
-                        </span>
-                      </details>
+                            <span class="px-4 py-2">Antwort</span>
+                          </details>
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -663,119 +610,36 @@ function restaurant({ restaurants }) {
             <section class="text-gray-600 body-font overflow-hidden">
               <div class="container px-5 py-24 mx-auto">
                 <div class="-my-8 divide-y-2 divide-gray-100">
-                  <div class="py-8 flex flex-wrap md:flex-nowrap">
-                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                      <span class="font-semibold title-font text-gray-700">
-                        CATEGORY
-                      </span>
-                      <span class="mt-1 text-gray-500 text-sm">
-                        12 Jun 2019
-                      </span>
-                    </div>
-                    <div class="md:flex-grow">
-                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
-                        Bitters hashtag waistcoat fashion axe chia unicorn
-                      </h2>
-                      <p class="leading-relaxed">
-                        Glossier echo park pug, church-key sartorial biodiesel
-                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
-                        wolf moon party messenger bag selfies, poke vaporware
-                        kombucha lumbersexual pork belly polaroid hoodie
-                        portland craft beer.
-                      </p>
-                      <a class="text-indigo-500 inline-flex items-center mt-4">
-                        Learn More
-                        <svg
-                          class="w-4 h-4 ml-2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="M5 12h14"></path>
-                          <path d="M12 5l7 7-7 7"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="py-8 flex flex-wrap md:flex-nowrap">
-                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                      <span class="font-semibold title-font text-gray-700">
-                        CATEGORY
-                      </span>
-                      <span class="mt-1 text-gray-500 text-sm">
-                        12 Jun 2019
-                      </span>
-                    </div>
-                    <div class="md:flex-grow">
-                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
-                        Meditation bushwick direct trade taxidermy shaman
-                      </h2>
-                      <p class="leading-relaxed">
-                        Glossier echo park pug, church-key sartorial biodiesel
-                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
-                        wolf moon party messenger bag selfies, poke vaporware
-                        kombucha lumbersexual pork belly polaroid hoodie
-                        portland craft beer.
-                      </p>
-                      <a class="text-indigo-500 inline-flex items-center mt-4">
-                        Learn More
-                        <svg
-                          class="w-4 h-4 ml-2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="M5 12h14"></path>
-                          <path d="M12 5l7 7-7 7"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="py-8 flex flex-wrap md:flex-nowrap">
-                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                      <span class="font-semibold title-font text-gray-700">
-                        CATEGORY
-                      </span>
-                      <span class="text-sm text-gray-500">12 Jun 2019</span>
-                    </div>
-                    <div class="md:flex-grow">
-                      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
-                        Woke master cleanse drinking vinegar salvia
-                      </h2>
-                      <p class="leading-relaxed">
-                        Glossier echo park pug, church-key sartorial biodiesel
-                        vexillologist pop-up snackwave ramps cornhole. Marfa 3
-                        wolf moon party messenger bag selfies, poke vaporware
-                        kombucha lumbersexual pork belly polaroid hoodie
-                        portland craft beer.
-                      </p>
-                      <a class="text-indigo-500 inline-flex items-center mt-4">
-                        Learn More
-                        <svg
-                          class="w-4 h-4 ml-2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="M5 12h14"></path>
-                          <path d="M12 5l7 7-7 7"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
+                  {Array(3)
+                    .fill()
+                    .map((v, i) => (
+                      <div class="py-8 flex flex-wrap md:flex-nowrap">
+                        <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                          <span class="font-semibold title-font text-gray-700">
+                            User ABC
+                          </span>
+                          <span class="mt-1 text-gray-500 text-sm">
+                            14 Jun 2022
+                          </span>
+                        </div>
+                        <div class="md:flex-grow">
+                          <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+                            Sehr gutes Restaurant
+                          </h2>
+                          <p class="leading-relaxed">
+                            Das Klima war sehr schön und die Ausstatung ist auch
+                            sehr nobel. Ich habe auf YourTable nach einem guten
+                            Restaurant gesucht und dann habe ich dieses schöne
+                            Gefunden. Wirklich TOP. und YourTable ist auch
+                            richtig nice
+                          </p>
+                        
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
             </section>
-            
           </div>
         </div>
       </div>

@@ -2,14 +2,65 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Autocomplete from "react-google-autocomplete";
 import Toggle from "react-toggle";
+import { DateTime } from "luxon";
+import TimePicker from '@mui/lab/TimePicker';
+
+import TextField from "@mui/material/TextField";
 
 function EditRestaurant(props) {
   const [restaurant, setRestaurant] = useState(props.restaurant);
   const [enabled, setEnabled] = useState(false);
+  const [value, setValue] = useState(DateTime.now());
+  const [opening, setOpening] = useState([
+    {
+      Tag: "Montag",
+      Offen: true,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Dienstag",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Mittwoch",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Donnerstag",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Freitag",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Samstag",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+    {
+      Tag: "Sonntag",
+      Offen: enabled,
+      FromTime: "12:30",
+      ToTime: "14:30",
+    },
+  ]);
+
   const [image, setImage] = useState({
     preview: props.restaurant.restaurant_logo,
     raw: "",
   });
+  const format = "HH:mm";
 
   const handleChange = (e) => {
     console.log({
@@ -34,6 +85,7 @@ function EditRestaurant(props) {
 
   useEffect(() => {
     setRestaurant(props.restaurant);
+    console.log(opening);
   }, [props.restaurant]);
 
   function ImageHandler(e) {
@@ -120,13 +172,14 @@ function EditRestaurant(props) {
               />
             </div>
 
-            <div className="flex flex-col mx-6 my-3 lg:col-span-2">
+            <div className="flex flex-col mx-6 my-3 lg:col-span-2 ">
               <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
                 Beschreibung
               </p>
               <textarea
                 className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
+                rows={6}
                 onChange={(e) => {
                   setRestaurant({ ...restaurant, ["details"]: e.target.value });
                 }}
@@ -139,40 +192,50 @@ function EditRestaurant(props) {
               <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
                 Normale Öffnungszeiten / Reservierungszeiten
               </p>
-              <div class="grid gap-4 grid-cols-2 md:grid-cols-4">
-                <p>Montag</p>
-                <label>
-                  <Toggle
-                    defaultChecked={enabled}
-                    icons={false}
-                    onChange={(e)=>e.target.COMMENT_NODE}
-                  />
-                  <span>Close</span>
-                </label>
-                <p>1</p>
-                <p>1</p>
-                <p>Dienstag</p>
-                <label>
-                  <Toggle
-                    defaultChecked={enabled}
-                    icons={false}
-                    onChange={(e)=>e.target.COMMENT_NODE}
-                  />
-                  <span>Open</span>
-                </label>
-                <p>1</p>
-                <p>1</p>
-                <p>Mittwoch</p>
-                <label>
-                  <Toggle
-                    defaultChecked={enabled}
-                    icons={false}
-                    onChange={(e)=>e.target.COMMENT_NODE}
-                  />
-                  <span>Close</span>
-                </label>
-                <p>1</p>
-                <p>1</p>
+              <div class="">
+                {opening.map((e, i) => (
+                  <div className="grid gap-4 grid-cols-2 md:grid-cols-4  my-6">
+                    <p>{e.Tag}</p>
+                    <label className="flex flex-row">
+                      <Toggle
+                        defaultChecked={e.Offen}
+                        icons={false}
+                        onChange={(e) => {
+                          const openingArr = [...opening];
+                          openingArr[i].Offen = e.target.checked;
+                          setOpening(openingArr);
+                        }}
+                      />
+                      <span className="ml-4">
+                        {!e.Offen ? "Geschlossen" : "Offen"}
+                      </span>
+                    </label>
+                    <TimePicker 
+                      label="Von"
+                      value={e.FromTime}
+                      ampm={false}
+                      disabled={!e.Offen}
+                      onChange={(newValue) => {
+                        const openingArr = [...opening];
+                        openingArr[i].FromTime = newValue;
+                        setOpening(openingArr);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <TimePicker 
+                      label="Bis"
+                      ampm={false}
+                      disabled={!e.Offen}
+                      value={e.ToTime}
+                      onChange={(newValue) => {
+                        const openingArr = [...opening];
+                        openingArr[i].ToTime = newValue;
+                        setOpening(openingArr);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 

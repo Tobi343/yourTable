@@ -16,7 +16,7 @@ function Sidebar(props) {
   return (
     <aside
       id="v_SideBar"
-      className={`${color} relative h-full w-72 hidden md:block shadow-xl transition duration-200 ease-in-out`}
+      className={`${color}  h-screen w-72 hidden md:block md:sticky shadow-xl  transition duration-200 ease-in-out`}
     >
       <div className="p-6">
         <a
