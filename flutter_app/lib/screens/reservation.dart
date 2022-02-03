@@ -22,6 +22,8 @@ class Reservation extends StatefulWidget {
 class _ReservationState extends State<Reservation> {
   AuthService auth = new AuthService();
 
+  bool loaded = false;
+
   Color secondColor = Color(0xffF7761E);
   Color frontColor = Colors.black;
 
@@ -80,12 +82,12 @@ class _ReservationState extends State<Reservation> {
           ),
         );
       }
-      print(_time);
     });
   }
 
   @override
   void initState() {
+    peopleCounter = 2;
     if(_time.hour+2 >23){
       int time = (_time.hour +2)-24;
       _time = new TimeOfDay(hour: time, minute: _time.minute);
@@ -168,13 +170,12 @@ class _ReservationState extends State<Reservation> {
                       }
                     });
                   },
-                  child: Text("${widget.restaurant.layout[i][j]["key"]}"),
+                  child: Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",textAlign: TextAlign.center,)),
                 )//Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",style: TextStyle(color: Colors.white),)),
           ));
         }
       //}
     //}
-    print(tables.length);
     return tables;
   }
 
@@ -194,7 +195,13 @@ class _ReservationState extends State<Reservation> {
         centerTitle: true,
         title: Text("Tischreservierung"),
       ),
-      body: GestureDetector(
+      body: loaded == true ? WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+        ),
+      ) : GestureDetector(
         onTap: (){
           FocusScopeNode currentFocus = FocusScope.of(context);
           if (!currentFocus.hasPrimaryFocus) {
@@ -694,6 +701,7 @@ class _ReservationState extends State<Reservation> {
                                 fit: BoxFit.fitWidth,
                                 child: selectedTableNumber > 0 ? Text("Reservierter Tisch: Raum ${roomNumber+1}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
                               ),
+                              SizedBox(height: 10,),
                               informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),
                             ],
                           ),
@@ -701,7 +709,56 @@ class _ReservationState extends State<Reservation> {
                       ),
                       SizedBox(height: 25,),
                       ElevatedButton(
-                          onPressed: (){},
+                          onPressed: () async {
+                            if(selectedTableNumber > -1 && selectedTableRoomNumber > -1){
+                              print(peopleCounter.toString());
+                              String time = "${_time.hour}:${_time.minute}";
+                              String date = "${_date.year}-${_date.month}-${_date.day}";
+                              setState(() {
+                                loaded = true;
+                              });
+                              var resp = await auth.writeReservation(widget.restaurant.restaurantId, 1, time, date, selectedTableNumber, selectedTableRoomNumber, informationText, peopleCounter);
+                              print(resp);
+                              if(resp == 200){
+                                Navigator.pop(context);
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: secondColor,
+                                    title: const Text('Tisch reserviert!',style: TextStyle(color: Colors.white),),
+                                    content:  Text('Ihr Tisch wurde für den ${_date.day}.${_date.month}.${_date.year} um ${_time.format(context)} reserviert.',style: TextStyle(color: Colors.white),),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: Text('OK',style: TextStyle(color: secondColor),),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              else{
+                                setState(() {
+                                  loaded = false;
+                                });
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: secondColor,
+                                    title: const Text('Fehlgeschlagen!',style: TextStyle(color: Colors.white),),
+                                    content: Text('Ihr Tisch konnte leider am ${_date.day}.${_date.month}.${_date.year} um ${_time.format(context)} nicht reserviert werden.',style: TextStyle(color: Colors.white),),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: Text('OK',style: TextStyle(color: secondColor),),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: secondColor,
                             elevation: 20
@@ -731,7 +788,6 @@ class _ReservationState extends State<Reservation> {
           // Increment activeStep, when the next button is tapped. However, check for upper bound.
           if (activeStep < upperBound) {
             setState(() {
-              print(_time);
               activeStep++;
             });
           }

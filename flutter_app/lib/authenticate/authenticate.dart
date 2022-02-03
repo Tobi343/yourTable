@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:day_night_time_picker/lib/state/time.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/models/restaurant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +22,7 @@ class AuthService{
   static List<dynamic> restaurantsJSON = [];
   static List<Restaurant> restaurants = [];
   static List<Restaurant> fixRestaurants = [];
+  static List<dynamic> reservations = [];
 
 
   Future<String?> attemptLogIn(String username, String password) async {
@@ -88,6 +91,15 @@ class AuthService{
 
   }
 
+  Future<String?> getReservations() async {
+    print("test");
+    var res = await http.get(
+        Uri.parse("$SERVER_IP/reservations"),
+    );
+    reservations = json.decode(res.body);
+    return res.body;
+  }
+
   Future<int?> writeUserData(String wfirstname, String wlastname, String wphone) async {
     var res = await http.post(
         Uri.parse("$SERVER_IP/users/data/updateUserData"),
@@ -99,6 +111,24 @@ class AuthService{
         }
     );
     //print(res.statusCode);
+    return res.statusCode;
+  }
+
+  Future<int?> writeReservation(int restaurantId, int userId, String reservationTime, String reservationDate, int tableNumber, int roomNumber, String extra, int personNumber, ) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/reservation"),
+        body: {
+          "restaurant_id": restaurantId.toString(),
+          "customer_id": userId.toString(),
+          "reservation_time": reservationTime,
+          "reservation_date": reservationDate,
+          "reservation_table": tableNumber.toString(),
+          "reservation_room": roomNumber.toString(),
+          "reservation_extra": extra,
+          "reservation_personCount": personNumber.toString(),
+          "reservation_chatid": "null"
+        }
+    );
     return res.statusCode;
   }
 
