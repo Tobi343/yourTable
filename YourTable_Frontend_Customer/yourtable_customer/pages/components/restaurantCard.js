@@ -3,7 +3,7 @@ import React from "react";
 function restaurantCard(props) {
   return (
     <div
-      class="md:w-1/2 lg:w-1/3 py-4 px-4 w-full"
+      class=" py-4 px-4 w-full"
       onClick={() => {
         props.indexState(props.index+1);
         console.log(props.index+1);
@@ -11,7 +11,7 @@ function restaurantCard(props) {
     >
       <div class=" ">
         <a href={"restaurants/"+props.index}>
-          <div class="bg-white relative shadow p-2 rounded-lg text-gray-800 hover:shadow-lg">
+          <div class="bg-white shadow p-2 rounded-lg text-gray-800 hover:shadow-lg">
             <div class="right-0 mt-4 rounded-l-full absolute text-center font-bold text-xs text-white px-2 py-1 bg-orange-500">
               0 Follower
             </div>

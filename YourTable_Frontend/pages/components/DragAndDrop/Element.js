@@ -13,42 +13,75 @@ function Element(props) {
         width: props.width,
         height: props.height,
       }}
-      dragGrid={[props.size,props.size]}
+
+     
+      dragGrid={[props.size, props.size]}
       resizeGrid={[props.size, props.size]}
       bounds={"parent"}
+      onDoubleClick={(e) => {
+        var index = props.tables[props.roomNumber].findIndex(
+          (x) => x.key == props.keyProp
+        );
+        
+        let copy = [...props.tables];
+        copy[props.roomNumber].splice(index,1);
+        props.setTables(copy);
+        console.log(index)
+        console.log(copy)
+      }}
       onDragStop={(e, d) => {
-
-          
-
-        var index = props.tables[props.roomNumber].findIndex((x) => x.key == props.keyProp);
-
+        var index = props.tables[props.roomNumber].findIndex(
+          (x) => x.key == props.keyProp
+        );
 
         let g = props.tables[props.roomNumber][index];
 
         g = {
           key: props.keyProp,
-          x: d.x-(d.x%props.size > props.size/2 ? -(props.size-(d.x%50)):d.x%props.size),
-          y: d.y-(d.y%props.size > props.size/2 ? -(props.size-(d.y%50)):d.y%props.size),
+          x:
+            d.x -
+            (d.x % props.size > props.size / 2
+              ? -(props.size - (d.x % 50))
+              : d.x % props.size),
+          y:
+            d.y -
+            (d.y % props.size > props.size / 2
+              ? -(props.size - (d.y % 50))
+              : d.y % props.size),
           width: props.width,
-          height:props.height,
+          height: props.height,
         };
-
 
         let copy = [...props.tables];
         copy[props.roomNumber][index] = g;
         props.setTables(copy);
 
+
+      }}
       
-        console.log(g)
-        console.log(copy)
+      onResizeStop={(e, direction, ref, delta, position)=>{
+        var index = props.tables[props.roomNumber].findIndex(
+          (x) => x.key == props.keyProp
+        );
+
+        let g = props.tables[props.roomNumber][index];
+        g = {
+          key: props.keyProp,
+          x: position.x,
+          y: position.y,
+          width: parseInt(ref.style.width),
+          height: parseInt(ref.style.height),
+        };
+
+        let copy = [...props.tables];
+        copy[props.roomNumber][index] = g;
+        props.setTables(copy);
 
       }}
       className=" rounded-lg bg-blue-500"
     >
       <Popover className="relative">
-      <Popover.Button>
-         
-        </Popover.Button>
+        <Popover.Button></Popover.Button>
 
         <Popover.Panel className="absolute z-10 w-64 px-4 mt-3 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl">
           <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">

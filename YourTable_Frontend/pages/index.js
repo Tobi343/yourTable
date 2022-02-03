@@ -1,41 +1,42 @@
 import Head from "next/head";
 import React from "react";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import CardContainer from "./components/Cards/CardContainer";
 import Sidebar from "./components/Sidebars/Sidebar";
 import MobileSideBar from "./components/Sidebars/MobileSideBar";
 import Navbar from "./components/Sidebars/Navbar";
-import { useSession, signIn, signOut,getSession } from "next-auth/react"
+import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import ColorContext from "./contexts/ColorContext";
+import Modal from "./components/Modal";
+
 export async function getServerSideProps(context) {
- const session =  await getSession(context)
+  const session = await getSession(context);
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
-    }
+    };
   }
 
   return {
-    props: { session: session   }
-  
-  }
+    props: { session: session },
+  };
 }
 
-export default function Home({session}) {
-
-  const [NavColor,setNavColor] = useState("bg-blue-500");
-  const {color, setColor} = useContext(ColorContext);
+export default function Home({ session }) {
+  const [NavColor, setNavColor] = useState("bg-blue-500");
+  const { color, setColor } = useContext(ColorContext);
 
   //const { data: session, status } = useSession()
 
   //console.log("Session: "+session)
   //if(session)
-    //console.log("Success");
+  //console.log("Success");
   //else
-    //console.log("No Success")
+  //console.log("No Success")
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   return (
     <div>
@@ -46,10 +47,11 @@ export default function Home({session}) {
       <div>
         <Navbar setNavColorField={setColor} session={session} />
         <main className="flex bg-gray-100">
-          <Sidebar NavColorField={color}/>
-          <div className="w-full flex flex-col h-screen overflow-y-hidden">
+          <Sidebar NavColorField={color} />
+          <div className="w-full flex flex-col h-screen overflow-y-scroll">
             <MobileSideBar />
-            <CardContainer  Color={color}/>
+            <CardContainer Color={color} setIsOpen={setIsOpen} />
+            
           </div>
         </main>
       </div>

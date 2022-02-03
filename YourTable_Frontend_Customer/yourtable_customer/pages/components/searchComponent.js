@@ -36,7 +36,7 @@ function searchComponent(props) {
         <hr />
         <div class="mx-2 xl:mx-28 lg:mx-20 md:mx-14 py-2 flex items-center">
           <nav class="hidden xl:contents ml-8">
-            <button class="bg-orange-500 hover:bg-gray-700 text-white font-bold uppercase px-4 xl:px-6 py-2 xl:py-3 rounded flex-shrink-0 flex items-center">
+            <button class="bg-orange-500 hover:bg-gray-700 text-white font-bold uppercase px-4 xl:px-6 py-2 xl:py-3 rounded flex-shrink-0 flex items-center h-14">
               <svg
                 width="21px"
                 height="21px"
@@ -91,7 +91,7 @@ function searchComponent(props) {
         </div>
       </header>
 
-      <div class="flex flex-wrap flex-1 min-h-screen">
+      <div class=" grid grid-cols-2 md:grid-cols-3 flex-1 min-h-screen">
         {restaurants
           .filter((res) => {
             const resName = res.restaurant_name.toLowerCase();
