@@ -7,7 +7,7 @@ import 'package:flutter_app/screens/home_screen.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:qr_flutter/qr_flutter.dart';
 import 'edit_userData.dart';
 
 
@@ -84,6 +84,7 @@ class _Home_ReservationsState extends State<Home_Reservations> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -238,6 +239,35 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                           child: InkWell(
                             splashColor: secondColor,
                             onTap: (){
+                              print(AuthService.user);
+                              String qrCode = "${AuthService.user["customer_firstname"]} ${AuthService.user["customer_secondname"]}\nDatum und Uhrzeit: ${getDate(AuthService.reservations[index]["reservation_date"])} um ${AuthService.reservations[index]["reservation_time"]}\nPlatz: ${AuthService.reservations[index]["reservation_table"]}";
+
+                              showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                backgroundColor: secondColor,
+                                content: Container(
+                                  height: height/3,
+                                  width: width/3,
+                                  child: Center(
+                                    child: QrImage(
+                                      data: qrCode,
+                                      gapless: false,
+                                      version: QrVersions.auto,
+                                    ),
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(primary: Colors.white),
+                                      onPressed: () => Navigator.pop(context, 'OK'),
+                                      child: Text('OK',style: TextStyle(color: secondColor),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              );
                               //Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
                             },
                             child: Container(
