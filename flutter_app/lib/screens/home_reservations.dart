@@ -222,7 +222,7 @@ class _Home_ReservationsState extends State<Home_Reservations> {
             },
             child: ScrollConfiguration(
               behavior: MyBehavior(),
-              child: ListView.builder(
+              child:AuthService.reservations.length > 0 ? ListView.builder(
                   itemCount: AuthService.reservations.length,
                   itemBuilder: (context, index){
                     return Card(
@@ -259,7 +259,17 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: IconButton(
-                                          onPressed: (){},
+                                          onPressed: () async {
+                                            setState(() {
+                                              loaded = false;
+                                            });
+                                            var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], 1, AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
+                                            print(resp);
+                                            setState(() {
+                                              auth.getReservations();
+                                              loaded = true;
+                                            });
+                                          },
                                           icon: Icon(Icons.delete_sharp,color: Colors.red,)
                                       ),
                                     )
@@ -272,7 +282,16 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                       ),
                     );
                   }
-              ),
+              )
+                  : Center(child:
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset('lib/assets/moon.json',height: height/4),
+                      SizedBox(height: 5,),
+                      FittedBox(fit: BoxFit.fitWidth, child: Text("Keine Reservierungen vorhanden",style: TextStyle(fontSize: 20),))
+                    ],
+                  )),
             ),
           ),
         ),

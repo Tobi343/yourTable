@@ -92,12 +92,25 @@ class AuthService{
   }
 
   Future<String?> getReservations() async {
-    print("test");
     var res = await http.get(
         Uri.parse("$SERVER_IP/reservations"),
     );
     reservations = json.decode(res.body);
     return res.body;
+  }
+
+  Future<int?> deleteReservation(int restaurantId, int userId, String reservationTime, String reservationDate) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/reservation/delete"),
+        body: {
+          "restaurant_id": restaurantId.toString(),
+          "costumer_id": userId.toString(),
+          "reservation_time": reservationTime.toString(),
+          "reservation_date": reservationDate.toString()
+        }
+    );
+    //print(res.statusCode);
+    return res.statusCode;
   }
 
   Future<int?> writeUserData(String wfirstname, String wlastname, String wphone) async {
