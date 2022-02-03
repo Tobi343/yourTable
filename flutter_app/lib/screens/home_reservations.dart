@@ -225,62 +225,66 @@ class _Home_ReservationsState extends State<Home_Reservations> {
               child:AuthService.reservations.length > 0 ? ListView.builder(
                   itemCount: AuthService.reservations.length,
                   itemBuilder: (context, index){
-                    return Card(
-                      shadowColor: secondColor,
-                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: secondColor, width: 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 7,
-                      child: InkWell(
-                        splashColor: secondColor,
-                        onTap: (){
-                          //Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
-                        },
-                        child: Container(
-                          height: height/6.0,
-                          //margin: EdgeInsets.symmetric(vertical: 40),
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FittedBox(fit: BoxFit.fitHeight,child: Text("Datum: ${getDate(AuthService.reservations[index]["reservation_date"])}",style: TextStyle(fontSize: 16),)),
-                                FittedBox(fit: BoxFit.fitHeight,child: Text("Uhrzeit: ${AuthService.reservations[index]["reservation_time"]}",style: TextStyle(fontSize: 16),)),
-                                FittedBox(fit: BoxFit.fitHeight,child: Text("Tisch: ${AuthService.reservations[index]["reservation_table"]}",style: TextStyle(fontSize: 16),)),
-                                FittedBox(fit: BoxFit.fitHeight,child: Text("Personen: ${AuthService.reservations[index]["reservation_personcount"]}",style: TextStyle(fontSize: 16),)),
-                                Stack(
-                                  alignment: Alignment.topLeft,
+                    if(AuthService.user["customer_id"] == AuthService.reservations[index]["customer_id"])
+                      {
+                        return Card(
+                          shadowColor: secondColor,
+                          margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: secondColor, width: 1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 7,
+                          child: InkWell(
+                            splashColor: secondColor,
+                            onTap: (){
+                              //Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
+                            },
+                            child: Container(
+                              height: height/5.5,
+                              //margin: EdgeInsets.symmetric(vertical: 40),
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),)),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              loaded = false;
-                                            });
-                                            var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], 1, AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
-                                            print(resp);
-                                            setState(() {
-                                              auth.getReservations();
-                                              loaded = true;
-                                            });
-                                          },
-                                          icon: Icon(Icons.delete_sharp,color: Colors.red,)
-                                      ),
-                                    )
+                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Datum: ${getDate(AuthService.reservations[index]["reservation_date"])}",style: TextStyle(fontSize: 16),)),
+                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Uhrzeit: ${AuthService.reservations[index]["reservation_time"]}",style: TextStyle(fontSize: 16),)),
+                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Tisch: ${AuthService.reservations[index]["reservation_table"]}",style: TextStyle(fontSize: 16),)),
+                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Personen: ${AuthService.reservations[index]["reservation_personcount"]}",style: TextStyle(fontSize: 16),)),
+                                    Stack(
+                                      alignment: Alignment.topLeft,
+                                      children: [
+                                        FittedBox(fit: BoxFit.fitHeight,child: Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),)),
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                              onPressed: () async {
+                                                setState(() {
+                                                  loaded = false;
+                                                });
+                                                var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], 1, AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
+                                                print(resp);
+                                                setState(() {
+                                                  auth.getReservations();
+                                                  loaded = true;
+                                                });
+                                              },
+                                              icon: Icon(Icons.delete_sharp,color: Colors.red,)
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
+                        );
+                      }
+                    else return Container();
                   }
               )
                   : Center(child:

@@ -717,7 +717,7 @@ class _ReservationState extends State<Reservation> {
                               setState(() {
                                 loaded = true;
                               });
-                              var resp = await auth.writeReservation(widget.restaurant.restaurantId, 1, time, date, selectedTableNumber, selectedTableRoomNumber, informationText, peopleCounter);
+                              var resp = await auth.writeReservation(widget.restaurant.restaurantId, AuthService.user["customer_id"], time, date, selectedTableNumber, selectedTableRoomNumber, informationText, peopleCounter);
                               print(resp);
                               if(resp == 200){
                                 Navigator.pop(context);
