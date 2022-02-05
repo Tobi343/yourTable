@@ -56,15 +56,15 @@ class _ReservationState extends State<Reservation> {
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
       _time = TimeOfDay.now().replacing(minute: 30);
+      double toDoubleTime = _time.hour+2;
+      double toDoubleNew = newTime.hour+0;
       if(_time.hour+2 >23){
         int time = (_time.hour +2)-24;
         _time = new TimeOfDay(hour: time, minute: _time.minute);
       }
       else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
-      double toDoubleTime = _time.hour+0;
-      double toDoubleNew = newTime.hour+0;
       if(toDoubleNew >= toDoubleTime && _date.day == DateTime.now().day && _date.month == DateTime.now().month && _date.year == DateTime.now().year) _time = newTime;
-      else if(_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year) _time = newTime;
+      else if(_date.isAfter(DateTime.now()) && (_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year)) _time = newTime;
       else{
         showDialog<String>(
           context: context,
@@ -91,6 +91,7 @@ class _ReservationState extends State<Reservation> {
     if(_time.hour+2 >23){
       int time = (_time.hour +2)-24;
       _time = new TimeOfDay(hour: time, minute: _time.minute);
+      _date = _date.add(new Duration(days: 1));
     }
     else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
     informationController = new TextEditingController();
@@ -350,7 +351,7 @@ class _ReservationState extends State<Reservation> {
                   child: Container(
                     color: Colors.white,
                     child: DatePicker(
-                      DateTime.now(),
+                      _date,
                       height: height/9,
                       locale: "de",
                       initialSelectedDate: _date,
@@ -757,6 +758,23 @@ class _ReservationState extends State<Reservation> {
                                   ),
                                 );
                               }
+                            }
+                            else{
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  backgroundColor: secondColor,
+                                  title: const Text('Tisch auswählen!',style: TextStyle(color: Colors.white),),
+                                  content: Text('Bitte wählen Sie einen Tisch für die Reservierung aus.',style: TextStyle(color: Colors.white),),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(primary: Colors.white),
+                                      onPressed: () => Navigator.pop(context, 'OK'),
+                                      child: Text('OK',style: TextStyle(color: secondColor),),
+                                    ),
+                                  ],
+                                ),
+                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(
