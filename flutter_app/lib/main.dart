@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/create_account.dart';
 import 'package:flutter_app/screens/home_screen.dart';
@@ -8,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp]);
   final prefs = await SharedPreferences.getInstance();
   String email = prefs.getString("email") ?? "";
   String date = prefs.getString("date") ?? "";
@@ -52,7 +55,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scrollBehavior: MyBehavior(),

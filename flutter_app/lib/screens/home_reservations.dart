@@ -295,10 +295,10 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                                                 setState(() {
                                                   loaded = false;
                                                 });
-                                                var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], 1, AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
+                                                var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], AuthService.user["customer_id"], AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
                                                 print(resp);
+                                                await auth.getReservations();
                                                 setState(() {
-                                                  auth.getReservations();
                                                   loaded = true;
                                                 });
                                               },

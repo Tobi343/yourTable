@@ -36,6 +36,7 @@ class _ReservationState extends State<Reservation> {
   bool iosStyle = true;
 
   DateTime _date = DateTime.now();
+  DateTime d = DateTime.now();
 
   late TextEditingController informationController;
   String informationText = "";
@@ -87,6 +88,7 @@ class _ReservationState extends State<Reservation> {
 
   @override
   void initState() {
+    getReservationsTime();
     peopleCounter = 2;
     if(_time.hour+2 >23){
       int time = (_time.hour +2)-24;
@@ -105,6 +107,11 @@ class _ReservationState extends State<Reservation> {
     super.initState();
   }
 
+  void getReservationsTime() async{
+    await auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
+    print(AuthService.reservationsTime);
+  }
+
   int getNumberofRooms(){
     int number = 0;
     for(int i = 0; i < widget.restaurant.layout.length;i++) {
@@ -114,6 +121,8 @@ class _ReservationState extends State<Reservation> {
   }
 
   List<Container> roomPicker(){
+    //var t = auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
+    //print(t);
     List<Container> rooms = [];
     for(int i = 0; i< getNumberofRooms();i++){
       rooms.add(
@@ -133,6 +142,7 @@ class _ReservationState extends State<Reservation> {
         )
       );
     }
+    selectedTableRoomNumber = 0;
     return rooms;
   }
 
@@ -351,17 +361,18 @@ class _ReservationState extends State<Reservation> {
                   child: Container(
                     color: Colors.white,
                     child: DatePicker(
-                      _date,
+                      d,
                       height: height/9,
                       locale: "de",
                       initialSelectedDate: _date,
                       selectionColor: secondColor,
                       selectedTextColor: Colors.white,
-                      onDateChange: (date) {
+                      onDateChange: (date) async {
                         // New date selected
                         setState(() {
                           _date = date;
                         });
+                        getReservationsTime();
                       },
                     ),
                   ),

@@ -23,6 +23,7 @@ class AuthService{
   static List<Restaurant> restaurants = [];
   static List<Restaurant> fixRestaurants = [];
   static List<dynamic> reservations = [];
+  static List<dynamic> reservationsTime = [];
 
 
   Future<String?> attemptLogIn(String username, String password) async {
@@ -93,8 +94,9 @@ class AuthService{
 
   Future<String?> getReservations() async {
     var res = await http.get(
-        Uri.parse("$SERVER_IP/reservations"),
+        Uri.parse("$SERVER_IP/reservation/${AuthService.user["customer_id"]}"),
     );
+    print(res.body);
     reservations = json.decode(res.body);
     return res.body;
   }
@@ -104,7 +106,7 @@ class AuthService{
         Uri.parse("$SERVER_IP/reservation/delete"),
         body: {
           "restaurant_id": restaurantId.toString(),
-          "costumer_id": userId.toString(),
+          "customer_id": userId.toString(),
           "reservation_time": reservationTime.toString(),
           "reservation_date": reservationDate.toString()
         }
@@ -143,6 +145,19 @@ class AuthService{
         }
     );
     return res.statusCode;
+  }
+
+  Future<dynamic> getReservationsTimeOfTable(int restaurantID, DateTime date) async {
+    var te = date.toString().split(" ");
+    var res = await http.get(
+        Uri.parse("$SERVER_IP/reservations/${restaurantID}"),
+        headers: {"reservationDate": te[0]}
+    );
+    if(res.statusCode == 201){
+      reservationsTime = jsonDecode(res.body);
+    }
+    else if(res.statusCode == 405) reservationsTime = [];
+    return res.body;
   }
 
 }
