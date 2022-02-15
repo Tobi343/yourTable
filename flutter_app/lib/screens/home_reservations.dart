@@ -271,7 +271,7 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                               //Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantHome(restaurantIndex: index)),);
                             },
                             child: Container(
-                              height: height/5.5,
+                              height: height/5.2,
                               //margin: EdgeInsets.symmetric(vertical: 40),
                               padding: EdgeInsets.symmetric(vertical: 5),
                               child: Padding(
@@ -281,10 +281,28 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     FittedBox(fit: BoxFit.fitHeight,child: Text("Datum: ${getDate(AuthService.reservations[index]["reservation_date"])}",style: TextStyle(fontSize: 16),)),
-                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Uhrzeit: ${AuthService.reservations[index]["reservation_time"]}",style: TextStyle(fontSize: 16),)),
+                                    FittedBox(fit: BoxFit.fitHeight,child: Text("Uhrzeit: ${AuthService.reservations[index]["reservation_time"].substring(0,5)}",style: TextStyle(fontSize: 16),)),
                                     FittedBox(fit: BoxFit.fitHeight,child: Text("Tisch: ${AuthService.reservations[index]["reservation_table"]}",style: TextStyle(fontSize: 16),)),
                                     FittedBox(fit: BoxFit.fitHeight,child: Text("Personen: ${AuthService.reservations[index]["reservation_personcount"]}",style: TextStyle(fontSize: 16),)),
-                                    Stack(
+                                    Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),overflow: TextOverflow.ellipsis,),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              loaded = false;
+                                            });
+                                            var resp = await auth.deleteReservation(AuthService.reservations[index]["restaurant_id"], AuthService.user["customer_id"], AuthService.reservations[index]["reservation_time"], AuthService.reservations[index]["reservation_date"]);
+                                            print(resp);
+                                            await auth.getReservations();
+                                            setState(() {
+                                              loaded = true;
+                                            });
+                                          },
+                                          icon: Icon(Icons.delete_sharp,color: Colors.red,)
+                                      ),
+                                    ),
+                                    /*Stack(
                                       children: [
                                         Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),overflow: TextOverflow.ellipsis,),
                                         Align(
@@ -305,7 +323,7 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                                           ),
                                         )
                                       ],
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),
