@@ -113,9 +113,11 @@ class _ReservationState extends State<Reservation> {
   }
 
   int getNumberofRooms(){
+    //print(widget.restaurant.layout[0]["Arr"][0]["key"]);
+    //print(widget.restaurant.layout[0]["Arr"].length);
     int number = 0;
     for(int i = 0; i < widget.restaurant.layout.length;i++) {
-      if (widget.restaurant.layout[i].length > 0) number++;
+      if (widget.restaurant.layout[i]["Arr"].length > 0) number++;
     }
     return number;
   }
@@ -137,32 +139,35 @@ class _ReservationState extends State<Reservation> {
                 roomNumber = i;
               });
             },
-            child: Text("${i+1}"),
+            child: Text("${widget.restaurant.layout[i]["Name"]}"),
           )
         )
       );
     }
-    selectedTableRoomNumber = 0;
+    //selectedTableRoomNumber = 0;
     return rooms;
   }
 
   List<Container> createTables(int i){
+    //print(widget.restaurant.layout[i]["Arr"].length);
+    //print(roomNumber);
+    print(selectedTableRoomNumber);
     List<Container> tables = [];
     //tables.add(Container());
     //for(int i = 0; i < widget.restaurant.layout.length;i++) {
       //if (widget.restaurant.layout[i].length > 0) {
         //print(widget.restaurant.layout[i][0]["key"]);
-        for (int j = 0; j < widget.restaurant.layout[i].length; j++) {
+        for (int j = 0; j < widget.restaurant.layout[i]["Arr"].length; j++) {
           tables.add(
               Container(
-                margin: EdgeInsets.only(top: widget.restaurant.layout[i][j]["y"]*0.5,left: widget.restaurant.layout[i][j]["x"]*0.5),
-                height: widget.restaurant.layout[i][j]["height"]*0.5,
-                width: widget.restaurant.layout[i][j]["width"]*0.5,
+                margin: EdgeInsets.only(top: widget.restaurant.layout[i]["Arr"][j]["y"]*0.5,left: widget.restaurant.layout[i]["Arr"][j]["x"]*0.5),
+                height: widget.restaurant.layout[i]["Arr"][j]["height"]*0.5,
+                width: widget.restaurant.layout[i]["Arr"][j]["width"]*0.5,
                 color: secondColor,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: secondColor,
-                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"] ? BorderSide(
+                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"] ? BorderSide(
                       width: 2,
                       color: Colors.black
                     ) : BorderSide(
@@ -171,9 +176,9 @@ class _ReservationState extends State<Reservation> {
                   ),
                   onPressed: (){
                     setState(() {
-                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"])) {
+                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"])) {
                         selectedTableRoomNumber = roomNumber;
-                        selectedTableNumber = widget.restaurant.layout[i][j]["key"];
+                        selectedTableNumber = widget.restaurant.layout[i]["Arr"][j]["key"];
                       }
                       else{
                         selectedTableRoomNumber = -1;
@@ -181,7 +186,7 @@ class _ReservationState extends State<Reservation> {
                       }
                     });
                   },
-                  child: Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",textAlign: TextAlign.center,)),
+                  child: Center(child: Text("${widget.restaurant.layout[i]["Arr"][j]["key"]}",textAlign: TextAlign.center,)),
                 )//Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",style: TextStyle(color: Colors.white),)),
           ));
         }
@@ -711,7 +716,7 @@ class _ReservationState extends State<Reservation> {
                               SizedBox(height: 10,),
                               FittedBox(
                                 fit: BoxFit.fitWidth,
-                                child: selectedTableNumber > 0 ? Text("Reservierter Tisch: Raum ${roomNumber+1}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
+                                child: selectedTableNumber > 0 ? Text("Reservierter Tisch: ${widget.restaurant.layout[selectedTableRoomNumber]["Name"]}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
                               ),
                               SizedBox(height: 10,),
                               informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),

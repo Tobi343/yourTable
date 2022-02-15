@@ -275,7 +275,7 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                               //margin: EdgeInsets.symmetric(vertical: 40),
                               padding: EdgeInsets.symmetric(vertical: 5),
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                                padding: const EdgeInsets.only(left: 10,right: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,11 +285,10 @@ class _Home_ReservationsState extends State<Home_Reservations> {
                                     FittedBox(fit: BoxFit.fitHeight,child: Text("Tisch: ${AuthService.reservations[index]["reservation_table"]}",style: TextStyle(fontSize: 16),)),
                                     FittedBox(fit: BoxFit.fitHeight,child: Text("Personen: ${AuthService.reservations[index]["reservation_personcount"]}",style: TextStyle(fontSize: 16),)),
                                     Stack(
-                                      alignment: Alignment.topLeft,
                                       children: [
-                                        FittedBox(fit: BoxFit.fitHeight,child: Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),)),
+                                        Text("Anmerkung: ${AuthService.reservations[index]["reservation_extra"] != "" ? AuthService.reservations[index]["reservation_extra"] : "Keine Angabe"}",style: TextStyle(fontSize: 16),overflow: TextOverflow.ellipsis,),
                                         Align(
-                                          alignment: Alignment.topRight,
+                                          alignment: Alignment.bottomRight,
                                           child: IconButton(
                                               onPressed: () async {
                                                 setState(() {
