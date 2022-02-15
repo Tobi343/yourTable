@@ -22,6 +22,8 @@ class Reservation extends StatefulWidget {
 class _ReservationState extends State<Reservation> {
   AuthService auth = new AuthService();
 
+  bool loaded = false;
+
   Color secondColor = Color(0xffF7761E);
   Color frontColor = Colors.black;
 
@@ -34,6 +36,7 @@ class _ReservationState extends State<Reservation> {
   bool iosStyle = true;
 
   DateTime _date = DateTime.now();
+  DateTime d = DateTime.now();
 
   late TextEditingController informationController;
   String informationText = "";
@@ -54,15 +57,15 @@ class _ReservationState extends State<Reservation> {
   void onTimeChanged(TimeOfDay newTime) {
     setState(() {
       _time = TimeOfDay.now().replacing(minute: 30);
+      double toDoubleTime = _time.hour+2;
+      double toDoubleNew = newTime.hour+0;
       if(_time.hour+2 >23){
         int time = (_time.hour +2)-24;
         _time = new TimeOfDay(hour: time, minute: _time.minute);
       }
       else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
-      double toDoubleTime = _time.hour+0;
-      double toDoubleNew = newTime.hour+0;
       if(toDoubleNew >= toDoubleTime && _date.day == DateTime.now().day && _date.month == DateTime.now().month && _date.year == DateTime.now().year) _time = newTime;
-      else if(_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year) _time = newTime;
+      else if(_date.isAfter(DateTime.now()) && (_date.day != DateTime.now().day || _date.month != DateTime.now().month || _date.year != DateTime.now().year)) _time = newTime;
       else{
         showDialog<String>(
           context: context,
@@ -80,15 +83,17 @@ class _ReservationState extends State<Reservation> {
           ),
         );
       }
-      print(_time);
     });
   }
 
   @override
   void initState() {
+    getReservationsTime();
+    peopleCounter = 2;
     if(_time.hour+2 >23){
       int time = (_time.hour +2)-24;
       _time = new TimeOfDay(hour: time, minute: _time.minute);
+      _date = _date.add(new Duration(days: 1));
     }
     else _time = new TimeOfDay(hour: _time.hour+2, minute: _time.minute);
     informationController = new TextEditingController();
@@ -102,15 +107,24 @@ class _ReservationState extends State<Reservation> {
     super.initState();
   }
 
+  void getReservationsTime() async{
+    await auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
+    print(AuthService.reservationsTime);
+  }
+
   int getNumberofRooms(){
+    //print(widget.restaurant.layout[0]["Arr"][0]["key"]);
+    //print(widget.restaurant.layout[0]["Arr"].length);
     int number = 0;
     for(int i = 0; i < widget.restaurant.layout.length;i++) {
-      if (widget.restaurant.layout[i].length > 0) number++;
+      if (widget.restaurant.layout[i]["Arr"].length > 0) number++;
     }
     return number;
   }
 
   List<Container> roomPicker(){
+    //var t = auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
+    //print(t);
     List<Container> rooms = [];
     for(int i = 0; i< getNumberofRooms();i++){
       rooms.add(
@@ -125,31 +139,35 @@ class _ReservationState extends State<Reservation> {
                 roomNumber = i;
               });
             },
-            child: Text("${i+1}"),
+            child: Text("${widget.restaurant.layout[i]["Name"]}"),
           )
         )
       );
     }
+    //selectedTableRoomNumber = 0;
     return rooms;
   }
 
   List<Container> createTables(int i){
+    //print(widget.restaurant.layout[i]["Arr"].length);
+    //print(roomNumber);
+    print(selectedTableRoomNumber);
     List<Container> tables = [];
     //tables.add(Container());
     //for(int i = 0; i < widget.restaurant.layout.length;i++) {
       //if (widget.restaurant.layout[i].length > 0) {
         //print(widget.restaurant.layout[i][0]["key"]);
-        for (int j = 0; j < widget.restaurant.layout[i].length; j++) {
+        for (int j = 0; j < widget.restaurant.layout[i]["Arr"].length; j++) {
           tables.add(
               Container(
-                margin: EdgeInsets.only(top: widget.restaurant.layout[i][j]["y"]*0.5,left: widget.restaurant.layout[i][j]["x"]*0.5),
-                height: widget.restaurant.layout[i][j]["height"]*0.5,
-                width: widget.restaurant.layout[i][j]["width"]*0.5,
+                margin: EdgeInsets.only(top: widget.restaurant.layout[i]["Arr"][j]["y"]*0.5,left: widget.restaurant.layout[i]["Arr"][j]["x"]*0.5),
+                height: widget.restaurant.layout[i]["Arr"][j]["height"]*0.5,
+                width: widget.restaurant.layout[i]["Arr"][j]["width"]*0.5,
                 color: secondColor,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: secondColor,
-                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"] ? BorderSide(
+                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"] ? BorderSide(
                       width: 2,
                       color: Colors.black
                     ) : BorderSide(
@@ -158,9 +176,9 @@ class _ReservationState extends State<Reservation> {
                   ),
                   onPressed: (){
                     setState(() {
-                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i][j]["key"])) {
+                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"])) {
                         selectedTableRoomNumber = roomNumber;
-                        selectedTableNumber = widget.restaurant.layout[i][j]["key"];
+                        selectedTableNumber = widget.restaurant.layout[i]["Arr"][j]["key"];
                       }
                       else{
                         selectedTableRoomNumber = -1;
@@ -168,13 +186,12 @@ class _ReservationState extends State<Reservation> {
                       }
                     });
                   },
-                  child: Text("${widget.restaurant.layout[i][j]["key"]}"),
+                  child: Center(child: Text("${widget.restaurant.layout[i]["Arr"][j]["key"]}",textAlign: TextAlign.center,)),
                 )//Center(child: Text("${widget.restaurant.layout[i][j]["key"]}",style: TextStyle(color: Colors.white),)),
           ));
         }
       //}
     //}
-    print(tables.length);
     return tables;
   }
 
@@ -194,7 +211,13 @@ class _ReservationState extends State<Reservation> {
         centerTitle: true,
         title: Text("Tischreservierung"),
       ),
-      body: GestureDetector(
+      body: loaded == true ? WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+        ),
+      ) : GestureDetector(
         onTap: (){
           FocusScopeNode currentFocus = FocusScope.of(context);
           if (!currentFocus.hasPrimaryFocus) {
@@ -343,17 +366,18 @@ class _ReservationState extends State<Reservation> {
                   child: Container(
                     color: Colors.white,
                     child: DatePicker(
-                      DateTime.now(),
+                      d,
                       height: height/9,
                       locale: "de",
                       initialSelectedDate: _date,
                       selectionColor: secondColor,
                       selectedTextColor: Colors.white,
-                      onDateChange: (date) {
+                      onDateChange: (date) async {
                         // New date selected
                         setState(() {
                           _date = date;
                         });
+                        getReservationsTime();
                       },
                     ),
                   ),
@@ -692,8 +716,9 @@ class _ReservationState extends State<Reservation> {
                               SizedBox(height: 10,),
                               FittedBox(
                                 fit: BoxFit.fitWidth,
-                                child: selectedTableNumber > 0 ? Text("Reservierter Tisch: Raum ${roomNumber+1}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
+                                child: selectedTableNumber > 0 ? Text("Reservierter Tisch: ${widget.restaurant.layout[selectedTableRoomNumber]["Name"]}, Tisch ${selectedTableNumber}",style: TextStyle(fontSize: 18, color: frontColor),) : null,
                               ),
+                              SizedBox(height: 10,),
                               informationText.length == 0 ? Container() : Text("Ihr Anliegen: $informationText",style: TextStyle(fontSize: 18,color: frontColor),),
                             ],
                           ),
@@ -701,7 +726,73 @@ class _ReservationState extends State<Reservation> {
                       ),
                       SizedBox(height: 25,),
                       ElevatedButton(
-                          onPressed: (){},
+                          onPressed: () async {
+                            if(selectedTableNumber > -1 && selectedTableRoomNumber > -1){
+                              print(peopleCounter.toString());
+                              String time = "${_time.hour}:${_time.minute}";
+                              String date = "${_date.year}-${_date.month}-${_date.day}";
+                              setState(() {
+                                loaded = true;
+                              });
+                              var resp = await auth.writeReservation(widget.restaurant.restaurantId, AuthService.user["customer_id"], time, date, selectedTableNumber, selectedTableRoomNumber, informationText, peopleCounter);
+                              print(resp);
+                              if(resp == 200){
+                                Navigator.pop(context);
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: secondColor,
+                                    title: const Text('Tisch reserviert!',style: TextStyle(color: Colors.white),),
+                                    content:  Text('Ihr Tisch wurde für den ${_date.day}.${_date.month}.${_date.year} um ${_time.format(context)} reserviert.',style: TextStyle(color: Colors.white),),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: Text('OK',style: TextStyle(color: secondColor),),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              else{
+                                setState(() {
+                                  loaded = false;
+                                });
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: secondColor,
+                                    title: const Text('Fehlgeschlagen!',style: TextStyle(color: Colors.white),),
+                                    content: Text('Ihr Tisch konnte leider am ${_date.day}.${_date.month}.${_date.year} um ${_time.format(context)} nicht reserviert werden.',style: TextStyle(color: Colors.white),),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                                        onPressed: () => Navigator.pop(context, 'OK'),
+                                        child: Text('OK',style: TextStyle(color: secondColor),),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                            else{
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  backgroundColor: secondColor,
+                                  title: const Text('Tisch auswählen!',style: TextStyle(color: Colors.white),),
+                                  content: Text('Bitte wählen Sie einen Tisch für die Reservierung aus.',style: TextStyle(color: Colors.white),),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(primary: Colors.white),
+                                      onPressed: () => Navigator.pop(context, 'OK'),
+                                      child: Text('OK',style: TextStyle(color: secondColor),),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: secondColor,
                             elevation: 20
@@ -731,7 +822,6 @@ class _ReservationState extends State<Reservation> {
           // Increment activeStep, when the next button is tapped. However, check for upper bound.
           if (activeStep < upperBound) {
             setState(() {
-              print(_time);
               activeStep++;
             });
           }

@@ -5,6 +5,7 @@ import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/models/restaurant.dart';
 import 'package:flutter_app/screens/edit_userData.dart';
+import 'package:flutter_app/screens/home_reservations.dart';
 import 'package:flutter_app/screens/restaurant_home.dart';
 import 'package:flutter_app/screens/sign_in.dart';
 import 'package:animated_search_bar/animated_search_bar.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     initGetRestaurants();
     super.initState();
   }
+
 
   initGetRestaurants() async{
     await auth.getRestaurantData();
@@ -205,9 +207,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.featured_play_list_outlined, color: secondColor,),
               title: Text("Reservierungen", style: TextStyle(fontSize: 16),),
-              onTap: () {/*
+              onTap: ()  {
                 Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => NotesHome()),);*/
+                  context,MaterialPageRoute(builder: (context) => Home_Reservations()),);
+
               },
             ),
             ListTile(

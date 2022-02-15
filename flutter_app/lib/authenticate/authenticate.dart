@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:day_night_time_picker/lib/state/time.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/models/restaurant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +22,8 @@ class AuthService{
   static List<dynamic> restaurantsJSON = [];
   static List<Restaurant> restaurants = [];
   static List<Restaurant> fixRestaurants = [];
+  static List<dynamic> reservations = [];
+  static List<dynamic> reservationsTime = [];
 
 
   Future<String?> attemptLogIn(String username, String password) async {
@@ -88,6 +92,29 @@ class AuthService{
 
   }
 
+  Future<String?> getReservations() async {
+    var res = await http.get(
+        Uri.parse("$SERVER_IP/reservation/${AuthService.user["customer_id"]}"),
+    );
+    print(res.body);
+    reservations = json.decode(res.body);
+    return res.body;
+  }
+
+  Future<int?> deleteReservation(int restaurantId, int userId, String reservationTime, String reservationDate) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/reservation/delete"),
+        body: {
+          "restaurant_id": restaurantId.toString(),
+          "customer_id": userId.toString(),
+          "reservation_time": reservationTime.toString(),
+          "reservation_date": reservationDate.toString()
+        }
+    );
+    //print(res.statusCode);
+    return res.statusCode;
+  }
+
   Future<int?> writeUserData(String wfirstname, String wlastname, String wphone) async {
     var res = await http.post(
         Uri.parse("$SERVER_IP/users/data/updateUserData"),
@@ -100,6 +127,37 @@ class AuthService{
     );
     //print(res.statusCode);
     return res.statusCode;
+  }
+
+  Future<int?> writeReservation(int restaurantId, int userId, String reservationTime, String reservationDate, int tableNumber, int roomNumber, String extra, int personNumber, ) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/reservation"),
+        body: {
+          "restaurant_id": restaurantId.toString(),
+          "customer_id": userId.toString(),
+          "reservation_time": reservationTime,
+          "reservation_date": reservationDate,
+          "reservation_table": tableNumber.toString(),
+          "reservation_room": roomNumber.toString(),
+          "reservation_extra": extra,
+          "reservation_personCount": personNumber.toString(),
+          "reservation_chatid": "null"
+        }
+    );
+    return res.statusCode;
+  }
+
+  Future<dynamic> getReservationsTimeOfTable(int restaurantID, DateTime date) async {
+    var te = date.toString().split(" ");
+    var res = await http.get(
+        Uri.parse("$SERVER_IP/reservations/${restaurantID}"),
+        headers: {"reservationDate": te[0]}
+    );
+    if(res.statusCode == 201){
+      reservationsTime = jsonDecode(res.body);
+    }
+    else if(res.statusCode == 405) reservationsTime = [];
+    return res.body;
   }
 
 }
