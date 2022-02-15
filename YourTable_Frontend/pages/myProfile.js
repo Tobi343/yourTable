@@ -44,6 +44,7 @@ export async function getServerSideProps(context) {
 
   const restaurant = await res.json();
   const user = await res1.json();
+  
   return {
     props: {
       restaurant,
@@ -61,6 +62,7 @@ async function editRestaurant(restaurant) {
     details: restaurant.details,
     id: restaurant.id,
     layout: restaurant.restaurant_layout,
+    opening: restaurant.opening,
   }));
   const res = await fetch(
     "http://34.139.40.48/restaurants/data/updateRestaurantData",
@@ -78,11 +80,10 @@ async function editRestaurant(restaurant) {
         details: restaurant.details,
         id: restaurant.id,
         layout: restaurant.restaurant_layout,
+        opening: restaurant.opening,
       }),
     }
   );
-
-  console.log(restaurant.restaurant_layout)
 
   console.log("Finished!");
   Router.reload();
@@ -197,6 +198,7 @@ function myProfile({ restaurant, user }) {
               <RestauranteLayout
                 restaurant={restaurant[moduleNumber - 1]}
                 edit={setEditLayout}
+                window={window}
                 tables={JSON.parse(restaurant[moduleNumber - 1].restaurant_layout)}
                 setTables={setTables}
               ></RestauranteLayout>

@@ -91,15 +91,15 @@ function Reservations({ reser }) {
           <MobileSideBar />
 
           <div className="flex-1">
-            <div class="flex justify-center py-4 overflow-x-scroll mx-8">
+            <div className="flex justify-center py-4 overflow-x-scroll mx-8">
               {[...Array(365)].map((el, index) => (
-                <div class="flex group hover:bg-blue-500 hover:shadow-lg hover-dark-shadow rounded-lg mx-1 transition-all	duration-300	 cursor-pointer justify-center w-16">
-                  <div class="flex items-center px-4 py-4">
-                    <div class="text-center">
-                      <p class="text-gray-900 group-hover:text-gray-100 text-sm transition-all	duration-300">
+                <div className="flex group hover:bg-blue-500 hover:shadow-lg hover-dark-shadow rounded-lg mx-1 transition-all	duration-300	 cursor-pointer justify-center w-16">
+                  <div className="flex items-center px-4 py-4">
+                    <div className="text-center">
+                      <p className="text-gray-900 group-hover:text-gray-100 text-sm transition-all	duration-300">
                         {dt.plus({ days: index }).toFormat("ccc")}
                       </p>
-                      <p class="text-gray-900 group-hover:text-gray-100 mt-3 group-hover:font-bold transition-all	duration-300">
+                      <p className="text-gray-900 group-hover:text-gray-100 mt-3 group-hover:font-bold transition-all	duration-300">
                         {dt.plus({ days: index }).toFormat("dd.LL")}
                       </p>
                     </div>

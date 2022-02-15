@@ -7,7 +7,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import ForumIcon from "@mui/icons-material/Forum";
 import { signOut } from "next-auth/react";
-
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 function MobileSideBar() {
   return (
@@ -28,7 +28,7 @@ function MobileSideBar() {
       <SideBarCard
         Text="Chats"
         Icon={<ForumIcon className="mr-3" />}
-        Link="/Reservations"
+        Link="/chat"
       />
       <SideBarCard
         Text="Meine Restaurants"
@@ -36,10 +36,10 @@ function MobileSideBar() {
         Link="/myProfile"
       />
       <SideBarCard
-        Text="Einstellungen"
-        Icon={<SettingsIcon className="mr-3" />}
-        Link="#"
-      />
+        Text="QR-Code"
+        Icon={<QrCodeScannerIcon className="mr-3" />}
+        Link="/qrCodeScanner"
+        />
       <SideBarCard
         Text="Ausloggen"
         Icon={<LogoutIcon className="mr-3" />}

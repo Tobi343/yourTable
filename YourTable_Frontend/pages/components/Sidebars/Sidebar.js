@@ -9,6 +9,7 @@ import ForumIcon from "@mui/icons-material/Forum";
 import { signOut } from "next-auth/react";
 import { useContext } from "react";
 import ColorContext from "../../contexts/ColorContext";
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 function Sidebar(props) {
   const {color, setColor} = useContext(ColorContext);
@@ -16,7 +17,7 @@ function Sidebar(props) {
   return (
     <aside
       id="v_SideBar"
-      className={`${color}  h-screen w-72 hidden md:block md:sticky shadow-xl  transition duration-200 ease-in-out`}
+      className={`${color}  h-screen w-72 hidden md:block sticky shadow-xl  transition duration-200 ease-in-out`}
     >
       <div className="p-6">
         <a
@@ -48,9 +49,9 @@ function Sidebar(props) {
           Link="/myProfile"
         />
         <SideBarCard
-          Text="Einstellungen"
-          Icon={<SettingsIcon className="mr-3" />}
-          Link="#"
+          Text="QR-Code"
+          Icon={<QrCodeScannerIcon className="mr-3" />}
+          Link="/qrCodeScanner"
         />
         <SideBarCard
           Text="Ausloggen"

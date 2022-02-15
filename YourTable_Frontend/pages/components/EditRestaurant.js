@@ -3,58 +3,16 @@ import { useState, useEffect } from "react";
 import Autocomplete from "react-google-autocomplete";
 import Toggle from "react-toggle";
 import { DateTime } from "luxon";
-import TimePicker from '@mui/lab/TimePicker';
-
+import TimePicker from "@mui/lab/TimePicker";
+import { Disclosure } from "@headlessui/react";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import TextField from "@mui/material/TextField";
 
 function EditRestaurant(props) {
   const [restaurant, setRestaurant] = useState(props.restaurant);
   const [enabled, setEnabled] = useState(false);
   const [value, setValue] = useState(DateTime.now());
-  const [opening, setOpening] = useState([
-    {
-      Tag: "Montag",
-      Offen: true,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Dienstag",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Mittwoch",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Donnerstag",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Freitag",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Samstag",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-    {
-      Tag: "Sonntag",
-      Offen: enabled,
-      FromTime: "12:30",
-      ToTime: "14:30",
-    },
-  ]);
+  const [opening, setOpening] = useState(JSON.parse(props.restaurant.opening));
 
   const [image, setImage] = useState({
     preview: props.restaurant.restaurant_logo,
@@ -85,6 +43,7 @@ function EditRestaurant(props) {
 
   useEffect(() => {
     setRestaurant(props.restaurant);
+    console.log(props.restaurant.opening);
     console.log(opening);
   }, [props.restaurant]);
 
@@ -188,55 +147,140 @@ function EditRestaurant(props) {
               />
             </div>
 
-            <div className="flex flex-col mx-6 my-3 lg:col-span-2">
-              <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
-                Normale Öffnungszeiten / Reservierungszeiten
-              </p>
-              <div class="">
-                {opening.map((e, i) => (
-                  <div className="grid gap-4 grid-cols-2 md:grid-cols-4  my-6">
-                    <p>{e.Tag}</p>
-                    <label className="flex flex-row">
-                      <Toggle
-                        defaultChecked={e.Offen}
-                        icons={false}
-                        onChange={(e) => {
-                          const openingArr = [...opening];
-                          openingArr[i].Offen = e.target.checked;
-                          setOpening(openingArr);
-                        }}
+            <div className=" mx-6 my-3 bg-white rounded-2xl lg:col-span-2 ">
+              <Disclosure>
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm text-gray-700 font-medium text-left border rounded-lg  focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                      <span>Öffnungszeiten</span>
+                      <ArrowBackIosIcon
+                        className={`${
+                          open ? "transform rotate-90" : "transform -rotate-90"
+                        } w-5 h-5 text-gray-500`}
                       />
-                      <span className="ml-4">
-                        {!e.Offen ? "Geschlossen" : "Offen"}
-                      </span>
-                    </label>
-                    <TimePicker 
-                      label="Von"
-                      value={e.FromTime}
-                      ampm={false}
-                      disabled={!e.Offen}
-                      onChange={(newValue) => {
-                        const openingArr = [...opening];
-                        openingArr[i].FromTime = newValue;
-                        setOpening(openingArr);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                    <TimePicker 
-                      label="Bis"
-                      ampm={false}
-                      disabled={!e.Offen}
-                      value={e.ToTime}
-                      onChange={(newValue) => {
-                        const openingArr = [...opening];
-                        openingArr[i].ToTime = newValue;
-                        setOpening(openingArr);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </div>
-                ))}
-              </div>
+                    </Disclosure.Button>
+                    <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                      <div className="flex flex-col mx-6 my-3 lg:col-span-2">
+                        <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
+                          Normale Öffnungszeiten / Reservierungszeiten
+                        </p>
+                        <div className="">
+                          {JSON.parse(props.restaurant.opening).map((e, i) => (
+                            <div className="grid gap-4 grid-cols-2 md:grid-cols-4  my-6">
+                              <p>{e.Tag}</p>
+                              <label className="flex flex-row">
+                                <Toggle
+                                  defaultChecked={e.Offen}
+                                  icons={false}
+                                  onChange={(e) => {
+                                    const openingArr = [...opening];
+                                    openingArr[i].Offen = e.target.checked;
+                                    setRestaurant({
+                                      ...restaurant,
+                                      ["opening"]: JSON.stringify(openingArr),
+                                    });
+                                    setOpening(openingArr);
+                                  }}
+                                />
+                                <span className="ml-4">
+                                  {!e.Offen ? "Geschlossen" : "Offen"}
+                                </span>
+                              </label>
+                              <TimePicker
+                                label="Von"
+                                value={opening[i].FromTime}
+                                ampm={false}
+                                disabled={!e.Offen}
+                                onChange={(newValue) => {
+                                  const openingArr = [...opening];
+                                  openingArr[i].FromTime = newValue;
+                                  setRestaurant({
+                                    ...restaurant,
+                                    ["opening"]: JSON.stringify(openingArr),
+                                  });
+                                  setOpening(openingArr);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField {...params} />
+                                )}
+                              />
+                              <TimePicker
+                                label="Bis"
+                                ampm={false}
+                                disabled={!e.Offen}
+                                value={opening[i].ToTime}
+                                onChange={(newValue) => {
+                                  const openingArr = [...opening];
+                                  openingArr[i].ToTime = newValue;
+                                  setRestaurant({
+                                    ...restaurant,
+                                    ["opening"]: JSON.stringify(openingArr),
+                                  });
+                                  setOpening(openingArr);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField {...params} />
+                                )}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </Disclosure.Panel>
+                  </>
+                )}
+              </Disclosure>
+              <Disclosure as="div" className="mt-2">
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm text-gray-700 font-medium text-left border rounded-lg  focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                      <span>Spezielle Öffnungszeiten</span>
+                      <ArrowBackIosIcon
+                        className={`${
+                          open ? "transform rotate-90" : "transform -rotate-90"
+                        } w-5 h-5 text-gray-500`}
+                      />
+                    </Disclosure.Button>
+                    <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                      No.
+                    </Disclosure.Panel>
+                  </>
+                )}
+              </Disclosure>
+              <Disclosure as="div" className="mt-2">
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm text-gray-700 font-medium text-left border rounded-lg  focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                      <span>Fragen</span>
+                      <ArrowBackIosIcon
+                        className={`${
+                          open ? "transform rotate-90" : "transform -rotate-90"
+                        } w-5 h-5 text-gray-500`}
+                      />
+                    </Disclosure.Button>
+                    <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                      No.
+                    </Disclosure.Panel>
+                  </>
+                )}
+              </Disclosure>
+              <Disclosure as="div" className="mt-2">
+                {({ open }) => (
+                  <>
+                    <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm text-gray-700 font-medium text-left border rounded-lg  focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                      <span>Kommentare</span>
+                      <ArrowBackIosIcon
+                        className={`${
+                          open ? "transform rotate-90" : "transform -rotate-90"
+                        } w-5 h-5 text-gray-500`}
+                      />
+                    </Disclosure.Button>
+                    <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                      No.
+                    </Disclosure.Panel>
+                  </>
+                )}
+              </Disclosure>
             </div>
 
             <div className="flex h-12 mt-5">

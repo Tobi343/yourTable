@@ -47,11 +47,11 @@ export default function Modal(props) {
                 {/*body*/}
                 <div className="relative p-6 flex-auto h-44 overflow-y-auto">
                   {props.itemsProp.map((e,index) => (
-                    <div class="flex items-center justify-between mb-5">
-                      <div class="flex items-center">
-                        <div class="pl-4 flex items-center">
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-center">
+                        <div className="pl-4 flex items-center">
                           <input
-                            class="form-check-input appearance-none h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            className="form-check-input appearance-none h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                             type="checkbox"
                             value="A"
                             id="flexCheckDefault"
@@ -65,7 +65,7 @@ export default function Modal(props) {
                           <p
                             id="fb1"
                             tabindex="0"
-                            class="focus:outline-none text-md leading-normal ml-2 text-gray-800"
+                            className="focus:outline-none text-md leading-normal ml-2 text-gray-800"
                           >
                             {e.item}
                           </p>
@@ -73,7 +73,7 @@ export default function Modal(props) {
                       </div>
                       <p
                         tabindex="0"
-                        class="focus:outline-none w-8 text-xs leading-3 text-right text-indigo-700"
+                        className="focus:outline-none w-8 text-xs leading-3 text-right text-indigo-700"
                       >
                         {e.number}
                       </p>

@@ -1,18 +1,16 @@
 import React from "react";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import ColorContext from "../../contexts/ColorContext";
+import Link from "next/link";
 
 function Navbar(props) {
   //localStorage.setItem('color', "bg-blue-500");
 
-  const {color, setColor} = useContext(ColorContext);
-
-
-
+  const { color, setColor } = useContext(ColorContext);
 
   function showColors(e) {
     e.preventDefault();
@@ -44,7 +42,6 @@ function Navbar(props) {
             >
               <MenuIcon />
             </button>
-            
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div className="ml-3 relative">
@@ -112,19 +109,25 @@ function Navbar(props) {
 
             <div className="ml-3 relative">
               <div>
-                <button
-                  type="button"
-                  className="bg-gray-800 flex text-sm rounded-full focus:outline-none
+                <Link href={"/myProfile"}>
+                  <div
+                    className="bg-gray-800 flex text-sm rounded-full focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                  id="profileBtn"
-                >
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src={props.session === undefined || props.session == 'undefined' ? "/sample-profile.png":props.session.picture}
-                    alt=""
-                  />
-                </button>
+                    id="profileBtn"
+                  >
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={
+                        props.session === undefined ||
+                        props.session == "undefined"
+                          ? "/sample-profile.png"
+                          : props.session.picture
+                      }
+                      alt=""
+                    />
+                  </div>
+                </Link>
               </div>
 
               <div

@@ -2,18 +2,18 @@ import React from "react";
 
 function card(props) {
   return (
-    <div class="w-full md:w-1/2 xl:w-1/3 px-4">
-      <div class="bg-white rounded-lg overflow-hidden mb-10">
+    <div className="w-full md:w-1/2 xl:w-1/3 px-4">
+      <div className="bg-white rounded-lg overflow-hidden mb-10">
         <img
           src={props.image}
           alt="image"
-          class=" h-80"
+          className=" h-80"
         />
-        <div class="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
+        <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
           <h3>
             <a
               href="javascript:void(0)"
-              class="
+              className="
                 font-semibold
                 text-dark text-xl
                 sm:text-[22px]
@@ -31,7 +31,7 @@ function card(props) {
           </h3>
           <a
             href="#"
-            class="
+            className="
              inline-block
              py-2
              px-7

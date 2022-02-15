@@ -19,22 +19,22 @@ function Element(props) {
       resizeGrid={[props.size, props.size]}
       bounds={"parent"}
       onDoubleClick={(e) => {
-        var index = props.tables[props.roomNumber].findIndex(
+        var index = props.tables[props.roomNumber].Arr.findIndex(
           (x) => x.key == props.keyProp
         );
         
         let copy = [...props.tables];
-        copy[props.roomNumber].splice(index,1);
+        copy[props.roomNumber].Arr.splice(index,1);
         props.setTables(copy);
         console.log(index)
         console.log(copy)
       }}
       onDragStop={(e, d) => {
-        var index = props.tables[props.roomNumber].findIndex(
+        var index = props.tables[props.roomNumber].Arr.findIndex(
           (x) => x.key == props.keyProp
         );
 
-        let g = props.tables[props.roomNumber][index];
+        let g = props.tables[props.roomNumber].Arr[index];
 
         g = {
           key: props.keyProp,
@@ -53,18 +53,18 @@ function Element(props) {
         };
 
         let copy = [...props.tables];
-        copy[props.roomNumber][index] = g;
+        copy[props.roomNumber].Arr[index] = g;
         props.setTables(copy);
 
 
       }}
       
       onResizeStop={(e, direction, ref, delta, position)=>{
-        var index = props.tables[props.roomNumber].findIndex(
+        var index = props.tables[props.roomNumber].Arr.findIndex(
           (x) => x.key == props.keyProp
         );
 
-        let g = props.tables[props.roomNumber][index];
+        let g = props.tables[props.roomNumber].Arr[index];
         g = {
           key: props.keyProp,
           x: position.x,
@@ -74,7 +74,7 @@ function Element(props) {
         };
 
         let copy = [...props.tables];
-        copy[props.roomNumber][index] = g;
+        copy[props.roomNumber].Arr[index] = g;
         props.setTables(copy);
 
       }}

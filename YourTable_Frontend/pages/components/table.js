@@ -79,7 +79,7 @@ function Table(props) {
               </thead>
               <tbody>
                {props.Reservations.map((reservation)=>(
-                <TableItem Name={"Unbekannt"} Anzahl={reservation.reservation_personcount} Uhrzeit={reservation.reservation_time} Tischnummer={reservation.reservation_table}/>
+                <TableItem Name={reservation.customer_firstname+" "+reservation.customer_secondname} Anzahl={reservation.reservation_personcount} Uhrzeit={reservation.reservation_time} Tischnummer={reservation.reservation_table}/>
                ))}
 
                 
