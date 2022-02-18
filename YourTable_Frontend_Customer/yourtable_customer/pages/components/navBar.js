@@ -1,4 +1,6 @@
-import React from "react";
+import { React, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { signOut } from "next-auth/react";
 
 function navBar(props) {
   return (
@@ -17,7 +19,9 @@ function navBar(props) {
             <li className="relative group">
               <a
                 href="/"
-                className={`outline-none rounded-lg ${props.active == 1 ?"text-orange-500":"" }`}
+                className={`outline-none rounded-lg ${
+                  props.active == 1 ? "text-orange-500" : ""
+                }`}
               >
                 Home
               </a>
@@ -26,7 +30,9 @@ function navBar(props) {
             <li className="relative group">
               <a
                 href="/search"
-                className={`outline-none rounded-lg ${props.active == 2 ?"text-orange-500":"" }`}
+                className={`outline-none rounded-lg ${
+                  props.active == 2 ? "text-orange-500" : ""
+                }`}
               >
                 Search
               </a>
@@ -35,7 +41,9 @@ function navBar(props) {
             <li className="relative group">
               <a
                 href="/reservations"
-                className={`outline-none rounded-lg ${props.active == 3 ?"text-orange-500":"" }`}
+                className={`outline-none rounded-lg ${
+                  props.active == 3 ? "text-orange-500" : ""
+                }`}
               >
                 Reservations
               </a>
@@ -44,26 +52,39 @@ function navBar(props) {
           </ul>
         </section>
         <section>
-
-          <ul className="md:flex hidden space-x-4">
-            <li>
-              <a
-                href="#"
-                className="bg-transparent  px-4 py-1 rounded-xl border-orange-500 border-2 text-orange-500 font-semibold hover:bg-orange-500 hover:text-white active:bg-gray-200 outline-none"
-              >
-                Login
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                className="bg-orange-500  px-4 py-1 rounded-xl border-orange-500 border-2 text-gray-100 font-semibold hover:bg-white hover:text-orange-500 active:bg-gray-200 outline-none"
-              >
-                Register
-              </a>
-            </li>
-          </ul>
+          {props.successful ? (
+            <ul className="md:flex hidden space-x-4">
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => props.setIsOpen(true)}
+                  className="bg-transparent  px-4 py-1 rounded-xl border-orange-500 border-2 text-orange-500 font-semibold hover:bg-orange-500 hover:text-white active:bg-gray-200 outline-none"
+                >
+                  Login
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="bg-orange-500  px-4 py-1 rounded-xl border-orange-500 border-2 text-gray-100 font-semibold hover:bg-white hover:text-orange-500 active:bg-gray-200 outline-none"
+                >
+                  Register
+                </a>
+              </li>
+            </ul>
+          ) : (
+            <ul className="md:flex hidden space-x-4">
+              <li>
+                <a
+                  href="#"
+                  onClick={(e)=>signOut()}
+                  className="bg-transparent  px-4 py-1 rounded-xl border-orange-500 border-2 text-orange-500 font-semibold hover:bg-orange-500 hover:text-white active:bg-gray-200 outline-none"
+                >
+                  Logout
+                </a>
+              </li>
+            </ul>
+          )}
         </section>
       </div>
     </nav>

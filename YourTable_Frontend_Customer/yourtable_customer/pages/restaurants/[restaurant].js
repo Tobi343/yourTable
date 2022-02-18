@@ -2,14 +2,14 @@ import React from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { Stepper } from "@progress/kendo-react-layout";
-import { Calendar } from "@progress/kendo-react-dateinputs";
+import { Calendar, DateInput } from "@progress/kendo-react-dateinputs";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef } from "react";
 import GridLines from "react-gridlines";
 import { Rnd } from "react-rnd";
 import NavBar from "../components/navBar";
 import { TimePicker } from "@progress/kendo-react-dateinputs";
-import { DateTime } from "luxon";
+import { Interval, DateTime, Duration } from "luxon";
 import Router from "next/router";
 
 export async function getServerSideProps(context) {
@@ -64,6 +64,23 @@ async function editProfile(profile) {
   });
   console.log("Finished!");
 }
+
+async function getReservationTimes(date, id) {
+  const res = await fetch(`http://34.139.40.48/reservations/${id}`, {
+    method: "GET",
+    headers: new Headers({
+      reservationdate: date,
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/x-www-form-urlencoded",
+    }),
+  });
+  const reser = await res.json();
+
+  console.log("Finished!");
+
+  return reser;
+}
+
 const items = [
   {
     label: "Personen",
@@ -97,6 +114,7 @@ function restaurant({ restaurants }) {
   const steps = 30;
 
   const [people, setPeople] = useState(0);
+  const [reservedTables, setReservedTables] = useState();
   const [extraText, setExtraText] = useState("");
   const [name, setName] = useState("");
   const [time, setTime] = useState("");
@@ -113,9 +131,23 @@ function restaurant({ restaurants }) {
   const [roomNumber, setRoomNumber] = useState(0);
   const [selectedRoomNumber, setSelectedRoomNumber] = useState(-1);
   const [width, setWidth] = useState(0);
+  const [personsShown, setPersonsShown] = useState(0);
   const [table, setTable] = useState(
     JSON.parse(restaurants[id].restaurant_layout)
   );
+
+  function callReservations(date) {
+    getReservationTimes(date, restaurants[id].id).then((res) => {
+      setReservedTables(res);
+    });
+    console.log(date);
+    console.log(restaurants[id].id);
+    console.log(
+      getReservationTimes(date, restaurants[id].id).then((res) =>
+        console.log(res)
+      )
+    );
+  }
 
   const windowWidth = useWidth();
 
@@ -126,6 +158,13 @@ function restaurant({ restaurants }) {
       console.log(window.innerHeight, window.innerWidth);
       setWidth(window.innerWidth);
     });
+
+    console.log(
+      Interval.after(
+        DateTime.fromFormat("14:30:00", "hh:mm:ss"),
+        Duration.fromObject({ hours: 2 })
+      ).contains(DateTime.fromFormat("15:30:00", "hh:mm:ss"))
+    );
   }, []);
 
   const handleChange = (e) => {
@@ -188,17 +227,14 @@ function restaurant({ restaurants }) {
                               people == i + 1 ? "border-orange-400" : ""
                             } flex justify-evenly items-center bg-white rounded-lg hover:bg-gray-200 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
                             onClick={(e) => {
-                              if (i + 1 == 10) {
-                              } else {setPeople(i + 1);
-                              setValue(1);}
+                              setPeople(i + 1);
+                              setValue(1);
                             }}
                           >
                             <div className="flex ">
-                              {i + 1 == 10 ? (
-                                <input className="text-lg font-semibold text-gray-700 dark:text-gray-200 w-32" placeholder={`10 +`}></input>
-                                ) : (
-                                <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">{i+1}</p>
-                              )}
+                              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                                {i + 1 == 10 ? i + 1 + "+" : i + 1}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -215,8 +251,13 @@ function restaurant({ restaurants }) {
                         min={date}
                         onChange={(e) => {
                           setSelectedDate(e.value.toDateString());
-                          console.log(e.value);
                           setpickerVisible(true);
+                          console.log(
+                            DateTime.fromJSDate(e.value).toFormat("yyyy-MM-dd")
+                          );
+                          callReservations(
+                            DateTime.fromJSDate(e.value).toFormat("yyyy-MM-dd")
+                          );
                         }}
                         value={new Date(selectedDate)}
                         className="w-full h-80 "
@@ -263,6 +304,7 @@ function restaurant({ restaurants }) {
                                     .plus({ minutes: steps * i })
                                     .toLocaleString(DateTime.TIME_24_SIMPLE)
                                 );
+
                                 setValue(2);
                                 setpickerVisible(false);
                               }}
@@ -305,13 +347,41 @@ function restaurant({ restaurants }) {
                     <GridLines
                       cellWidth={50}
                       strokeWidth={2}
-                      className="  flex-1 h-full relative"
+                      className="  flex-1 relative"
                     >
-                      {table[roomNumber].Arr.map((e) => (
+                      {table[roomNumber].Arr.map((e, i) => (
                         <div
                           className={`${
-                            selectedTable == e.key ? "border-gray-700" : ""
-                          } bg-blue-500 z-2 absolute top-0 left-0 rounded-xl flex flex-col border-2 hover:bg-blue-300`}
+                            selectedTable == e.key &&
+                            selectedRoomNumber == roomNumber
+                              ? "border-gray-700"
+                              : ""
+                          }  ${
+                            reservedTables != undefined &&
+                            reservedTables[roomNumber] != undefined &&
+                            reservedTables[roomNumber][e.key] != undefined &&
+                            reservedTables[roomNumber][e.key].filter((el) => {
+                              console.log(
+                                Interval.after(
+                                  DateTime.fromFormat(
+                                    el.reservation_time,
+                                    "hh:mm:ss"
+                                  ),
+                                  Duration.fromObject({ hours: 2 })
+                                ).contains(DateTime.fromFormat(time, "hh:mm"))
+                              );
+
+                              return Interval.after(
+                                DateTime.fromFormat(
+                                  el.reservation_time,
+                                  "hh:mm:ss"
+                                ),
+                                Duration.fromObject({ hours: 2 })
+                              ).contains(DateTime.fromFormat(time, "hh:mm"));
+                            }).length != 0
+                              ? "bg-red-500"
+                              : "bg-blue-500 hover:bg-blue-300"
+                          } z-2 absolute top-0 left-0 rounded-xl flex flex-col border-2 `}
                           style={{
                             width: e.width,
                             height: e.height,
@@ -319,10 +389,9 @@ function restaurant({ restaurants }) {
                             marginTop: e.y,
                           }}
                           onClick={(ex) => {
+                            console.log(reservedTables)
                             setSelectedTable(e.key);
                             setSelectedRoomNumber(roomNumber);
-                            console.log(e.key);
-                            console.log(selectedTable);
                             setValue(3);
                           }}
                         >
@@ -679,7 +748,7 @@ function restaurant({ restaurants }) {
                                           table: selectedTable,
                                           extra: extraText,
                                           count: people,
-                                          room: "2",
+                                          room: selectedRoomNumber,
                                         });
                                       }}
                                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
