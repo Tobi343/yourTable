@@ -12,7 +12,7 @@ function EditRestaurant(props) {
   const [restaurant, setRestaurant] = useState(props.restaurant);
   const [enabled, setEnabled] = useState(false);
   const [value, setValue] = useState(DateTime.now());
-  const [opening, setOpening] = useState(JSON.parse(props.restaurant.opening));
+  const [opening, setOpening] = useState((props.restaurant.opening));
 
   const [image, setImage] = useState({
     preview: props.restaurant.restaurant_logo,
@@ -165,7 +165,7 @@ function EditRestaurant(props) {
                           Normale Öffnungszeiten / Reservierungszeiten
                         </p>
                         <div className="">
-                          {JSON.parse(props.restaurant.opening).map((e, i) => (
+                          {(props.restaurant.opening).map((e, i) => (
                             <div className="grid gap-4 grid-cols-2 md:grid-cols-4  my-6">
                               <p>{e.Tag}</p>
                               <label className="flex flex-row">
@@ -177,7 +177,7 @@ function EditRestaurant(props) {
                                     openingArr[i].Offen = e.target.checked;
                                     setRestaurant({
                                       ...restaurant,
-                                      ["opening"]: JSON.stringify(openingArr),
+                                      ["opening"]: (openingArr),
                                     });
                                     setOpening(openingArr);
                                   }}
@@ -196,7 +196,7 @@ function EditRestaurant(props) {
                                   openingArr[i].FromTime = newValue;
                                   setRestaurant({
                                     ...restaurant,
-                                    ["opening"]: JSON.stringify(openingArr),
+                                    ["opening"]: (openingArr),
                                   });
                                   setOpening(openingArr);
                                 }}
@@ -214,7 +214,7 @@ function EditRestaurant(props) {
                                   openingArr[i].ToTime = newValue;
                                   setRestaurant({
                                     ...restaurant,
-                                    ["opening"]: JSON.stringify(openingArr),
+                                    ["opening"]: (openingArr),
                                   });
                                   setOpening(openingArr);
                                 }}

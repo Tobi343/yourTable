@@ -188,14 +188,17 @@ function restaurant({ restaurants }) {
                               people == i + 1 ? "border-orange-400" : ""
                             } flex justify-evenly items-center bg-white rounded-lg hover:bg-gray-200 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
                             onClick={(e) => {
-                              setPeople(i + 1);
-                              setValue(1);
+                              if (i + 1 == 10) {
+                              } else {setPeople(i + 1);
+                              setValue(1);}
                             }}
                           >
                             <div className="flex ">
-                              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                                {i + 1 == 10 ? i + 1 + "+" : i + 1}
-                              </p>
+                              {i + 1 == 10 ? (
+                                <input className="text-lg font-semibold text-gray-700 dark:text-gray-200 w-32" placeholder={`10 +`}></input>
+                                ) : (
+                                <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">{i+1}</p>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -282,9 +285,9 @@ function restaurant({ restaurants }) {
                       {table.map((el, i) => (
                         <div
                           className={`border-2  ${
-                            roomNumber == i  ? "bg-gray-200" : "bg-white"
+                            roomNumber == i ? "bg-gray-200" : "bg-white"
                           }  ${
-                            selectedRoomNumber == i  ? "border-orange-400" : ""
+                            selectedRoomNumber == i ? "border-orange-400" : ""
                           } flex justify-evenly items-center  rounded-lg hover:bg-gray-200 mx-3 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
                           onClick={(e) => {
                             setRoomNumber(i);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState,useContext,useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import Sidebar from "./components/Sidebars/Sidebar";
 import Navbar from "./components/Sidebars/Navbar";
 import MobileSideBar from "./components/Sidebars/MobileSideBar";
@@ -21,30 +21,28 @@ import RestauranteLayout from "./components/RestauranteLayout";
 import { getSession } from "next-auth/react";
 import ColorContext from "./contexts/ColorContext";
 export async function getServerSideProps(context) {
-
-  const session =  await getSession(context)
-  console.log("Session: "+session.accessToken)
+  const session = await getSession(context);
+  console.log("Session: " + session.accessToken);
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
-    }
+    };
   }
   const res = await fetch(`http://34.139.40.48/restaurant/2`);
-  const res1 = await fetch(`http://34.139.40.48/users/data/`+session.email, {
+  const res1 = await fetch(`http://34.139.40.48/users/data/` + session.email, {
     method: "GET",
     headers: new Headers({
-      Authorization:
-      "Token "+session.accessToken,
+      Authorization: "Token " + session.accessToken,
       "Content-Type": "application/x-www-form-urlencoded",
     }),
   });
 
   const restaurant = await res.json();
   const user = await res1.json();
-  
+
   return {
     props: {
       restaurant,
@@ -54,16 +52,18 @@ export async function getServerSideProps(context) {
 }
 
 async function editRestaurant(restaurant) {
-  console.log(JSON.stringify({
-    name: restaurant.restaurant_name,
-    address: restaurant.restaurant_address,
-    mainImage: restaurant.restaurant_image,
-    logoImage: restaurant.restaurant_logo,
-    details: restaurant.details,
-    id: restaurant.id,
-    layout: restaurant.restaurant_layout,
-    opening: restaurant.opening,
-  }));
+  console.log(
+    JSON.stringify({
+      name: restaurant.restaurant_name,
+      address: restaurant.restaurant_address,
+      mainImage: restaurant.restaurant_image,
+      logoImage: restaurant.restaurant_logo,
+      details: restaurant.details,
+      id: restaurant.id,
+      layout: restaurant.restaurant_layout,
+      opening: restaurant.opening,
+    })
+  );
   const res = await fetch(
     "http://34.139.40.48/restaurants/data/updateRestaurantData",
     {
@@ -111,12 +111,19 @@ async function editProfile(profile) {
 
 function myProfile({ restaurant, user }) {
   const [NavColor, setNavColor] = useState("bg-blue-500");
-  const {color, setColor} = useContext(ColorContext);
+  const { color, setColor } = useContext(ColorContext);
 
-
-  useEffect(()=>{
+  useEffect(() => {
+    for (let index = 0; index < restaurant.length; index++) {
+      restaurant[index].restaurant_layout = JSON.parse(
+        restaurant[index].restaurant_layout
+      );
+      restaurant[index].opening = JSON.parse(restaurant[index].opening);
+      
+    }
     console.log(restaurant);
-  },[])
+
+  }, []);
 
   function sidebarOpenMobile(e) {
     e.preventDefault();
@@ -137,7 +144,7 @@ function myProfile({ restaurant, user }) {
 
     console.log(moduleNumber);
     console.log(restaurant.length);
-   // console.log(restaurant[moduleNumber - 1].layout);
+    // console.log(restaurant[moduleNumber - 1].layout);
   }
 
   const [moduleNumber, setModuleNumber] = useState(0);
@@ -145,7 +152,6 @@ function myProfile({ restaurant, user }) {
   const [editLayout, setEditLayout] = useState(false);
 
   const size = 50;
-
 
   const [tables, setTables] = useState([
     [
@@ -170,7 +176,6 @@ function myProfile({ restaurant, user }) {
     [],
   ]);
 
-
   return (
     <div>
       <Navbar setNavColorField={setColor} />
@@ -194,12 +199,12 @@ function myProfile({ restaurant, user }) {
                 className=" flex-1 h-full"
                 id="createRestaurant"
               ></CreateRestaurant>
-            ) : (editLayout ? (
+            ) : editLayout ? (
               <RestauranteLayout
                 restaurant={restaurant[moduleNumber - 1]}
                 edit={setEditLayout}
                 window={window}
-                tables={JSON.parse(restaurant[moduleNumber - 1].restaurant_layout)}
+                tables={restaurant[moduleNumber - 1].restaurant_layout}
                 setTables={setTables}
               ></RestauranteLayout>
             ) : (
@@ -211,7 +216,7 @@ function myProfile({ restaurant, user }) {
                 id="editRestaurant"
                 click={editRestaurant}
               ></EditRestaurant>
-            ))}
+            )}
           </div>
         </div>
       </main>
