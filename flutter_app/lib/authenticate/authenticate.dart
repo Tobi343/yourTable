@@ -23,7 +23,7 @@ class AuthService{
   static List<Restaurant> restaurants = [];
   static List<Restaurant> fixRestaurants = [];
   static List<dynamic> reservations = [];
-  static List<dynamic> reservationsTime = [];
+  static var reservationsTime;
 
 
   Future<String?> attemptLogIn(String username, String password) async {

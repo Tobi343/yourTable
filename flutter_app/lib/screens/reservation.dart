@@ -109,7 +109,7 @@ class _ReservationState extends State<Reservation> {
 
   void getReservationsTime() async{
     await auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
-    print(AuthService.reservationsTime);
+    print(AuthService.reservationsTime["1"]["2"][0]);
   }
 
   int getNumberofRooms(){
@@ -151,13 +151,26 @@ class _ReservationState extends State<Reservation> {
   List<Container> createTables(int i){
     //print(widget.restaurant.layout[i]["Arr"].length);
     //print(roomNumber);
-    print(selectedTableRoomNumber);
     List<Container> tables = [];
     //tables.add(Container());
     //for(int i = 0; i < widget.restaurant.layout.length;i++) {
       //if (widget.restaurant.layout[i].length > 0) {
-        //print(widget.restaurant.layout[i][0]["key"]);
+        //print(AuthService.reservationsTime[(i+1).toString()][2.toString()]);
         for (int j = 0; j < widget.restaurant.layout[i]["Arr"].length; j++) {
+          bool open = true;
+          if(AuthService.reservationsTime.length != 0 && AuthService.reservationsTime[(i).toString()] != null && AuthService.reservationsTime[(i).toString()][widget.restaurant.layout[i]["Arr"][j]["key"].toString()] != null){
+            for(int k = 0; k<AuthService.reservationsTime[(i).toString()][widget.restaurant.layout[i]["Arr"][j]["key"].toString()].length;k++){
+              TimeOfDay t = new TimeOfDay(hour: int.parse(AuthService.reservationsTime[(i).toString()][widget.restaurant.layout[i]["Arr"][j]["key"].toString()][k]["reservation_time"].substring(0,2)),minute: int.parse(AuthService.reservationsTime[(i).toString()][widget.restaurant.layout[i]["Arr"][j]["key"].toString()][k]["reservation_time"].substring(3,5)));
+              double tBefore = t.hour-2 + t.minute/60.0;
+              double tAfter = t.hour+2 + t.minute/60.0;
+              double tt = _time.hour + _time.minute/60.0;
+              print(tt);
+              print(tBefore);
+              print(tAfter);
+              if(tt>=tBefore && tt<= tAfter)open = false;
+              //if(!(tBefore > tt) || !(tAfter < tt))open = false;
+            }
+          }
           tables.add(
               Container(
                 margin: EdgeInsets.only(top: widget.restaurant.layout[i]["Arr"][j]["y"]*0.5,left: widget.restaurant.layout[i]["Arr"][j]["x"]*0.5),
@@ -166,8 +179,8 @@ class _ReservationState extends State<Reservation> {
                 color: secondColor,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: secondColor,
-                    side: selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"] ? BorderSide(
+                    primary: open ? secondColor : Colors.grey[700],
+                    side: open && selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"] ? BorderSide(
                       width: 2,
                       color: Colors.black
                     ) : BorderSide(
@@ -176,11 +189,11 @@ class _ReservationState extends State<Reservation> {
                   ),
                   onPressed: (){
                     setState(() {
-                      if(!(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"])) {
+                      if(open && !(selectedTableRoomNumber == roomNumber && selectedTableNumber == widget.restaurant.layout[i]["Arr"][j]["key"])) {
                         selectedTableRoomNumber = roomNumber;
                         selectedTableNumber = widget.restaurant.layout[i]["Arr"][j]["key"];
                       }
-                      else{
+                      else if(open){
                         selectedTableRoomNumber = -1;
                         selectedTableNumber = -1;
                       }
