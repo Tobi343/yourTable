@@ -45,9 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   initGetRestaurants() async{
     await auth.getRestaurantData();
-    setState(() {
-      loaded = true;
-    });
+    if(mounted){
+      setState(() {
+        loaded = true;
+      });
+    }
   }
 
   Future<bool> showExitPopup() async {

@@ -37,7 +37,10 @@ class AuthService{
     if(res.statusCode == 200) {
       print("test");
       email = username;
-      jwToken = res.body;
+      var body = json.decode(res.body);
+      print(body);
+      jwToken = body["token"];
+      print(jwToken);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString("email", username);
       prefs.setString("jwt", jwToken);
@@ -45,7 +48,7 @@ class AuthService{
       String dateOfLogin = "${now.year}-${now.month}-${now.day}";
       print(dateOfLogin);
       prefs.setString("date", dateOfLogin);
-      return res.body;
+      return jwToken;
     }
     return null;
   }
@@ -87,6 +90,7 @@ class AuthService{
         Uri.parse("$SERVER_IP/users/data/$email"),
         headers: {"authorization": jwt}
     );
+    print(res.body);
     user = json.decode(res.body);
     return res.body;
 
