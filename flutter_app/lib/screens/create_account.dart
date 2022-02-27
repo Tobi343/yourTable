@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -176,6 +178,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                           });
                                         }
                                         else {
+                                          print(jwt);
                                           int? statusCode = await auth.writeUserData(firstName, lastName, number);
                                           if(statusCode != null && statusCode != 201){
                                             error = "Einloggen fehlgeschlagen!";
