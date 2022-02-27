@@ -7,12 +7,15 @@ import TimePicker from "@mui/lab/TimePicker";
 import { Disclosure } from "@headlessui/react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import TextField from "@mui/material/TextField";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function EditRestaurant(props) {
   const [restaurant, setRestaurant] = useState(props.restaurant);
   const [enabled, setEnabled] = useState(false);
   const [value, setValue] = useState(DateTime.now());
-  const [opening, setOpening] = useState((props.restaurant.opening));
+  const [opening, setOpening] = useState(props.restaurant.opening);
+  const [startDate, setStartDate] = useState(new Date());
 
   const [image, setImage] = useState({
     preview: props.restaurant.restaurant_logo,
@@ -44,7 +47,7 @@ function EditRestaurant(props) {
   useEffect(() => {
     setRestaurant(props.restaurant);
     console.log(props.restaurant.opening);
-    console.log(opening);
+    setOpening(props.restaurant.opening);
   }, [props.restaurant]);
 
   function ImageHandler(e) {
@@ -54,16 +57,16 @@ function EditRestaurant(props) {
   }
 
   return (
-    <div className="flex-1 h-full">
+    <div className="flex-1 h-full overflow-y-scroll">
       <div className="bg-white block">
         <div className="">
-          <div className="w-full bg-blue-500  h-48 rounded-t-lg">
+          <div className="w-full bg-orange-500  h-48 rounded-t-lg">
             <img
               src={restaurant.restaurant_image}
               className="object-cover w-full h-48"
             />
           </div>
-          <div className="absolute -mt-20 ml-5">
+          <div className="relative -mt-20 ml-5 z-10">
             <div className="bg-gray-200 border border-gray-300 h-36 w-36 rounded-lg shadow-md border-b border-primary">
               <label htmlFor="upload-button">
                 <img
@@ -81,7 +84,7 @@ function EditRestaurant(props) {
           onChange={handleChange}
         />
 
-        <div className="bg-primary border border-primary rounded-b-lg p-5 pt-20 flex flex-col">
+        <div className="bg-primary border border-primary rounded-b-lg p-5 pt-20 flex flex-col relative -mt-16 z-0">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="flex flex-col mx-6 my-3">
               <p className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
@@ -165,19 +168,19 @@ function EditRestaurant(props) {
                           Normale Öffnungszeiten / Reservierungszeiten
                         </p>
                         <div className="">
-                          {(props.restaurant.opening).map((e, i) => (
-                            <div className="grid gap-4 grid-cols-2 md:grid-cols-4  my-6">
+                          {props.restaurant.opening.map((e, i) => (
+                            <div className="grid gap-4 grid-cols-2 lg:grid-cols-4  my-6">
                               <p>{e.Tag}</p>
                               <label className="flex flex-row">
                                 <Toggle
                                   defaultChecked={e.Offen}
                                   icons={false}
-                                  onChange={(e) => {
+                                  onChange={(el) => {
                                     const openingArr = [...opening];
-                                    openingArr[i].Offen = e.target.checked;
+                                    openingArr[i].Offen = el.target.checked;
                                     setRestaurant({
                                       ...restaurant,
-                                      ["opening"]: (openingArr),
+                                      ["opening"]: openingArr,
                                     });
                                     setOpening(openingArr);
                                   }}
@@ -196,7 +199,7 @@ function EditRestaurant(props) {
                                   openingArr[i].FromTime = newValue;
                                   setRestaurant({
                                     ...restaurant,
-                                    ["opening"]: (openingArr),
+                                    ["opening"]: openingArr,
                                   });
                                   setOpening(openingArr);
                                 }}
@@ -214,7 +217,7 @@ function EditRestaurant(props) {
                                   openingArr[i].ToTime = newValue;
                                   setRestaurant({
                                     ...restaurant,
-                                    ["opening"]: (openingArr),
+                                    ["opening"]: openingArr,
                                   });
                                   setOpening(openingArr);
                                 }}
@@ -242,7 +245,40 @@ function EditRestaurant(props) {
                       />
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                      No.
+                      {[...Array(5)].map((e, i) => (
+                        <div className="grid gap-4 grid-cols-2 xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-1  my-6">
+                          <div>
+                            <DatePicker
+                              selected={startDate}
+                              className="w-32"
+                              onChange={(date) => setStartDate(date)}
+                            />
+                          </div>
+                          <label className="flex flex-row">
+                            <Toggle defaultChecked={false} icons={false} />
+                            <span className="ml-4">
+                              {true ? "Geschlossen" : "Offen"}
+                            </span>
+                          </label>
+                          <TimePicker
+                            label="Von"
+                            ampm={false}
+                            renderInput={(params) => <TextField  className=" w-32 h-11" {...params} />}
+                          />
+                          <TimePicker
+                            label="Bis"
+                            ampm={false}
+                            renderInput={(params) => <TextField className=" w-32" {...params} />}
+                          />
+                         {/* <div
+                            className="w-4 mr-2 transform hover:fill-red-500 hover:scale-110"
+                            onClick={(e) => {
+                            }}
+                          >
+                            <img src={"/delete.png"} />
+                          </div>*/}
+                        </div>
+                      ))}
                     </Disclosure.Panel>
                   </>
                 )}
@@ -298,7 +334,7 @@ function EditRestaurant(props) {
                 Save
               </button>
               <button
-                className="bg-blue-500 text-md h-12 text-center inline-block w-36 rounded-xl text-white font-bold ml-6 "
+                className="bg-orange-500 text-md h-12 text-center inline-block w-36 rounded-xl text-white font-bold ml-6 "
                 onClick={(e) => props.edit(true)}
               >
                 Edit Layout

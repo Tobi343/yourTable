@@ -31,7 +31,7 @@ export default function Modal(props) {
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                <div className="flex items-start justify-between p-5 border-b border-solid border-orangeGray-200 rounded-t">
                   <h3 className="text-3xl font-semibold">
                     Ansicht / Was wollen Sie sehen ?
                   </h3>
@@ -51,7 +51,7 @@ export default function Modal(props) {
                       <div className="flex items-center">
                         <div className="pl-4 flex items-center">
                           <input
-                            className="form-check-input appearance-none h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            className="form-check-input appearance-none h-5 w-5 border border-gray-300 rounded-sm bg-white checked:bg-orange-600 checked:border-orange-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
                             type="checkbox"
                             value="A"
                             id="flexCheckDefault"
@@ -81,7 +81,7 @@ export default function Modal(props) {
                   ))}
                 </div>
                 {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <div className="flex items-center justify-end p-6 border-t border-solid border-orangeGray-200 rounded-b">
                   <button
                     className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"

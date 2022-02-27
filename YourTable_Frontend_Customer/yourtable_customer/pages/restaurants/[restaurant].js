@@ -12,23 +12,35 @@ import { TimePicker } from "@progress/kendo-react-dateinputs";
 import { Interval, DateTime, Duration } from "luxon";
 import Router from "next/router";
 
+import { useSession, signIn, signOut, getSession } from "next-auth/react";
+
+const handleLogin = (email, password) => {
+  console.log(email + " " + password);
+  const register = "false";
+  signIn("credentials", {
+    email,
+    password,
+    register,
+    // The page where you want to redirect to after a
+    // successful login
+  });
+};
+
 export async function getServerSideProps(context) {
-  /*const session =  await getSession(context)
-  console.log("Session: "+session.accessToken)
+  const session = await getSession(context);
+  console.log("Session: " + session);
+  var successful = false;
   if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }*/
+    successful = true;
+  }
   const res = await fetch(`http://34.139.40.48/restaurant`);
   const restaurants = await res.json();
 
   return {
     props: {
       restaurants,
+      successful,
+      session,
     },
   };
 }
@@ -43,8 +55,35 @@ const useWidth = () => {
   return width;
 };
 
+async function getComments(id) {
+  const res = await fetch(`http://34.139.40.48/comments/${id}`);
+  const comments = await res.json();
+  console.log("Finished!");
+  return comments;
+}
+
+async function postComments(id, comment, session, stars, title) {
+  const res = await fetch(`http://34.139.40.48/comments/${id}`, {
+    method: "POST",
+    headers: new Headers({
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    }),
+    body: JSON.stringify({
+      _restaurant_id: id,
+      customer_id: session.ID,
+      _comment: comment,
+      _date: DateTime.now().toLocaleString(DateTime.DATE_FULL),
+      stars: stars,
+      title: title,
+    }),
+  });
+  console.log("Finished!");
+}
+
 async function editProfile(profile) {
   console.log(profile);
+
   const res = await fetch(`http://34.139.40.48/reservation`, {
     method: "POST",
     headers: new Headers({
@@ -65,7 +104,15 @@ async function editProfile(profile) {
   console.log("Finished!");
 }
 
-async function getReservationTimes(date, id) {
+async function getReservationTimes(date, id, session) {
+  const res1 = await fetch(`http://34.139.40.48/users/data/` + session.email, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: "Token " + session.accessToken,
+      "Content-Type": "application/x-www-form-urlencoded",
+    }),
+  });
+  const user1 = await res1.json();
   const res = await fetch(`http://34.139.40.48/reservations/${id}`, {
     method: "GET",
     headers: new Headers({
@@ -78,7 +125,7 @@ async function getReservationTimes(date, id) {
 
   console.log("Finished!");
 
-  return reser;
+  return { reser, user1 };
 }
 
 const items = [
@@ -105,7 +152,7 @@ const items = [
   },
 ];
 
-function restaurant({ restaurants }) {
+function restaurant({ restaurants, successful, session }) {
   const router = useRouter();
   const id = router.query.restaurant;
   const date = new Date();
@@ -114,15 +161,18 @@ function restaurant({ restaurants }) {
   const steps = 30;
 
   const [people, setPeople] = useState(0);
+  let [isOpen, setIsOpen] = useState(false);
   const [reservedTables, setReservedTables] = useState();
   const [extraText, setExtraText] = useState("");
   const [name, setName] = useState("");
+  const [stars, setStars] = useState(0);
   const [time, setTime] = useState("");
   const [email, setEmail] = useState("");
   const [value, setValue] = useState(0);
   const [selectedTable, setSelectedTable] = useState(0);
   const [extraHighChairs, setExtraHighChairs] = useState(0);
   const [extraDogs, setExtraDogs] = useState(0);
+  const [comments, setComments] = useState([]);
   const [extraTime, setExtraTime] = useState(0);
   const [selectedDate, setSelectedDate] = useState(date.toDateString());
   const [pickerVisible, setpickerVisible] = useState(false);
@@ -132,18 +182,24 @@ function restaurant({ restaurants }) {
   const [selectedRoomNumber, setSelectedRoomNumber] = useState(-1);
   const [width, setWidth] = useState(0);
   const [personsShown, setPersonsShown] = useState(0);
+  const [user, setUser] = useState(0);
   const [table, setTable] = useState(
     JSON.parse(restaurants[id].restaurant_layout)
   );
 
   function callReservations(date) {
-    getReservationTimes(date, restaurants[id].id).then((res) => {
-      setReservedTables(res);
+    getReservationTimes(date, restaurants[id].id, session).then((res) => {
+      setReservedTables(res.reser);
+      setUser(res.user1);
+      setName(
+        res.user1.customer_firstname + " " + res.user1.customer_secondname
+      );
+      console.log(res.user1);
     });
     console.log(date);
     console.log(restaurants[id].id);
     console.log(
-      getReservationTimes(date, restaurants[id].id).then((res) =>
+      getReservationTimes(date, restaurants[id].id, session).then((res) =>
         console.log(res)
       )
     );
@@ -152,12 +208,15 @@ function restaurant({ restaurants }) {
   const windowWidth = useWidth();
 
   useEffect(() => {
-    console.log(window.innerHeight, window.innerWidth);
+    // console.log(window.innerHeight, window.innerWidth);
     setWidth(window.innerWidth);
+    getComments(id).then((res) => setComments(res));
     window.addEventListener("resize", () => {
-      console.log(window.innerHeight, window.innerWidth);
+      //console.log(window.innerHeight, window.innerWidth);
       setWidth(window.innerWidth);
     });
+
+    getComments(id);
 
     console.log(
       Interval.after(
@@ -173,8 +232,166 @@ function restaurant({ restaurants }) {
 
   return (
     <div className="flex-col h-full bg-gray-200">
-      <NavBar className="" active={2}></NavBar>
+      <NavBar
+        className=""
+        active={2}
+        setIsOpen={setIsOpen}
+        successful={successful}
+      ></NavBar>{" "}
       <div className="flex-1 h-full">
+        <>
+          {isOpen ? (
+            <>
+              <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none">
+                <div className="relative my-6 mx-auto max-w-6xl">
+                  {/*content*/}
+                  <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    {/*header*/}
+                    {/*body*/}
+                    <div class=" flex flex-col items-center justify-center bg-gray-300">
+                      <div class="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
+                        <div class="font-medium self-center text-xl sm:text-2xl uppercase text-gray-800">
+                          Login To Your Account
+                        </div>
+                        <button class="relative mt-6 border rounded-md py-2 text-sm text-gray-800 bg-gray-100 hover:bg-gray-200">
+                          <span class="absolute left-0 top-0 flex items-center justify-center h-full w-10 text-blue-500">
+                            <i class="fab fa-facebook-f"></i>
+                          </span>
+                          <span>Login with Facebook</span>
+                        </button>
+                        <div class="relative mt-10 h-px bg-gray-300">
+                          <div class="absolute left-0 top-0 flex justify-center w-full -mt-2">
+                            <span class="bg-white px-4 text-xs text-gray-500 uppercase">
+                              Or Login With Email
+                            </span>
+                          </div>
+                        </div>
+                        <div class="mt-10">
+                          <form
+                            action="#"
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              handleLogin(emailField.value, password.value);
+                            }}
+                          >
+                            <div class="flex flex-col mb-6">
+                              <label
+                                for="email"
+                                class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                              >
+                                E-Mail Address:
+                              </label>
+                              <div class="relative">
+                                <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                                  <svg
+                                    class="h-6 w-6 m-0"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                  </svg>
+                                </div>
+
+                                <input
+                                  id="emailField"
+                                  type="email"
+                                  name="emailField"
+                                  class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
+                                  placeholder="E-Mail Address"
+                                />
+                              </div>
+                            </div>
+                            <div class="flex flex-col mb-6">
+                              <label
+                                for="password"
+                                class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                              >
+                                Password:
+                              </label>
+                              <div class="relative">
+                                <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                                  <span>
+                                    <svg
+                                      class="h-6 w-6 m-0"
+                                      fill="none"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                  </span>
+                                </div>
+
+                                <input
+                                  id="password"
+                                  type="password"
+                                  name="password"
+                                  class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
+                                  placeholder="Password"
+                                />
+                              </div>
+                            </div>
+
+                            <div class="flex items-center mb-6 -mt-4">
+                              <div class="flex ml-auto">
+                                <a
+                                  href="#"
+                                  class="inline-flex text-xs sm:text-sm text-blue-500 hover:text-blue-700"
+                                >
+                                  Forgot Your Password?
+                                </a>
+                              </div>
+                            </div>
+
+                            <div class="flex w-full">
+                              <button
+                                type="submit"
+                                class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
+                              >
+                                <span class="mr-2 uppercase">Login</span>
+                                <span>
+                                  <svg
+                                    class="h-6 w-6 m-0"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                </span>
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="flex justify-center items-center mt-6">
+                          <a
+                            href="#"
+                            target="_blank"
+                            class="inline-flex items-center font-bold text-blue-500 hover:text-blue-700 text-xs text-center"
+                          >
+                            <span class="ml-2">You don't have an account?</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>{" "}
+                    {/*footer*/}
+                  </div>
+                </div>
+              </div>
+              <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            </>
+          ) : null}
+        </>
         <div className="bg-white block h-full mx-2 xl:mx-28 lg:mx-20 md:mx-14">
           <div className="">
             <div className="w-full bg-blue-500  h-56 rounded-t-lg">
@@ -208,7 +425,12 @@ function restaurant({ restaurants }) {
               </div>
             </div>
 
-            <div className="m-8 rounded-xl bg-gray-100 p-8">
+            <div
+              className="m-8 rounded-xl bg-gray-100 p-8"
+              onClick={(e) => {
+                setIsOpen(successful);
+              }}
+            >
               <Stepper
                 value={value}
                 onChange={handleChange}
@@ -227,14 +449,40 @@ function restaurant({ restaurants }) {
                               people == i + 1 ? "border-orange-400" : ""
                             } flex justify-evenly items-center bg-white rounded-lg hover:bg-gray-200 text-center shadow-xs  dark:bg-gray-800 w-36 h-12`}
                             onClick={(e) => {
-                              setPeople(i + 1);
-                              setValue(1);
+                              if (i + 1 == 10) {
+                                if (peopleInput.value != "") {
+                                  setPeople(peopleInput.value);
+                                  setValue(1);
+                                }
+                              } else {
+                                setPeople(i + 1);
+                                setValue(1);
+                              }
                             }}
                           >
                             <div className="flex ">
-                              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                                {i + 1 == 10 ? i + 1 + "+" : i + 1}
-                              </p>
+                              {i + 1 == 10 ? (
+                                <form
+                                  onSubmit={(e) => {
+                                    if (peopleInput.value != "") {
+                                      setPeople(peopleInput.value);
+                                      setValue(1);
+                                    }
+                                  }}
+                                >
+                                  <input
+                                    onEnter
+                                    id="peopleInput"
+                                    name="peopleInput"
+                                    className="text-lg w-32 font-semibold text-gray-700 dark:text-gray-200 text-center"
+                                    placeholder={"10 +"}
+                                  ></input>
+                                </form>
+                              ) : (
+                                <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                                  {i + 1}
+                                </p>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -322,8 +570,8 @@ function restaurant({ restaurants }) {
                     </div>
                   </div>
                 ) : value == 2 ? (
-                  <div className="w-full h-96 overflow-scroll">
-                    <div className="w-full flex flex-row h-16">
+                  <div className="w-full h-96 overflow-scroll bg-white">
+                    <div className="w-full flex flex-row h-16 bg-gray-200">
                       {table.map((el, i) => (
                         <div
                           className={`border-2  ${
@@ -344,11 +592,7 @@ function restaurant({ restaurants }) {
                       ))}
                     </div>
 
-                    <GridLines
-                      cellWidth={50}
-                      strokeWidth={2}
-                      className="  flex-1 relative"
-                    >
+                    <div className="   relative h-full ">
                       {table[roomNumber].Arr.map((e, i) => (
                         <div
                           className={`${
@@ -366,8 +610,8 @@ function restaurant({ restaurants }) {
                                   DateTime.fromFormat(
                                     el.reservation_time,
                                     "hh:mm:ss"
-                                  ),
-                                  Duration.fromObject({ hours: 2 })
+                                  ).plus({ hours: -2 }),
+                                  Duration.fromObject({ hours: 4 })
                                 ).contains(DateTime.fromFormat(time, "hh:mm"))
                               );
 
@@ -375,8 +619,8 @@ function restaurant({ restaurants }) {
                                 DateTime.fromFormat(
                                   el.reservation_time,
                                   "hh:mm:ss"
-                                ),
-                                Duration.fromObject({ hours: 2 })
+                                ).plus({ hours: -1, minutes: -59 }),
+                                Duration.fromObject({ hours: 3, minutes: 59 })
                               ).contains(DateTime.fromFormat(time, "hh:mm"));
                             }).length != 0
                               ? "bg-red-500"
@@ -389,7 +633,7 @@ function restaurant({ restaurants }) {
                             marginTop: e.y,
                           }}
                           onClick={(ex) => {
-                            console.log(reservedTables)
+                            console.log(reservedTables);
                             setSelectedTable(e.key);
                             setSelectedRoomNumber(roomNumber);
                             setValue(3);
@@ -462,7 +706,7 @@ function restaurant({ restaurants }) {
                           )}
                         </div>
                       ))}
-                    </GridLines>
+                    </div>
                   </div>
                 ) : value == 3 ? (
                   <div className="bg-red-300 w-full ">
@@ -684,8 +928,13 @@ function restaurant({ restaurants }) {
                                     name="email"
                                     id="email"
                                     className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={user.customer_email}
+                                    onChange={(e) => {
+                                      setUser({
+                                        ...user,
+                                        ["customer_email"]: e.target.value,
+                                      });
+                                    }}
                                     placeholder="email@domain.com"
                                   />
                                 </div>
@@ -742,7 +991,7 @@ function restaurant({ restaurants }) {
                                         setCheckVisible(true);
                                         editProfile({
                                           restaurant: restaurants[id].id,
-                                          customer: 1,
+                                          customer: session.ID,
                                           time: time,
                                           date: selectedDate,
                                           table: selectedTable,
@@ -814,33 +1063,130 @@ function restaurant({ restaurants }) {
             <section className="text-gray-600 body-font overflow-hidden">
               <div className="container px-5 py-24 mx-auto">
                 <div className="-my-8 divide-y-2 divide-gray-100">
-                  {Array(3)
-                    .fill()
-                    .map((v, i) => (
-                      <div className="py-8 flex flex-wrap md:flex-nowrap">
-                        <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                          <span className="font-semibold title-font text-gray-700">
-                            User ABC
-                          </span>
-                          <span className="mt-1 text-gray-500 text-sm">
-                            14 Jun 2022
-                          </span>
-                        </div>
-                        <div className="md:flex-grow">
-                          <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
-                            Sehr gutes Restaurant
-                          </h2>
-                          <p className="leading-relaxed">
-                            Das Klima war sehr schön und die Ausstatung ist auch
-                            sehr nobel. Ich habe auf YourTable nach einem guten
-                            Restaurant gesucht und dann habe ich dieses schöne
-                            Gefunden. Wirklich TOP. und YourTable ist auch
-                            richtig nice
-                          </p>
+                  {comments.slice(0, 3).map((v, i) => (
+                    <div className="py-8 flex flex-wrap lg:flex-nowrap">
+                      <div className="lg:w-64 lg:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                        <span className="font-semibold title-font text-gray-700">
+                          {v.customer_username}
+                        </span>
+                        <span className="mt-1 text-gray-500 text-sm">
+                          {v._date}
+                        </span>
+
+                        <div class="flex h-6 mt-2">
+                          {Array(v.stars)
+                            .fill()
+                            .map((e, i) => (
+                              <svg
+                                class="ml-0 mr-1 w-4 h-4 mt-0 fill-current text-yellow-500"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                              </svg>
+                            ))}
+                          {Array(5 - v.stars)
+                            .fill()
+                            .map((e, i) => (
+                              <svg
+                                class="ml-0 mr-1 w-4 h-4 mt-0 fill-current text-gray-400"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                              </svg>
+                            ))}
                         </div>
                       </div>
-                    ))}
+                      <div className="lg:flex-grow">
+                        <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
+                          {v.title}
+                        </h2>
+                        <p className="leading-relaxed">{v._comment}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
+
+              <div class="flex items-center justify-center mx-8 mb-4 w-full">
+                <form
+                  class="w-full bg-white rounded-lg px-4 pt-2"
+                  onSubmit={(e) => {
+                    setIsOpen(successful);
+                    if (!successful) {
+                      postComments(
+                        id,
+                        comment.value,
+                        session,
+                        stars,
+                        title.value
+                      );
+                    }
+                  }}
+                >
+                  <div class="flex flex-col -mx-3 mb-6 w-full">
+                    <h2 class=" pt-3 pb-2 text-gray-800 text-lg">
+                      Add a new comment
+                    </h2>
+                    <div class=" mb-2 mt-2 mr-4">
+                      <textarea
+                        class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full  py-2 px-3  font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+                        name="title"
+                        id="title"
+                        rows={1}
+                        maxLength={100}
+                        placeholder="Überschrift"
+                        required
+                      ></textarea>
+
+                      <textarea
+                        class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+                        name="comment"
+                        id="comment"
+                        placeholder="Schreib deine Bewertung"
+                        required
+                      ></textarea>
+                    </div>
+                    <div class="w-full my-4 flex">
+                      {[...Array(stars)].map((e, i) => (
+                        <svg
+                          class="ml-0 mr-1 w-4 h-4 mt-0 fill-current text-yellow-500"
+                          xmlns="http://www.w3.org/2000/svg"
+                          onClick={(e) => {
+                            setStars(i + 1);
+                            console.log(i + 1);
+                          }}
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                        </svg>
+                      ))}
+                      {[...Array(5 - stars)].map((e, i) => (
+                        <svg
+                          class="ml-0 mr-1 w-4 h-4 mt-0 fill-current text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          onClick={(e) => {
+                            setStars(stars + i + 1);
+                            console.log(stars + i + 1);
+                          }}
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <div class="w-full flex items-end">
+                      <div class="-mr-1">
+                        <input
+                          type="submit"
+                          class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100"
+                          value="Bewertung veröffentlichen"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
             </section>
           </div>

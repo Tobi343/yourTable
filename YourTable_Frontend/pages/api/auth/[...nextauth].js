@@ -20,19 +20,20 @@ const providers = [
 
       console.log(credentials.register)
 
-      const res = await axios.post("http://34.139.40.48/users"+path, {
+      const res = await axios.post("http://34.139.40.48/users/besitzer"+path, {
         email: credentials.email,
         password: credentials.password,
       });
 
-      const user = res.data;
-
+      
+      const data = res.data;
       const object = {
-        token: user,
+        token: data.token,
         email: credentials.email,
+        ID: data.ID,
       };
 
-      if (user) {
+      if (data.token) {
         console.log("success");
         return object;
       }
@@ -50,10 +51,11 @@ const callbacks = {
       token = {
         name: user.email.split("@")[0],
         email: user.email,
+        ID: user.ID,
         picture:
           "https://firebasestorage.googleapis.com/v0/b/usedado.appspot.com/o/UserImage%2Fdeafult.jpeg?alt=media&token=70fee5c5-4cb3-4695-9778-8698a50c6c8c",
         sub: "undefined",
-        accessToken: user.token,
+        token: user.token,
       };
     }
     return token;
@@ -62,10 +64,11 @@ const callbacks = {
     // this token return above jwt()
 
     if (token) {
-      session.accessToken = token.accessToken;
+      session.token = token.token;
       session.name = token.name;
       session.email = token.email;
       session.picture = token.picture;
+      session.ID = token.ID;
     }
     return session;
   },

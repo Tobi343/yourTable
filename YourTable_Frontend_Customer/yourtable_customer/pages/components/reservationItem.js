@@ -57,19 +57,17 @@ function reservationItem(props) {
           <span className="font-medium">{props.reser.restaurant_name}</span>
         </div>
       </td>
-      <td className="py-3 px-6 text-left">
+      <td className="py-3 px-6 text-center">
         <span>{props.reser.reservation_personcount}</span>
       </td>
-      <td className="py-3 px-6 text-left">
+      <td className="py-3 px-6 text-center">
         <span>{props.reser.reservation_date.split("T")[0]}</span>
       </td>
-      <td className="py-3 px-6 text-left">
+      <td className="py-3 px-6 text-center">
         <span>{props.reser.reservation_time}</span>
       </td>
       <td className="py-3 px-6 text-center">
-        <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
-          Active
-        </span>
+        <span>{props.reser.reservation_room}/{props.reser.reservation_table}</span>
       </td>
       <td className="py-3 px-6 text-center">
         <div className="flex item-center justify-center">

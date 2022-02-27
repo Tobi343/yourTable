@@ -4,7 +4,7 @@ import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 function ContextWrapper({children,session}){
 
-    const [color,setColor] = useState("bg-blue-500")
+    const [color,setColor] = useState("bg-orange-500")
 
     return(
 

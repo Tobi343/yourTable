@@ -13,28 +13,27 @@ const providers = [
     // You can pass any HTML attribute to the <input> tag through the object.
 
     async authorize(credentials, req) {
-      
-      const path = credentials.register == "true" ? "/register" : "/login"
-      
-      
+      const path = credentials.register == "true" ? "/register" : "/login";
 
-      console.log(credentials.register)
+      console.log(credentials.register);
 
-      const res = await axios.post("http://34.139.40.48/users"+path, {
+      const res = await axios.post("http://34.139.40.48/users" + path, {
         email: credentials.email,
         password: credentials.password,
       });
 
-      const user = res.data;
-
-      const object = {
-        token: user,
+      const data = res.data;
+      console.log(data)
+      const user = {
+        token: data.token,
         email: credentials.email,
+        ID: data.ID,
+        abc:"abc",
       };
 
-      if (user) {
+      if (data.token) {
         console.log("success");
-        return object;
+        return user;
       }
       console.log("error");
       return null;
@@ -50,10 +49,12 @@ const callbacks = {
       token = {
         name: user.email.split("@")[0],
         email: user.email,
+        ID: user.ID,
         picture:
           "https://firebasestorage.googleapis.com/v0/b/usedado.appspot.com/o/UserImage%2Fdeafult.jpeg?alt=media&token=70fee5c5-4cb3-4695-9778-8698a50c6c8c",
         sub: "undefined",
         accessToken: user.token,
+        abc: user.abc,
       };
     }
     return token;
@@ -66,6 +67,7 @@ const callbacks = {
       session.name = token.name;
       session.email = token.email;
       session.picture = token.picture;
+      session.ID = token.ID;
     }
     return session;
   },
@@ -74,6 +76,10 @@ const callbacks = {
     return true;
   },
   async redirect({ url, baseUrl }) {
+    console.log(url)
+    if (url.startsWith(baseUrl)) return url;
+    // Allows relative callback URLs
+    else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
     return baseUrl;
   },
 
@@ -88,7 +94,7 @@ const options = {
   callbacks,
   session,
   pages: {
-    error: "/login", // Changing the error redirect page to our custom login page
+    error: "/", // Changing the error redirect page to our custom login page
   },
 };
 

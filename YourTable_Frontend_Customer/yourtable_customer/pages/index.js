@@ -6,15 +6,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import Modal from "./components/Modal";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 
-
 export async function getServerSideProps(context) {
-  const session =  await getSession(context)
-  console.log("Session: "+session)
+  const session = await getSession(context);
+  console.log("Session: " + session);
   var successful = false;
   if (!session) {
-    //successful = true;
+    successful = true;
   }
-  console.log(successful)
+  console.log(successful);
   return {
     props: {
       successful,
@@ -46,9 +45,9 @@ const TEXTS = [
   "Nudeln",
 ];
 
-export default function Home({successful}) {
+export default function Home({ successful }) {
   const [index, setIndex] = useState(0);
-  let [isOpen, setIsOpen] = useState(successful);
+  let [isOpen, setIsOpen] = useState(/*successful*/);
 
   useEffect(() => {
     const intervalId = setInterval(
@@ -60,7 +59,12 @@ export default function Home({successful}) {
 
   return (
     <div className="flex-col h-full bg-gray-600">
-      <NavBar className="" active={1} setIsOpen={setIsOpen} successful={successful}></NavBar>
+      <NavBar
+        className=""
+        active={1}
+        setIsOpen={setIsOpen}
+        successful={successful}
+      ></NavBar>
       <div className="flex-1 flex h-screen">
         <>
           {isOpen ? (
@@ -202,11 +206,18 @@ export default function Home({successful}) {
                             target="_blank"
                             class="inline-flex items-center font-bold text-blue-500 hover:text-blue-700 text-xs text-center"
                           >
-                            <span class="ml-2">You don't have an account?</span>
+                            <span class="ml-2">You don't have an account? - </span>
+                          </a>
+                          <a
+                            href="/"
+                            onClick={(e)=>setIsOpen(false)}
+                            class="inline-flex items-center font-bold text-blue-500 hover:text-blue-700 text-xs text-center"
+                          >
+                            <span class="ml-2">I just want to look</span>
                           </a>
                         </div>
                       </div>
-                    </div>{" "}
+                    </div>
                     {/*footer*/}
                   </div>
                 </div>

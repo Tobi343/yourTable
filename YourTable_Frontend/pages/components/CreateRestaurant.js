@@ -65,7 +65,7 @@ function CreateRestaurant() {
 
         <div className="flex h-12 mt-5">
           <button
-            className="bg-blue-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
+            className="bg-orange-500 text-lg h-12 text-center inline-block w-28 rounded-xl text-white font-bold ml-6 "
             onClick={() => props.click(restaurant)}
           >
             Create

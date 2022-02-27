@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Home({ session }) {
-  const [NavColor, setNavColor] = useState("bg-blue-500");
+  const [NavColor, setNavColor] = useState("bg-orange-500");
   const { color, setColor } = useContext(ColorContext);
 
   //const { data: session, status } = useSession()

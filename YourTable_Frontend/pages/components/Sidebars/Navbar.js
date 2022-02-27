@@ -8,7 +8,7 @@ import ColorContext from "../../contexts/ColorContext";
 import Link from "next/link";
 
 function Navbar(props) {
-  //localStorage.setItem('color', "bg-blue-500");
+  //localStorage.setItem('color', "bg-orange-500");
 
   const { color, setColor } = useContext(ColorContext);
 
@@ -84,8 +84,8 @@ function Navbar(props) {
                 <p className="p-2 text-sm text-gray-700">Colors:</p>
                 <div className="py-2">
                   <button
-                    className="bg-blue-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-blue-600"
-                    onClick={() => setColor("bg-blue-500")}
+                    className="bg-orange-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-orange-600"
+                    onClick={() => setColor("bg-orange-500")}
                   ></button>
                   <button
                     className="bg-indigo-500 w-24 h-8 rounded block mx-auto my-1 hover:bg-indigo-600"

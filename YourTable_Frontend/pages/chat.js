@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
 }
 
 function chat({ name }) {
-  const [NavColor, setNavColor] = useState("bg-blue-500");
+  const [NavColor, setNavColor] = useState("bg-orange-500");
   const {color, setColor} = useContext(ColorContext);
 
   const [arr, setArr] = useState(["Hallo"]);
@@ -144,7 +144,7 @@ function chat({ name }) {
                   <a
                     key={i}
                     onClick={() => setStateNumber(i)}
-                    className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-blue-500"
+                    className=" flex items-center active-nav-link text-gray-400 py-4  h-18 px-6 transition duration-200 nav-item hover:bg-gray-300 hover:text-orange-500"
                   >
                     <ChatIcon className="mr-3" />
                     <p id="editProfileBtn" className=" hidden md:flex">

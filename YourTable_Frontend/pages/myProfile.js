@@ -22,7 +22,6 @@ import { getSession } from "next-auth/react";
 import ColorContext from "./contexts/ColorContext";
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  console.log("Session: " + session.accessToken);
   if (!session) {
     return {
       redirect: {
@@ -32,17 +31,17 @@ export async function getServerSideProps(context) {
     };
   }
   const res = await fetch(`http://34.139.40.48/restaurant/2`);
-  const res1 = await fetch(`http://34.139.40.48/users/data/` + session.email, {
+  const res1 = await fetch(`http://34.139.40.48/users/besitzer/data/` + session.email, {
     method: "GET",
     headers: new Headers({
-      Authorization: "Token " + session.accessToken,
+      Authorization: "Token " + session.token,
       "Content-Type": "application/x-www-form-urlencoded",
     }),
   });
 
   const restaurant = await res.json();
-  const user = await res1.json();
-
+  //const user = await res1.json();
+const user = [];
   return {
     props: {
       restaurant,
@@ -110,7 +109,7 @@ async function editProfile(profile) {
 }
 
 function myProfile({ restaurant, user }) {
-  const [NavColor, setNavColor] = useState("bg-blue-500");
+  const [NavColor, setNavColor] = useState("bg-orange-500");
   const { color, setColor } = useContext(ColorContext);
 
   useEffect(() => {
