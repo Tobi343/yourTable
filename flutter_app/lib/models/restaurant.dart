@@ -12,6 +12,7 @@ class Restaurant{
   String details;
   List<dynamic> layout = [];
 
+
   Restaurant({
     required this.restaurantName,
     required this.restaurantId,
