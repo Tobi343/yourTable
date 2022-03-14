@@ -164,4 +164,14 @@ class AuthService{
     return res.body;
   }
 
+  Future<dynamic> getRestaurantComments(int restaurantID) async {
+    var res = await http.get(
+        Uri.parse("$SERVER_IP/comments/${restaurantID}"),
+    );
+    if(res.statusCode == 201){
+      return res.body;
+    }
+    else return [];
+  }
+
 }

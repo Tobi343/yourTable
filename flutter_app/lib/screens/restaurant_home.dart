@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/reservation.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rate_in_stars/rate_in_stars.dart';
 import 'package:lottie/lottie.dart';
 
 class RestaurantHome extends StatefulWidget {
@@ -35,11 +38,13 @@ class _RestaurantHomeState extends State<RestaurantHome> {
   AuthService auth = new AuthService();
 
   late CameraPosition _initianalCameraPosition;
+  List<dynamic> comments = [];
 
   @override
   void initState() {
     // TODO: implement initState
     //getRestaurantLocation();
+    getRestaurantComments();
     _initianalCameraPosition = CameraPosition(target: LatLng(AuthService.restaurants[widget.restaurantIndex].lat, AuthService.restaurants[widget.restaurantIndex].long),zoom: 18);
     super.initState();
   }
@@ -58,6 +63,62 @@ class _RestaurantHomeState extends State<RestaurantHome> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void getRestaurantComments() async {
+    var test = await auth.getRestaurantComments(AuthService.restaurants[widget.restaurantIndex].restaurantId);
+    setState(() {
+    });
+    print(test);
+    comments = jsonDecode(test);
+  }
+
+  List<Widget> displayComments(double w){
+    List<Widget> com = [];
+    print(comments.length);
+    for(int i = 0; i< comments.length;i++){
+      com.add(
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Material(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              elevation: 20,
+              child: Container(
+                width: w,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(comments[i]["title"],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,decoration: TextDecoration.underline),),
+                    ),
+                    RatingStars(
+                      editable: false,
+                      rating: comments[i]["stars"]+0.0,
+                      color: Colors.amber,
+                      iconSize: 24,
+                    ),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(comments[i]["_comment"],style: TextStyle(fontSize: 16),),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(comments[i]["_date"],style: TextStyle(fontSize: 16),),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ),
+      );
+    }
+    return com;
   }
 
   @override
@@ -177,6 +238,9 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                     ),
                   ),
                 ),
+              Column(
+                children: displayComments(width),
+              ),
               SizedBox(height: 100,)
             ],
           )],
