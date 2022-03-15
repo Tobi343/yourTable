@@ -109,7 +109,6 @@ class _ReservationState extends State<Reservation> {
 
   void getReservationsTime() async{
     await auth.getReservationsTimeOfTable(widget.restaurant.restaurantId, _date);
-    print(AuthService.reservationsTime["1"]["2"][0]);
   }
 
   int getNumberofRooms(){
