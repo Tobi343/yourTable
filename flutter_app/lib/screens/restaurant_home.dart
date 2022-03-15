@@ -10,8 +10,10 @@ import 'package:flutter_app/authenticate/authenticate.dart';
 import 'package:flutter_app/screens/reservation.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:rate_in_stars/rate_in_stars.dart';
 import 'package:lottie/lottie.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class RestaurantHome extends StatefulWidget {
 
@@ -44,11 +46,14 @@ class _RestaurantHomeState extends State<RestaurantHome> {
   List<dynamic> comments = [];
   double avgStar = 0;
   bool loaded = false;
+  bool loadComment = false;
+  bool commentWrote = false;
 
   String comTitle = "";
   String comText = "";
   late TextEditingController _comTitleController;
   late TextEditingController _comTextController;
+  double comStars = 5;
 
   @override
   void initState() {
@@ -91,6 +96,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
     });
     print(test);
     comments = jsonDecode(test);
+    comments = comments.reversed.toList();
   }
 
   double averageStars(){
@@ -302,13 +308,19 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                 Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () async {
                       Dialog errorDialog = Dialog(
                         elevation: 20,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
                         child: Form(
                           key: _formKey,
-                          child: Container(
+                          child: loadComment ? WillPopScope(
+                              onWillPop: () async => false,
+                              child: Scaffold(
+                                backgroundColor: Colors.white,
+                                body: Center(child: Lottie.asset('lib/assets/fast-food-mobile-app-loading.json')),
+                              ),
+                          ) : Container(
                             padding: EdgeInsets.only(top: 10),
                             height: height/2,
                             child: Column(
@@ -319,6 +331,7 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
                                         child: TextFormField(
+                                          textCapitalization: TextCapitalization.sentences,
                                           controller: _comTitleController,
                                           inputFormatters: [
                                             new LengthLimitingTextInputFormatter(30),
@@ -348,18 +361,19 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                                       ),
                                       RatingStars(
                                         editable: true,
-                                        rating: 5,
+                                        rating: comStars,
                                         color: Colors.amber,
                                         iconSize: 30,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
                                         child: TextFormField(
+                                          textCapitalization: TextCapitalization.sentences,
                                           keyboardType: TextInputType.multiline,
                                           maxLines: null,
                                           controller: _comTextController,
                                           inputFormatters: [
-                                            new LengthLimitingTextInputFormatter(30),
+                                            new LengthLimitingTextInputFormatter(1000),
                                           ],
                                           style: TextStyle(color: secondColor),
                                           validator: (val) => val!.isEmpty ? 'Text eingeben' : null,
@@ -387,25 +401,73 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                                     ],
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextButton(onPressed: () {
-                                      if(_formKey.currentState!.validate()) {
-
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                        child: Text('Bewerten!', style: TextStyle(color: secondColor, fontSize: 18.0),)),
-                                  ),
-                                )
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextButton(onPressed: () {
+                                          _comTitleController.text = "";
+                                          _comTextController.text = "";
+                                          Navigator.of(context).pop();
+                                        },
+                                            child: Text('Schließen', style: TextStyle(color: secondColor, fontSize: 18.0),)),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextButton(onPressed: () async {
+                                          if(_formKey.currentState!.validate()) {
+                                            initializeDateFormatting();
+                                            Intl.defaultLocale = "de";
+                                            DateTime _date = DateTime.now();
+                                            DateFormat formatter = DateFormat('d. MMMM y');
+                                            String d = formatter.format(_date);
+                                            setState(() {
+                                              loadComment = true;
+                                            });
+                                            var resp = await auth.writeComment(AuthService.restaurants[widget.restaurantIndex].restaurantId, AuthService.user["customer_id"], comText, d, comStars.round(), comTitle);
+                                            print(resp);
+                                            if(resp == 200){
+                                              print("good");
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                loadComment = false;
+                                                _comTitleController.text = "";
+                                                _comTextController.text = "";
+                                                commentWrote = true;
+                                              });
+                                            }
+                                          }
+                                        },
+                                            child: Text('Bewerten', style: TextStyle(color: secondColor, fontSize: 18.0),)),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
                           ),
                         ),
                       );
-                      showDialog(context: context, builder: (BuildContext context) => errorDialog);
+                      await showDialog(barrierDismissible: false, context: context, builder: (BuildContext context) => errorDialog);
+                      if(commentWrote) {
+                        setState(() {
+                          loaded = false;
+                        });
+                        var t = await auth.getRestaurantComments(AuthService
+                            .restaurants[widget.restaurantIndex].restaurantId);
+                        comments = jsonDecode(t);
+                        comments = comments.reversed.toList();
+                        setState(() {
+                          loaded = true;
+                          commentWrote = false;
+                        });
+                      }
                     },
                     child: Text("Bewertung schreiben",style: TextStyle(fontSize: 18)),
                     style: ElevatedButton.styleFrom(

@@ -174,4 +174,18 @@ class AuthService{
     else return [];
   }
 
+  Future<int?> writeComment(int restaurantId, int userId, String comment, String date, int stars, String title) async {
+    var res = await http.post(
+        Uri.parse("$SERVER_IP/comments/${restaurantId}"),
+        body: {
+          "customer_id": userId.toString(),
+          "_comment": comment,
+          "_date": date,
+          "stars": stars.toString(),
+          "title": title
+        }
+    );
+    return res.statusCode;
+  }
+
 }

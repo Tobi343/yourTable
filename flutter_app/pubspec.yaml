@@ -45,6 +45,7 @@ dependencies:
   date_picker_timeline: ^1.2.3
   qr_flutter: ^4.0.0
   rate_in_stars: ^0.0.2
+  intl: ^0.17.0
 
 
 flutter_native_splash:
