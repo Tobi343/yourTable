@@ -73,6 +73,14 @@ class _RestaurantHomeState extends State<RestaurantHome> {
     comments = jsonDecode(test);
   }
 
+  double averageStars(){
+    double star = 0;
+    for(var item in comments){
+      star+= item["stars"]+0.0;
+    }
+    return star/comments.length;
+  }
+
   List<Widget> displayComments(double w){
     List<Widget> com = [];
     print(comments.length);
@@ -238,6 +246,39 @@ class _RestaurantHomeState extends State<RestaurantHome> {
                     ),
                   ),
                 ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text("Bewertungen (${comments.length}):",style: TextStyle(fontSize: 24,decoration: TextDecoration.underline,decorationThickness: 2)),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: RatingStars(
+                      editable: false,
+                      rating: averageStars(),
+                      color: Colors.amber,
+                      iconSize: 24,
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: (){},
+                  child: Text("Bewertung schreiben",style: TextStyle(fontSize: 18)),
+                  style: ElevatedButton.styleFrom(
+                    primary: secondColor,
+                  ),
+                ),
+              ),
               Column(
                 children: displayComments(width),
               ),
