@@ -37,19 +37,18 @@ function searchComponent(props) {
         <div class="mx-2 xl:mx-28 lg:mx-20 md:mx-14 py-2 flex items-center">
           <nav class="hidden xl:contents ml-8">
             <button class="bg-orange-500 hover:bg-gray-700 text-white font-bold uppercase h-12 px-4 xl:px-6 py-2 xl:py-3 rounded flex-shrink-0 flex items-center">
-              
               <span className="ml-4">In meiner Nähe</span>
             </button>
             <ul class="flex items-center text-sm font-bold">
               <li class="px-2 lg:px-3 flex items-center">
                 <span>Kategorie 1</span>
-                
               </li>
             </ul>
           </nav>
         </div>
       </header>
 
+     
       <div class="flex flex-wrap flex-1 min-h-screen">
         {restaurants
           .filter((res) => {
@@ -59,7 +58,7 @@ function searchComponent(props) {
             return resName.includes(searchQuery.toLowerCase());
           })
           .map((e, i) => (
-            <Link href={"/restaurant/"+i}>
+            <Link href={"/restaurant/" + i}>
               <RestaurantCard
                 restaurant={e}
                 index={i}

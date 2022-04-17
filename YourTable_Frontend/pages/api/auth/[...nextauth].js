@@ -19,13 +19,15 @@ const providers = [
       
 
       console.log(credentials.register)
+      console.log("ABC")
 
       const res = await axios.post("http://34.139.40.48/users/besitzer"+path, {
         email: credentials.email,
         password: credentials.password,
       });
 
-      
+      console.log("ABC")
+
       const data = res.data;
       const object = {
         token: data.token,
@@ -47,6 +49,12 @@ const callbacks = {
   // Getting the JWT token from API response
   async jwt({ token, user, account, profile, isNewUser }) {
     // This user return by provider {} as you mentioned above MY CONTENT {token:}
+    console.log("FF F "+user);
+    console.log(token);
+    console.log("FF FC "+profile);
+    console.log("FF FD "+isNewUser);
+
+    
     if (user) {
       token = {
         name: user.email.split("@")[0],
@@ -62,6 +70,8 @@ const callbacks = {
   },
   async session({ session, user, token }) {
     // this token return above jwt()
+
+    console.log("FF FE "+user);
 
     if (token) {
       session.token = token.token;

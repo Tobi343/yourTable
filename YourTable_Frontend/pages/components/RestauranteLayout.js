@@ -24,6 +24,8 @@ function RestauranteLayout(props) {
   const [roomName, setRoomName] = useState(props.tables[0].Name);
   const [tables, setTables] = useState(props.tables);
   const [modalSelectedTable, setModalSelectedTable] = useState(-1);
+  const [tableName, setTableName] = useState("");
+  const [tableSeats, setTableSeats] = useState([]);
 
   const [dimensions, setDimensions] = useState({
     height: props.window.innerHeight,
@@ -86,11 +88,13 @@ function RestauranteLayout(props) {
                     onClick={(e) => {
                       let copy = [...props.tables];
                       copy[i].Arr.push({
-                        key: 1,
+                        key: copy[i].Arr[copy[i].Arr.length-1].key + 1,
                         x: 0,
                         y: 0,
                         width: 50,
                         height: 50,
+                        name: copy[i].Arr[copy[i].Arr.length-1].key + 1,
+                        seats: [],
                       });
                       setTables(copy);
                     }}
@@ -145,7 +149,7 @@ function RestauranteLayout(props) {
                 </div>
 
                 <>
-                  {modalSelectedTable>=0 ? (
+                  {modalSelectedTable >= 0 ? (
                     <>
                       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -180,95 +184,281 @@ function RestauranteLayout(props) {
                                     id="tableName"
                                     type="text"
                                     placeholder="Tischname"
-                                    value={tables[i].Arr[modalSelectedTable]}
+                                    value={tableName}
+                                    onChange={(e) =>
+                                      setTableName(e.target.value)
+                                    }
                                   />
-                                                                      {console.log(tables[i].Arr[parseInt(modalSelectedTable)])}
-                                                                      {console.log(tables[i].Arr)}
-                                                                      {console.log(modalSelectedTable)}
-
+                                  {console.log(
+                                    tables[i].Arr[parseInt(modalSelectedTable)]
+                                  )}
+                                  {console.log(tables[i].Arr)}
+                                  {console.log(modalSelectedTable)}
                                 </div>
                                 <div class="my-6">
-                                  <div class="flex h-full justify-center">
+                                  <div class="flex h-full ">
                                     <div className="relative h-full ">
                                       <div
                                         className={`${"bg-orange-500"} z-2 absolute top-0 left-0 rounded-xl flex flex-col border-2 `}
                                         style={{
-                                          width: 100,
-                                          height: 50,
+                                          width:
+                                            tables[i].Arr[
+                                              parseInt(modalSelectedTable)
+                                            ] == undefined
+                                              ? 0
+                                              : tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ].width,
+                                          height:
+                                            tables[i].Arr[
+                                              parseInt(modalSelectedTable)
+                                            ] == undefined
+                                              ? 0
+                                              : tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ].height,
                                         }}
                                         onClick={(ex) => {}}
                                       >
-                                          <div>
-                                            <div className="flex flex-row absolute">
-                                              {Array(parseInt(100) / 50)
-                                                .fill()
-                                                .map((v, i) => (
-                                                  <div
-                                                    className="border-gray-300 hover:bg-gray-200 border-2 z-10 h-6 w-6 rounded-xl"
-                                                    style={{
-                                                      marginLeft: 13,
-                                                      marginRight: 13,
-                                                      marginTop: -10,
-                                                    }}
-                                                    onClick={({target}) => target.classList.toggle("bg-gray-200")}
-                                                  ></div>
-                                                ))}
-                                            </div>
-                                            <div className="flex flex-row absolute">
-                                              {Array(parseInt(100) / 50)
-                                                .fill()
-                                                .map((v, i) => (
-                                                  <div
-                                                    className="border-gray-300 border-2 hover:bg-gray-200 z-10 h-6 w-6 rounded-xl"
-                                                    style={{
-                                                      marginTop:
-                                                        parseInt(50) -
-                                                        16 +
-                                                        "px",
-                                                      marginLeft: 13,
-                                                      marginRight: 13,
-                                                    }}
-                                                    onClick={({target}) => target.classList.toggle("bg-gray-200")}
-                                                  ></div>
-                                                ))}
-                                            </div>
+                                        <div>
+                                          <div className="flex flex-row absolute">
+                                            {Array(
+                                              parseInt(
+                                                tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ] == undefined
+                                                  ? 0
+                                                  : tables[i].Arr[
+                                                      parseInt(
+                                                        modalSelectedTable
+                                                      )
+                                                    ].width
+                                              ) / 50
+                                            )
+                                              .fill()
+                                              .map((v, i) => (
+                                                <div
+                                                  className={`border-gray-300 hover:bg-gray-200 border-2 z-10 h-6 w-6 rounded-xl ${
+                                                    tableSeats.includes(i + 1)
+                                                      ? "bg-gray-200"
+                                                      : ""
+                                                  }`}
+                                                  style={{
+                                                    marginLeft: 13,
+                                                    marginRight: 13,
+                                                    marginTop: -10,
+                                                  }}
+                                                  onClick={({ target }) =>
+                                                    target.classList.toggle(
+                                                      "bg-gray-200"
+                                                    )
+                                                  }
+                                                ></div>
+                                              ))}
                                           </div>
-                                          <div>
-                                            <div className="flex flex-col absolute">
-                                              {Array(parseInt(50) / 50)
-                                                .fill()
-                                                .map((v, i) => (
-                                                  <div
-                                                    className=" border-gray-300 border-2 hover:bg-gray-200 z-10 h-6 w-6 rounded-xl"
-                                                    style={{
-                                                      marginTop: 13,
-                                                      marginLeft: -10,
-                                                      marginBottom: 13,
-                                                    }}
-                                                    onClick={({target}) => target.classList.toggle("bg-gray-200")}
-                                                  ></div>
-                                                ))}
-                                            </div>
-                                            <div className="flex flex-col absolute">
-                                              {Array(parseInt(50) / 50)
-                                                .fill()
-                                                .map((v, i) => (
-                                                  <div
+                                          {console.log(tableSeats)}
+                                          <div className="flex flex-row absolute">
+                                            {Array(
+                                              parseInt(
+                                                tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ] == undefined
+                                                  ? 0
+                                                  : tables[i].Arr[
+                                                      parseInt(
+                                                        modalSelectedTable
+                                                      )
+                                                    ].width
+                                              ) / 50
+                                            )
+                                              .fill()
+                                              .map((v, i) => (
+                                                <div
+                                                  className={`border-gray-300 hover:bg-gray-200 border-2 z-10 h-6 w-6 rounded-xl ${
+                                                    tableSeats.includes(
+                                                      i +
+                                                        parseInt(
+                                                          tables[i].Arr[
+                                                            parseInt(
+                                                              modalSelectedTable
+                                                            )
+                                                          ] == undefined
+                                                            ? 0
+                                                            : tables[i].Arr[
+                                                                parseInt(
+                                                                  modalSelectedTable
+                                                                )
+                                                              ].width
+                                                        ) /
+                                                          50 +
+                                                        parseInt(
+                                                          tables[i].Arr[
+                                                            parseInt(
+                                                              modalSelectedTable
+                                                            )
+                                                          ] == undefined
+                                                            ? 0
+                                                            : tables[i].Arr[
+                                                                parseInt(
+                                                                  modalSelectedTable
+                                                                )
+                                                              ].height
+                                                        ) /
+                                                          50
+                                                    )
+                                                      ? "bg-gray-200"
+                                                      : ""
+                                                  }`}
+                                                  style={{
+                                                    marginTop:
+                                                      parseInt(50) - 16 + "px",
+                                                    marginLeft: 13,
+                                                    marginRight: 13,
+                                                  }}
+                                                  onClick={({ target }) =>
+                                                    target.classList.toggle(
+                                                      "bg-gray-200"
+                                                    )
+                                                  }
+                                                ></div>
+                                              ))}
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <div className="flex flex-col absolute">
+                                            {Array(
+                                              parseInt(
+                                                tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ] == undefined
+                                                  ? 0
+                                                  : tables[i].Arr[
+                                                      parseInt(
+                                                        modalSelectedTable
+                                                      )
+                                                    ].height
+                                              ) / 50
+                                            )
+                                              .fill()
+                                              .map((v, i) => (
+                                                <div
+                                                  className={`border-gray-300 hover:bg-gray-200 border-2 z-10 h-6 w-6 rounded-xl ${
+                                                    tableSeats.includes(
+                                                      i +
+                                                        1 +
+                                                        parseInt(
+                                                          tables[i].Arr[
+                                                            parseInt(
+                                                              modalSelectedTable
+                                                            )
+                                                          ] == undefined
+                                                            ? 0
+                                                            : tables[i].Arr[
+                                                                parseInt(
+                                                                  modalSelectedTable
+                                                                )
+                                                              ].width
+                                                        ) /
+                                                          50
+                                                    )
+                                                      ? "bg-gray-200"
+                                                      : ""
+                                                  }`}
+                                                  style={{
+                                                    marginTop: 13,
+                                                    marginLeft: -10,
+                                                    marginBottom: 13,
+                                                  }}
+                                                  onClick={({ target }) =>
+                                                    target.classList.toggle(
+                                                      "bg-gray-200"
+                                                    )
+                                                  }
+                                                ></div>
+                                              ))}
+                                          </div>
+                                          <div className="flex flex-col absolute">
+                                            {Array(
+                                              parseInt(
+                                                tables[i].Arr[
+                                                  parseInt(modalSelectedTable)
+                                                ] == undefined
+                                                  ? 0
+                                                  : tables[i].Arr[
+                                                      parseInt(
+                                                        modalSelectedTable
+                                                      )
+                                                    ].height
+                                              ) / 50
+                                            )
+                                              .fill()
+                                              .map((v, i) => (
+                                                <div
                                                   id={i}
-                                                    className="border-gray-300 border-2 hover:bg-gray-200 z-10 h-6 w-6 rounded-xl"
-                                                    style={{
-                                                      marginTop: 13,
-                                                      marginLeft:
-                                                        parseInt(100) -
-                                                        16 +
-                                                        "px",
-                                                      marginBottom: 13,
-                                                    }}
-                                                    onClick={({target}) => target.classList.toggle("bg-gray-200")}
-                                                  ></div>
-                                                ))}
-                                            </div>
+                                                  className={`border-gray-300 hover:bg-gray-200 border-2 z-10 h-6 w-6 rounded-xl ${
+                                                    tableSeats.includes(
+                                                      i +
+                                                        (parseInt(
+                                                          tables[i].Arr[
+                                                            parseInt(
+                                                              modalSelectedTable
+                                                            )
+                                                          ] == undefined
+                                                            ? 0
+                                                            : tables[i].Arr[
+                                                                parseInt(
+                                                                  modalSelectedTable
+                                                                )
+                                                              ].width
+                                                        ) /
+                                                          50) * 2 +
+                                                        parseInt(
+                                                          tables[i].Arr[
+                                                            parseInt(
+                                                              modalSelectedTable
+                                                            )
+                                                          ] == undefined
+                                                            ? 0
+                                                            : tables[i].Arr[
+                                                                parseInt(
+                                                                  modalSelectedTable
+                                                                )
+                                                              ].height
+                                                        ) /
+                                                          50
+                                                    )
+                                                      ? "bg-gray-200"
+                                                      : ""
+                                                  }`}
+                                                  style={{
+                                                    marginTop: 13,
+                                                    marginLeft:
+                                                      parseInt(
+                                                        tables[i].Arr[
+                                                          parseInt(
+                                                            modalSelectedTable
+                                                          )
+                                                        ] == undefined
+                                                          ? 0
+                                                          : tables[i].Arr[
+                                                              parseInt(
+                                                                modalSelectedTable
+                                                              )
+                                                            ].width
+                                                      ) -
+                                                      16 +
+                                                      "px",
+                                                    marginBottom: 13,
+                                                  }}
+                                                  onClick={({ target }) =>
+                                                    target.classList.toggle(
+                                                      "bg-gray-200"
+                                                    )
+                                                  }
+                                                ></div>
+                                              ))}
                                           </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -287,14 +477,44 @@ function RestauranteLayout(props) {
                               <button
                                 className="bg-red-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                 type="button"
-                                onClick={() => setModalSelectedTable(-1)}
+                                onClick={() => {
+                                  let copy = [...tables];
+                                  copy[i].Arr = [
+                                    ...copy[i].Arr.slice(0, modalSelectedTable),
+                                    ...copy[i].Arr.slice(
+                                      modalSelectedTable + 1
+                                    ),
+                                  ];
+                                  setTables(copy);
+
+                                  console.log(tables[i].Arr);
+                                  setModalSelectedTable(-1);
+                                }}
                               >
                                 Tisch löschen
                               </button>
                               <button
                                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                 type="button"
-                                onClick={() => setModalSelectedTable(-1)}
+                                onClick={() => {
+                                  let g =
+                                    tables[i].Arr[parseInt(modalSelectedTable)];
+
+                                  g = {
+                                    key: g.key,
+                                    x: g.x,
+                                    y: g.y,
+                                    width: g.width,
+                                    height: g.height,
+                                    name: tableName,
+                                    seats: g.seats,
+                                  };
+
+                                  let copy = [...tables];
+                                  copy[i].Arr[parseInt(modalSelectedTable)] = g;
+                                  setTables(copy);
+                                  setModalSelectedTable(-1);
+                                }}
                               >
                                 Änderungen speichern
                               </button>
@@ -315,12 +535,16 @@ function RestauranteLayout(props) {
                   {tables[i].Arr.map((e, index) => (
                     <Element
                       roomNumber={i}
+                      setTableName={setTableName}
+                      setTableSeats={setTableSeats}
                       setModalSelectedTable={setModalSelectedTable}
                       keyProp={e.key}
-                      key={index}
+                      key={e.key}
                       index={index}
                       setTables={setTables}
                       tables={tables}
+                      name={e.name}
+                      seats={e.seats}
                       x={e.x}
                       y={e.y}
                       width={e.width}

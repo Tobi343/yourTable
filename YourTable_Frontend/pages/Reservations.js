@@ -48,13 +48,6 @@ export async function getServerSideProps(context) {
     }),
   });
 
-  const res2 = await fetch("http://34.139.40.48/reservations", {
-    method: "GET",
-    headers: new Headers({
-      Authorization: "Token " + session.token,
-      "Content-Type": "application/x-www-form-urlencoded",
-    }),
-  });
 
   const reser = await res.json();
   const resta = await res1.json();

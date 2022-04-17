@@ -7,6 +7,7 @@ import { PortraitSharp } from "@mui/icons-material";
 function Element(props) {
   return (
     <Rnd
+  
       default={{
         x: props.x,
         y: props.y,
@@ -16,8 +17,9 @@ function Element(props) {
       dragGrid={[props.size, props.size]}
       resizeGrid={[props.size, props.size]}
       bounds={"parent"}
-     
       onDragStop={(e, d) => {
+        console.log("drag")
+
         var index = props.tables[props.roomNumber].Arr.findIndex(
           (x) => x.key == props.keyProp
         );
@@ -38,6 +40,8 @@ function Element(props) {
               : d.y % props.size),
           width: props.width,
           height: props.height,
+          name: props.name,
+          seats: props.seats,
         };
 
         let copy = [...props.tables];
@@ -45,6 +49,7 @@ function Element(props) {
         props.setTables(copy);
       }}
       onResizeStop={(e, direction, ref, delta, position) => {
+        console.log("resize")
         var index = props.tables[props.roomNumber].Arr.findIndex(
           (x) => x.key == props.keyProp
         );
@@ -56,6 +61,8 @@ function Element(props) {
           y: position.y,
           width: parseInt(ref.style.width),
           height: parseInt(ref.style.height),
+          name: props.name,
+          seats: props.seats,
         };
 
         let copy = [...props.tables];
@@ -63,9 +70,14 @@ function Element(props) {
         props.setTables(copy);
       }}
       className=" rounded-lg bg-orange-500 absolute z-10"
-      onDoubleClick={() => props.setModalSelectedTable(props.index)}
+      onDoubleClick={() => {
+        props.setModalSelectedTable(props.index);
+        props.setTableName(props.name);
+        props.setTableSeats(props.seats);
+      }}
     >
-      {props.keyProp}
+      {props.keyProp}    {console.log(props.keyProp+":"+props.x+":"+props.y)}
+
     </Rnd>
   );
 }
